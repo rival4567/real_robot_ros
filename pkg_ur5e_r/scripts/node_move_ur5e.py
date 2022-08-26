@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 import copy
@@ -62,20 +62,6 @@ class CartesianPath:
 
         # 1. Create a empty list to hold waypoints
         waypoints = []
-
-        # 2. Add Current Pose to the list of waypoints
-        waypoints.append(self._group.get_current_pose().pose)
-
-        # 3. Create a New waypoint
-        wpose = geometry_msgs.msg.Pose()
-        wpose.position.x = waypoints[0].position.x + (trans_x)
-        wpose.position.y = waypoints[0].position.y + (trans_y)
-        wpose.position.z = waypoints[0].position.z + (trans_z)
-        # This to keep EE parallel to Ground Plane
-        wpose.orientation.x = -0.5
-        wpose.orientation.y = -0.5
-        wpose.orientation.z = 0.5
-        wpose.orientation.w = 0.5
 
         # 4. Add the new waypoint to the list of waypoints
         waypoints.append(copy.deepcopy(wpose))

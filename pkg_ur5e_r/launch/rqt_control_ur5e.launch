@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find pkg_ur5e_r)/launch/connect_real_ur5e.launch"/>
+
+    <node name="trajectory_controller" type="rqt_joint_trajectory_controller" pkg="rqt_joint_trajectory_controller"/>
+
+</launch>

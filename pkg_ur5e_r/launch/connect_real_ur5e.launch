@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+
+    <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
+        <arg name="robot_ip" value="192.168.0.100"/>
+        <arg name="kinematics_config" value="$(find pkg_ur5e_r)/config/ur5e_default_calibration.yaml"/>
+        <arg name="use_tool_communication" value="true"/>
+        <arg name="tool_voltage" value="24"/>
+        <arg name="tool_parity" value="0"/>
+        <arg name="tool_baud_rate" value="115200"/>
+        <arg name="tool_stop_bits" value="1"/>
+        <arg name="tool_rx_idle_chars" value="1.5"/>
+        <arg name="tool_tx_idle_chars" value="3.5"/>
+        <arg name="tool_device_name" value="/tmp/ttyUR"/>
+
+    </include>
+
+</launch>
