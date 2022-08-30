@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <launch>
-    <include file="$(find pkg_ur5e_r)/launch/connect_real_ur5e.launch"/>
-
-    <!-- Launch Moveit move_group Node -->
-    <include file="$(find ur5e_moveit_config)/launch/ur5e_moveit_planning_execution.launch" />
-
-    <!-- Run RViz with Moveit! Plugin -->
+    <arg name="sim" default="true"/>
     <arg name="use_rviz" default="true" />
 
+    <!-- Launch Moveit move_group Node -->
+    <include file="$(find ur5e_moveit_config)/launch/ur5e_moveit_planning_execution.launch">
+        <arg name="sim" value="$(arg sim)"/>
+    </include>
+
+    <!-- Run RViz with Moveit! Plugin -->
     <include file="$(find ur5e_moveit_config)/launch/moveit_rviz.launch" if="$(arg use_rviz)">
         <arg name="rviz_config" value="$(find ur5e_moveit_config)/launch/moveit.rviz"/>
     </include>

@@ -1,7 +1,16 @@
 <?xml version="1.0"?>
 <launch>
+    <arg name="sim" default="true" />
 
-    <include file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
+    <!-- Simulation in gazebo of UR5e arm -->
+    <include if="$(arg sim)" file="$(find ur_gazebo)/launch/ur5e_bringup.launch">
+        <arg name="paused" value="false"/>
+        <arg name="controller_config_file" value="$(find ur_gazebo)/config/ur5e_controllers.yaml"/>
+        <arg name="gui" value="true"/>
+    </include>
+
+    <!-- Connection with real UR5e robotic arm -->
+    <include unless="$(arg sim)" file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
         <arg name="robot_ip" value="192.168.0.100"/>
         <arg name="kinematics_config" value="$(find pkg_ur5e_r)/config/ur5e_default_calibration.yaml"/>
         <arg name="use_tool_communication" value="true"/>
@@ -12,7 +21,6 @@
         <arg name="tool_rx_idle_chars" value="1.5"/>
         <arg name="tool_tx_idle_chars" value="3.5"/>
         <arg name="tool_device_name" value="/tmp/ttyUR"/>
-
     </include>
 
 </launch>
