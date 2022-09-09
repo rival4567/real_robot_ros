@@ -15,6 +15,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
   tf2
+  xacro
 )
 
 ## System dependencies are found with CMake's conventions

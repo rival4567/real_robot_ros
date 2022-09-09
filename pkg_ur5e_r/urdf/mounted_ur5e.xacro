@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="https://ros.org/wiki/xacro" name="mounted_ur5e">
+
+    <!-- Mounting Table -->
+    <xacro:include filename="$(find pkg_ur5e_r)/urdf/mounting_table.xacro"/>
+    <!-- UR5e -->
+    <xacro:include filename="$(find ur_description)/urdf/ur5e.xacro"/>
+    <!-- End effector -->
+    <xacro:include filename="$(find pkg_ur5e_r)/urdf/schunk_gripper.xacro"/>
+    <!-- Gazebo settings -->
+    <xacro:include filename="$(find pkg_ur5e_r)/urdf/ur5e_gazebo.xacro"/>
+
+    <!-- Connect Mounting table to UR5e base link -->
+    <xacro:mounting_table prefix="" connected_to="base_link"/>
+
+    <!-- Connect Schunk gripper end effector to the robotic arm -->
+    <xacro:schunk_gripper prefix="" connected_to="tool0"/>
+
+    <!-- Connect world to base link -->
+    <xacro:ur5e_gazebo prefix="" connected_to="base_link"/>
+
+</robot>
+

@@ -1,13 +1,42 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="sim" default="true" />
+    <arg name="sim" default="true"/>
 
-    <!-- Simulation in gazebo of UR5e arm -->
-    <include if="$(arg sim)" file="$(find ur_gazebo)/launch/ur5e_bringup.launch">
-        <arg name="paused" value="false"/>
-        <arg name="controller_config_file" value="$(find ur_gazebo)/config/ur5e_controllers.yaml"/>
-        <arg name="gui" value="true"/>
-    </include>
+    <group if="$(arg sim)">
+        <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+        <arg name="paused" default="false"/>
+        <arg name="use_sim_time" default="true"/>
+        <arg name="gui" default="true"/>
+        <arg name="headless" default="false"/>
+        <arg name="debug" default="false"/>
+        <arg name="model" default="$(find pkg_ur5e_r)/urdf/mounted_ur5e.urdf"/>
+        <arg name="extra_gazebo_args" default="--verbose"/>
+
+        <include file="$(find gazebo_ros)/launch/empty_world.launch">
+            <!-- <arg name="world_name" value="$(find pkg_ur5e_r)/worlds/ur5e.world"/> -->
+            <arg name="debug" value="$(arg debug)" />
+            <arg name="gui" value="$(arg gui)" />
+            <arg name="paused" value="$(arg paused)"/>
+            <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+            <arg name="headless" value="$(arg headless)"/>
+            <arg name="extra_gazebo_args" value="$(arg extra_gazebo_args)"/>
+        </include>
+
+        <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
+        <rosparam file="$(find ur_gazebo)/config/ur5e_controllers.yaml" command="load"/>
+
+        <node name="controller_spawner" pkg ="controller_manager" type="spawner" ns="/" args="
+            pos_joint_traj_controller joint_state_controller"/>
+
+        <!-- load other controllers -->
+        <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager"
+            respawn="false" output="screen" args="load joint_group_pos_controller" />
+
+        <!-- push robot_description to factory and spawn robot in gazebo -->
+        <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+            args="-x 0.0 -y 0.0 -z 0.75 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
+    </group>
+
 
     <!-- Connection with real UR5e robotic arm -->
     <include unless="$(arg sim)" file="$(find ur_robot_driver)/launch/ur5e_bringup.launch">
@@ -22,5 +51,8 @@
         <arg name="tool_tx_idle_chars" value="3.5"/>
         <arg name="tool_device_name" value="/tmp/ttyUR"/>
     </include>
+
+    <!-- <include file="$(find micromouse)/launch/rviz.launch" /> -->
+
 
 </launch>
