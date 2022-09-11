@@ -13,7 +13,7 @@
         <arg name="extra_gazebo_args" default="--verbose"/>
 
         <include file="$(find gazebo_ros)/launch/empty_world.launch">
-            <!-- <arg name="world_name" value="$(find pkg_ur5e_r)/worlds/ur5e.world"/> -->
+            <arg name="world_name" value="$(find pkg_ur5e_r)/worlds/ur5e.world"/>
             <arg name="debug" value="$(arg debug)" />
             <arg name="gui" value="$(arg gui)" />
             <arg name="paused" value="$(arg paused)"/>
@@ -51,8 +51,5 @@
         <arg name="tool_tx_idle_chars" value="3.5"/>
         <arg name="tool_device_name" value="/tmp/ttyUR"/>
     </include>
-
-    <!-- <include file="$(find micromouse)/launch/rviz.launch" /> -->
-
 
 </launch>

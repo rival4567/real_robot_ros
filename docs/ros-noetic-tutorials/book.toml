@@ -1,0 +1,41 @@
+[book]
+authors = ["Shivam"]
+language = "en"
+multilingual = false
+src = "src"
+title = "THD - Summer School: ROS"
+
+[preprocessor.index]
+
+[preprocessor.links]
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "ayu"
+curly-quotes = true
+mathjax-support = true
+copy-fonts = true
+no-section-label = false
+git-repository-url = "https://github.com/rival4567/real_robot_ros.git"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/rust-lang/mdBook/edit/master/guide/{path}"
+
+[output.html.print]
+enable = true
+
+[output.html.search]
+enable = true
+limit-results = 15
+copy-js = true
+use-boolean-and = true
+teaser-word-count = 30
+heading-split-level = 3
+
+[output.html.fold]
+enable = true
+level = 0
+
+[output.html.playground]
+editable = false
+copy-js = true
+line-numbers = true
