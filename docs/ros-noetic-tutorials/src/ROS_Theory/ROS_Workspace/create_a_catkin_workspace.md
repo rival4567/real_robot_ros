@@ -17,16 +17,16 @@ ls
 ```
 6. Now to make your workspace visible to ROS. Source the setup file in the devel directory.
 ```bash
-source ~/catkin_ws/devel/setup.bash
+source ~/workspace/devel/setup.bash
 ```
 By doing this, all the packages that you create inside the `src` folder will be visible to ROS.
-
+s
 7. This `setup.bash` file of your workspace must be source everytime when you want to use ROS packages created inside this workspace.
 
 8. To make sure your workspace is properly overlayed by the setup script, make sure ROS_PACKAGE_PATH environment variable includes the directory you're in.
 
 ```bash
 echo $ROS_PACKAGE_PATH
-/home/youruser/catkin_ws/src:/opt/ros/noetic/share
+/home/youruser/workspace/src:/opt/ros/noetic/share
 ```
 <hr>

@@ -8,7 +8,7 @@ import rospy
 
 
 class turtle:
-    '''This class has variables and method to manipulate turtle 
+    '''This class has variables and method to manipulate turtle
     movement.
     '''
 
@@ -33,7 +33,7 @@ class turtle:
         self.rate = rospy.Rate(10)  # Rate in Hz
 
     def callback(self, pos_msg):
-        '''Callback function which is called when a new message of type 
+        '''Callback function which is called when a new message of type
         Pose is received by the subscriber.
         '''
         self.pose = pos_msg
@@ -60,8 +60,8 @@ class turtle:
 
     def traceCircle(self, turns, velocity, anticlockwise=True):
         '''Turtle traces a circle. This method takes 3 arguments.
-        'turns', 'velocity', 'anticlockwise'. Turns gives number of 
-        circular rotations. 'velocity' is of tuple data type (linear 
+        'turns', 'velocity', 'anticlockwise'. Turns gives number of
+        circular rotations. 'velocity' is of tuple data type (linear
         velocity, angular velocity). 'anticlockwise' is of boolean
         data type which gives direction of rotation.
         '''
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         # Making sure velocity is not equal to zero or different.
         # Provide anticlockwise bool value for direction of
         if not (linear_velocity == 0.0 or angular_velocity == 0.0 and
-                not linear_velocity == angular_velocity):
+                linear_velocity != angular_velocity):
             t.traceCircle(turns, velocity, True)
 
     except rospy.ROSInterruptException:

@@ -16,7 +16,7 @@ rospack = rospkg.RosPack()
 path = rospack.get_path('pkg_ur5e_r')
 print(path)
 
-bottle_model = open(path + '/models/coke_can/model.sdf', 'r').read()
+bottle_model = open(path + '/models/cricket_ball/model.sdf', 'r').read()
 
 
 def create_model_request(sdf_model, modelname, px, py, pz, rr, rp, ry):
@@ -44,10 +44,10 @@ def main():
     spawn_srv.wait_for_service()
     rospy.loginfo("Connected to service!")
 
-    req_coke_can = create_model_request(
-        bottle_model, "coke_can", 0.4, 0.3, 0.75, 0, 0, 0)
-    spawn_srv.call(req_coke_can)
-    rospy.loginfo("Spawned Coke Can!")
+    req_cricket_ball = create_model_request(
+        bottle_model, "cricket_ball", 0.251, 0.38, 0.75, 0, 0, 0)
+    spawn_srv.call(req_cricket_ball)
+    rospy.loginfo("Spawned Ball!")
     rospy.spin()
 
 

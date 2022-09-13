@@ -10,6 +10,10 @@ import actionlib
 
 import tf2_ros
 import tf2_msgs.msg
+import math
+
+from pkg_ur5e_r.srv import SchunkGripper
+
 
 class CartesianPath:
     '''This class moves the ur5 arm using MoveIt!'''
@@ -33,7 +37,7 @@ class CartesianPath:
         # Instantiate a `MoveGroupCommander`_ object. This object is an interface
         # to a planning group (group of joints).
         # This interface can be used to plan and execute motions:
-        self._planning_group = "planner_ur5e"
+        self._planning_group = "manipulator"
         self._group = moveit_commander.MoveGroupCommander(self._planning_group)
 
         # Create a `DisplayTrajectory`_ ROS publisher which is used to display
@@ -64,14 +68,14 @@ class CartesianPath:
         waypoints = []
 
         # 4. Add the new waypoint to the list of waypoints
-        waypoints.append(copy.deepcopy(wpose))
+        waypoints.append(copy.deepcopy(self._group.get_current_pose().pose))
 
         # 5. Compute Cartesian Path connecting the waypoints in the list of waypoints
         fraction = 0.0
         (plan, fraction) = self._group.compute_cartesian_path(
-                                            waypoints,   # waypoints to follow
-                                            0.01,        # Step Size, distance between two adjacent computed waypoints will be 1 cm
-                                            0.0)         # Jump Threshold
+            waypoints,   # waypoints to follow
+            0.01,        # Step Size, distance between two adjacent computed waypoints will be 1 cm
+            0.0)         # Jump Threshold
 
         rospy.loginfo("Path computed successfully. Moving the arm.")
 
@@ -144,8 +148,8 @@ class CartesianPath:
         # Calling 'stop()' ensures that there is no residual movement.
         self._group.stop()
         # Clearing targets after planning of poses.
-        self._group.clear_pose_targets()        
-        return flag_plan    
+        self._group.clear_pose_targets()
+        return flag_plan
 
     # Destructor
     def __del__(self):
@@ -163,6 +167,19 @@ class tfEcho:
         self._tfBuffer = tf2_ros.Buffer()
         self._listener = tf2_ros.TransformListener(self._tfBuffer)
 
+    @staticmethod
+    def list_degrees_to_radians(list_degrees):
+        '''Converts list of degrees to radians
+        :param list_degrees: List of degrees
+        :type list_degrees: list
+        :return: List of radians
+        :rtype: list
+        '''
+        list_in_radians = []
+        for list_d in list_degrees:
+            list_in_radians.append(math.radians(list_d))
+        return list_in_radians
+
     def calc_tf(self, arg_frame_1="world", arg_frame_2="ur5_wrist_3_link"):
         '''This method finds transform between two coordinate frames and return
         transform. It takes two coordinate frames as input.'''
@@ -170,7 +187,7 @@ class tfEcho:
         try:
             trans = self._tfBuffer.lookup_transform(
                 arg_frame_1, arg_frame_2, rospy.Time())
-            
+
             # Calculate transform
             ref_pos = geometry_msgs.msg.Pose()
             ref_pos.position.x = trans.transform.translation.x
@@ -200,14 +217,13 @@ class tfEcho:
 
     def calc_distance(self, pos1, pos2):
         '''This calculates distance between two position coordinates.'''
-        return (pos1.position.x - pos2.position.x, pos1.position.y - pos2.position.y,\
-            pos1.position.z - pos2.position.z)
+        return (pos1.position.x - pos2.position.x, pos1.position.y - pos2.position.y,
+                pos1.position.z - pos2.position.z)
 
     # Destructor
     def __del__(self):
         rospy.loginfo(
             '\033[94m' + "Object of class tfEcho Deleted." + '\033[0m')
-    
 
 
 def main():
@@ -215,27 +231,16 @@ def main():
     ur5 = CartesianPath()
     tf = tfEcho()
 
-    # Defined three home positions for ur5 arm using joint angles.
-    ur5e_n = [-4.547906819974081, -0.6960781377604981, -1.8021016120910645, -0.4913160365870972, -1.6629589239703577, -0.15789300600160772]
-    ur5e_p = [-4.547906819974081, -0.6960781377604981, -1.8021016120910645, -0.4913160365870972, -1.6629589239703577, 3.14]
-    ur5_1_home_front_joint_angles = [-0.0, -0.0, -0.09345202312839884,
-                                    -1.7081302018947557, 1.5707962921838723, -0.36232479405483087]
+    ur5e_pick_joint_angles = tf.list_degrees_to_radians(
+        [254.79, -100.37, -122.19, -48.98, -270.54, 44.03])
+    ur5e_place_joint_angles = tf.list_degrees_to_radians(
+        [325.45, -103.26, -116.62, -54.35, -271.28, 119.25])
+    ur5e_home_joint_angles = tf.list_degrees_to_radians(
+        [90, -90, 0, -90, 0, 90])
 
-    ur5_1_home_mid_joint_angles = [0.13687798614297986, -2.442375782343568, -1.0176829030835242,
-                                -1.251753817369103, 1.5704502299497376, 0.1371094617247337]
-
-    ur5_1_home_back_joint_angles = [0.6059869639432289, -2.937214832510734, -0.0387824203391709,
-                                     -1.7363916566123745, 1.5707961622937958, 0.6059869639191504]
-
-    # Bin positions using joint angles
-    ur5_1_red_bin_joint_angles = [1.4515139748708146, -1.32523128036701, 2.0544499833951804,
-                                    -2.3000151909844897, -1.5707963285225661, -1.6900786787216378]
-
-    ur5_1_green_bin_joint_angles = [0.011579996212777388, -1.1104214907925725, 1.7368595610765318,
-                                    -2.1972342164116148, -1.5707964842223632, -3.1300126574775646]
-
-    ur5_1_blue_bin_joint_angles = [1.7909925949020966, -1.8114511190700302, -2.061194590020448,
-                                    -0.8397431095558687, 1.570796105764062, 1.7909925949520566]
+    gripper_srv = rospy.ServiceProxy(
+        'ur5e/connect/GazeboGripper/activate', SchunkGripper)
+    rospy.wait_for_service(gripper_srv)
 
     while not rospy.is_shutdown():
         # Infinite loop unless Ctrl + C or some error.
@@ -243,12 +248,18 @@ def main():
         # Wait for packages to spawn.
         rospy.sleep(1)
 
-        # ur5.go_to_pose([0, 0.09, -1.5428, 1.57, 3.14, 0])
-
-
-        ur5.set_joint_angles(ur5e_n)
+        ur5.set_joint_angles(ur5e_pick_joint_angles)
+        gripper_srv.call("True")
         rospy.sleep(1)
-        ur5.set_joint_angles(ur5e_p)
+        ur5.ee_cartesian_translation(0, 0, 0.5)
+        rospy.sleep(1)
+        ur5.set_joint_angles(ur5e_place_joint_angles)
+        rospy.sleep(1)
+        gripper_srv.call("False")
+        ur5.ee_cartesian_translation(0, 0, 0.1)
+        rospy.sleep(1)
+        ur5.set_joint_angles(ur5e_home_joint_angles)
+
 
 if __name__ == '__main__':
     main()

@@ -10,7 +10,7 @@ from pkg_ur5e_r.srv import SchunkGripper
 from pkg_ur5e_r.srv import SchunkGripperResponse
 
 
-class SchunkGripper(object):
+class SchunkGripperWork(object):
 
     def __init__(self) -> None:
         self.set_io_req = SetIORequest()
@@ -45,10 +45,12 @@ class SchunkGripper(object):
         self.set_io_req.state = 1.0
         pin16_response = self.set_ur5e_pin_srv.call(self.set_io_req)
         rospy.sleep(0.5)
+
         self.set_io_req.pin = 17
         self.set_io_req.state = 0.0
-        pin17_response = self.set_ur5e_pi_srv.call(self.set_io_req)
+        pin17_response = self.set_ur5e_pin_srv.call(self.set_io_req)
         rospy.sleep(0.5)
+
         return pin16_response.success and pin17_response.success
 
     def callback_service_on_request(self, req):
@@ -71,7 +73,7 @@ def main():
 
     rospy.init_node('node_service_schunk_gripper')
 
-    schunk_gripper = SchunkGripper()
+    schunk_gripper = SchunkGripperWork()
 
     rospy.Service('/ur5e/connect/SchunkGripper/activate', SchunkGripper,
                   schunk_gripper.callback_service_on_request)
