@@ -2,8 +2,8 @@
 
     
     <node name="turtlesim_node" pkg="turtlesim" type="turtlesim_node" output="screen"/>
-    <node name="node_do_circle" pkg="pkg_move_turtle" type="node_do_circle.py" 
-        output="screen"/>
+    <!-- <node name="node_do_circle" pkg="pkg_move_turtle" type="node_do_circle.py"  -->
+        <!-- output="screen"/> -->
     <rosparam file="$(find pkg_move_turtle)/config/turtlesim_background.yaml"/>
 
 </launch>

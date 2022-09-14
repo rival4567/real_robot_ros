@@ -10,7 +10,7 @@
 
     <!-- Run RViz with Moveit! Plugin -->
     <include file="$(find ur5e_moveit_config)/launch/moveit_rviz.launch" if="$(arg use_rviz)">
-        <arg name="rviz_config" value="$(find pkg_ur5e_r)/config/rviz/ur5e.rviz"/>
+        <arg name="rviz_config" value="$(find ur5e_moveit_config)/launch/moveit.rviz"/>
     </include>
 
     <!-- Add table to MoveIt! planning group in UR5e RViz -->

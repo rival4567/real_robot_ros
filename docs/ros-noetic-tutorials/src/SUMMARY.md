@@ -29,5 +29,3 @@
     - [Problem Statement](./ROS_Exercises/turtlesim_task/turtle-task.md)
     - [Expected Output](./ROS_Exercises/turtlesim_task/expected_output.md)
   - [Task on UR5e](./ROS_Exercises/ur5e_task/ur5e.md)
-    - [Problem Statement](./ROS_Exercises/ur5e_task/problem_statement.md)
-    - [Expected Output](./ROS_Exercises/ur5e_task/expected_output.md)

@@ -231,6 +231,10 @@ def main():
     ur5 = CartesianPath()
     tf = tfEcho()
 
+    pick_ball_srv = rospy.ServiceProxy(
+        '/ur5e/connect/GazeboGripper/activate', SchunkGripper)
+    pick_ball_srv.wait_for_service()
+
     ur5e_pick_joint_angles = tf.list_degrees_to_radians(
         [254.79, -100.37, -122.19, -48.98, -270.54, 44.03])
     ur5e_place_joint_angles = tf.list_degrees_to_radians(
@@ -238,27 +242,25 @@ def main():
     ur5e_home_joint_angles = tf.list_degrees_to_radians(
         [90, -90, 0, -90, 0, 90])
 
-    gripper_srv = rospy.ServiceProxy(
-        'ur5e/connect/GazeboGripper/activate', SchunkGripper)
-    rospy.wait_for_service(gripper_srv)
+    # gripper_srv = rospy.ServiceProxy(
+    #     'ur5e/connect/GazeboGripper/activate', SchunkGripper)
+    # rospy.wait_for_service(gripper_srv)
 
     while not rospy.is_shutdown():
         # Infinite loop unless Ctrl + C or some error.
 
         # Wait for packages to spawn.
         rospy.sleep(1)
-
         ur5.set_joint_angles(ur5e_pick_joint_angles)
-        gripper_srv.call("True")
+        pick_ball_srv.call(True)
         rospy.sleep(1)
-        ur5.ee_cartesian_translation(0, 0, 0.5)
+        ur5.ee_cartesian_translation(0, 0, -0.1)
         rospy.sleep(1)
         ur5.set_joint_angles(ur5e_place_joint_angles)
         rospy.sleep(1)
-        gripper_srv.call("False")
-        ur5.ee_cartesian_translation(0, 0, 0.1)
-        rospy.sleep(1)
-        ur5.set_joint_angles(ur5e_home_joint_angles)
+        pick_ball_srv.call(False)
+        ur5.ee_cartesian_translation(0, 0, -0.1)
+        break
 
 
 if __name__ == '__main__':
