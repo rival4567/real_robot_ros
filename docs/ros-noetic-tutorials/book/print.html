@@ -1,0 +1,1564 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>THD - Summer School: ROS</title>
+        <meta name="robots" content="noindex" />
+
+
+        <!-- Custom HTML head -->
+        
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "ayu" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item "><a href="ROS_Theory/bash-commands.html"><strong aria-hidden="true">1.</strong> Bash Terminal Basic Commands</a></li><li class="chapter-item "><a href="ROS_Theory/main.html"><strong aria-hidden="true">2.</strong> ROS Theory</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Theory/ROS_Workspace/main.html"><strong aria-hidden="true">2.1.</strong> ROS Workspace</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Theory/ROS_Workspace/create_a_catkin_workspace.html"><strong aria-hidden="true">2.1.1.</strong> Create a Catkin Workspace</a></li></ol></li><li class="chapter-item "><a href="ROS_Theory/ROS_Package/main.html"><strong aria-hidden="true">2.2.</strong> ROS Package</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Theory/ROS_Package/create_a_ros_package.html"><strong aria-hidden="true">2.2.1.</strong> Create a ROS Package</a></li></ol></li><li class="chapter-item "><a href="ROS_Theory/ROS_Master/main.html"><strong aria-hidden="true">2.3.</strong> ROS Master</a></li><li class="chapter-item "><a href="ROS_Theory/Additional_Sections/main.html"><strong aria-hidden="true">2.4.</strong> ROS using Turtlesim</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Theory/Additional_Sections/configuring_your_ros_environment.html"><strong aria-hidden="true">2.4.1.</strong> Configuring your ROS environment</a></li><li class="chapter-item "><a href="ROS_Theory/Additional_Sections/introducing_turtlesim_and_rqt.html"><strong aria-hidden="true">2.4.2.</strong> Introducing turtlesim and rqt</a></li><li class="chapter-item "><a href="ROS_Theory/Additional_Sections/ros_nodes.html"><strong aria-hidden="true">2.4.3.</strong> Understanding ROS nodes</a></li><li class="chapter-item "><a href="ROS_Theory/Additional_Sections/ros_topics.html"><strong aria-hidden="true">2.4.4.</strong> Understanding ROS topics</a></li><li class="chapter-item "><a href="ROS_Theory/Additional_Sections/ros_services.html"><strong aria-hidden="true">2.4.5.</strong> Understanding ROS services</a></li></ol></li><li class="chapter-item "><a href="ROS_Theory/ROS_Parameter_Server/main.html"><strong aria-hidden="true">2.5.</strong> ROS Parameter Server</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Theory/ROS_Parameter_Server/load_parameters_using_yaml_file.html"><strong aria-hidden="true">2.5.1.</strong> Load Parameters using YAML file</a></li><li class="chapter-item "><a href="ROS_Theory/ROS_Parameter_Server/ros_node_to_get_and_set_parameters.html"><strong aria-hidden="true">2.5.2.</strong> Example #1: ROS Node to Get and Set Parameters</a></li></ol></li><li class="chapter-item "><a href="ROS_Theory/ROS_with_python/create_a_ros_node.html"><strong aria-hidden="true">2.6.</strong> ROS with Python</a></li><li class="chapter-item "><a href="ROS_Theory/ROS_Launch_Files/main.html"><strong aria-hidden="true">2.7.</strong> ROS Launch Files</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Theory/ROS_Launch_Files/create_a_ros_launch_file.html"><strong aria-hidden="true">2.7.1.</strong> Create a ROS Launch File</a></li><li class="chapter-item "><a href="ROS_Theory/ROS_Launch_Files/launch_two_ros_nodes.html"><strong aria-hidden="true">2.7.2.</strong> Example #1: Launch two ROS Nodes</a></li><li class="chapter-item "><a href="ROS_Theory/ROS_Launch_Files/launch_turtle_in_forest.html"><strong aria-hidden="true">2.7.3.</strong> Example #2: Launch Turtle in Forest</a></li></ol></li><li class="chapter-item "><a href="ROS_Theory/ROS_with_gazebo/Gazebo.html"><strong aria-hidden="true">2.8.</strong> ROS with Gazebo</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Theory/ROS_with_gazebo/main.html"><strong aria-hidden="true">2.8.1.</strong> Gazebo Simulator</a></li><li class="chapter-item "><a href="ROS_Theory/ROS_with_gazebo/rviz.html"><strong aria-hidden="true">2.8.2.</strong> RViz</a></li></ol></li></ol></li><li class="chapter-item "><a href="ROS_Exercises/main.html"><strong aria-hidden="true">3.</strong> ROS Exercises</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Exercises/turtlesim_task/turtlesim.html"><strong aria-hidden="true">3.1.</strong> Task on Turtlesim</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="ROS_Exercises/turtlesim_task/turtle-task.html"><strong aria-hidden="true">3.1.1.</strong> Problem Statement</a></li><li class="chapter-item "><a href="ROS_Exercises/turtlesim_task/expected_output.html"><strong aria-hidden="true">3.1.2.</strong> Expected Output</a></li></ol></li><li class="chapter-item "><a href="ROS_Exercises/ur5e_task/ur5e.html"><strong aria-hidden="true">3.2.</strong> Task on UR5e</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">THD - Summer School: ROS</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        <a href="https://github.com/rival4567/real_robot_ros.git" title="Git repository" aria-label="Git repository">
+                            <i id="git-repository-button" class="fa fa-github"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="bash-terminal-basic-commands"><a class="header" href="#bash-terminal-basic-commands">Bash Terminal Basic Commands</a></h1>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: center">Command</th><th style="text-align: center">Output</th></tr></thead><tbody>
+<tr><td style="text-align: center">ls</td><td style="text-align: center">List directory contents</td></tr>
+<tr><td style="text-align: center">echo</td><td style="text-align: center">Prints text to the terminal window</td></tr>
+<tr><td style="text-align: center">touch</td><td style="text-align: center">Creates a file</td></tr>
+<tr><td style="text-align: center">mkdir</td><td style="text-align: center">Create a directory</td></tr>
+<tr><td style="text-align: center">pwd</td><td style="text-align: center">Print working directory</td></tr>
+<tr><td style="text-align: center">cd</td><td style="text-align: center">Change directory</td></tr>
+<tr><td style="text-align: center">mv</td><td style="text-align: center">Move or rename directory</td></tr>
+<tr><td style="text-align: center">less</td><td style="text-align: center">view the contents of a text file</td></tr>
+<tr><td style="text-align: center">cat</td><td style="text-align: center">Read a file, create a file, and concatenate files</td></tr>
+<tr><td style="text-align: center">chmod</td><td style="text-align: center">Sets the file permissions flag on a file or folder</td></tr>
+</tbody></table>
+</div><div style="break-before: page; page-break-before: always;"></div><h1 id="ros-basics"><a class="header" href="#ros-basics">ROS Basics</a></h1>
+<h2 id="difficulty-beginner"><a class="header" href="#difficulty-beginner">Difficulty: Beginner</a></h2>
+<hr />
+<p>The <strong>Robot Operating System (ROS)</strong> is a set of software libraries and tools for building robot applications. From drivers to state-of-the-art algorithms, and with powerful developer tools, ROS has what you need for your next robotics project. And it’s all open source.</p>
+<p>These tutorials are a collection of step-by-step instructions meant to steadily build skills.</p>
+<p>The best way to approach the tutorials is to walk through them for the first time in order, as they build off of each other and are not meant to be comprehensive documentation.</p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="catkin-workspace"><a class="header" href="#catkin-workspace">Catkin Workspace</a></h1>
+<ul>
+<li><strong>catkin</strong> is the official build system of ROS and the successor to the original ROS build system, rosbuild.</li>
+<li><strong>catkin</strong> combines CMake macros and Python scripts to provide some functionality on top of CMake’s normal workflow.</li>
+<li>catkin was designed to be more conventional than rosbuild, allowing for better distribution of packages, better cross-compiling support, and better portability.</li>
+</ul>
+<h2 id="src"><a class="header" href="#src">src</a></h2>
+<ul>
+<li>the <code>src</code> folder contains the source code of catkin packages. This is where you can extract/checkout/clone source code for the packages you want to build.</li>
+<li>Each folder within the <code>src</code> folder contains one or more catkin packages. This folder should remain unchanged by configuring, building, or installing.</li>
+<li>The root of the <code>src</code> folder contains a symbolic link to catkin’s boiler-plate ‘toplevel’ CMakeLists.txt file. This file is invoked by CMake during the configuration of the catkin projects in the workspace. It can be created by calling <code>catkin_init_workspace</code> in the <code>src</code> folder directory. When we execute the <code>catkin_make</code> command from the workspace folder, it checks inside the <code>src</code> folder and builds each package.</li>
+</ul>
+<h2 id="build"><a class="header" href="#build">build</a></h2>
+<ul>
+<li>The <code>build</code> folder is where CMake is invoked to <code>build</code> the catkin packages in the <code>src</code> folder.</li>
+<li>CMake and catkin keep their cache information and other intermediate files here.</li>
+<li>The <code>build</code> folder does not have to be contained within the workspace nor does it have to be outside of the <code>src</code> folder, but this is recommended.</li>
+</ul>
+<h2 id="devel"><a class="header" href="#devel">devel</a></h2>
+<ul>
+<li>The development folder (or <code>devel</code> folder) is where built targets are placed before installed.</li>
+<li>The way targets are organized in the <code>devel</code> folder is the same as their layout when they are installed.</li>
+<li>This provides a useful testing and development environment which does not require invoking the installation step.</li>
+<li>The location of the <code>devel</code> folder is controlled by a catkin specific CMake variable called <code>CATKIN_DEVEL_PREFIX</code>, and it defaults to build/devel folder.</li>
+<li>This is the default behavior because it might be confusing to CMake users if they invoked CMake in a <code>build</code> folder and that modified things outside of the current directory.</li>
+<li>It is recommended, however, to set the <code>devel</code> folder directory to be a peer of the <code>build</code> folder directory.</li>
+</ul>
+<pre><code class="language-bash">source ~/&lt;workspace_name&gt;/devel/setup.bash
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="create-a-catkin-workspace"><a class="header" href="#create-a-catkin-workspace">Create a Catkin Workspace</a></h1>
+<ol>
+<li>Open up the terminal <code>shortcut key: ctrl+alt+t</code>.</li>
+<li>Create the root workspace directory. You can name your directory anything we are using <code>workspace</code> as the name this time.</li>
+</ol>
+<pre><code class="language-bash">cd ~/
+mkdir -p ~/workspace/src
+cd workspace
+</code></pre>
+<ol start="3">
+<li>Run the following command:</li>
+</ol>
+<pre><code class="language-bash">catkin_make
+</code></pre>
+<ol start="4">
+<li>The <code>catkin_make</code> command is a convenience tool for working with catkin workspaces. Running it the first time in your workspace, it will create a <code>CMakeLists.txt</code> link in your <code>src</code> folder.</li>
+<li>Additionally, if you look in your current directory you should now have a ‘build’ and ‘devel’ folder.</li>
+</ol>
+<pre><code class="language-bash">ls
+</code></pre>
+<ol start="6">
+<li>Now to make your workspace visible to ROS. Source the setup file in the devel directory.</li>
+</ol>
+<pre><code class="language-bash">source ~/workspace/devel/setup.bash
+</code></pre>
+<p>By doing this, all the packages that you create inside the <code>src</code> folder will be visible to ROS.
+s
+7. This <code>setup.bash</code> file of your workspace must be source everytime when you want to use ROS packages created inside this workspace.</p>
+<ol start="8">
+<li>To make sure your workspace is properly overlayed by the setup script, make sure ROS_PACKAGE_PATH environment variable includes the directory you’re in.</li>
+</ol>
+<pre><code class="language-bash">echo $ROS_PACKAGE_PATH
+/home/youruser/workspace/src:/opt/ros/noetic/share
+</code></pre>
+<hr>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ros-package"><a class="header" href="#ros-package">ROS Package</a></h1>
+<ul>
+<li>ROS Packages according to ROS Wiki</li>
+</ul>
+<blockquote>
+<p>Software in ROS is organized in packages. A package might contain ROS nodes, a ROS-independent library, a dataset, configuration files, a third-party piece of software, or anything else that logically constitutes a useful module. The goal of these packages it to provide this useful functionality in an easy-to-consume manner so that software can be easily reused. In general, ROS packages follow a "Goldilocks" principle: enough functionality to be useful, but not too much that the package is heavyweight and difficult to use from other software.</p>
+</blockquote>
+<hr>
+<h3 id="reference"><a class="header" href="#reference">Reference</a></h3>
+<ol>
+<li><a href="http://wiki.ros.org/Packages">Packages</a></li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="create-a-ros-package"><a class="header" href="#create-a-ros-package">Create a ROS Package</a></h1>
+<ul>
+<li>This tutorial will demonstrate how to use the <code>catkin_create_pkg</code> script to create a new catkin package, and what you can do with it after it has been created.</li>
+</ul>
+<ol>
+<li>
+<p>First, navigate to the source space directory of the catkin workspace you’ve created.</p>
+<pre><code class="language-bash">cd ~/workspace/src
+</code></pre>
+</li>
+<li>
+<p>Now, use the catkin_create_pkg script to create a new package called pkg_ros_basics which depends on std_msgs, roscpp, and rospy:</p>
+<pre><code class="language-bash">catkin_create_pkg pkg_ros_basics std_msgs rospy roscpp
+</code></pre>
+<ul>
+<li>
+<p>This will create a beginner_tutorials folder which contains a <code>package.xml</code> and a <code>CMakeLists.txt</code>, which have been partially filled out with the information you gave <code>catkin_create_pkg</code>.</p>
+</li>
+<li>
+<p><code>catkin_create_pkg</code> requires that you give it a <code>package_name</code> and optionally a list of dependencies on which that package depends:</p>
+<pre><code class="language-bash">catkin_create_pkg &lt;package_name&gt; [depend1] [depend2] [depend3]
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Now, you need to build the packages in the catkin workspace:</p>
+<pre><code class="language-bash">cd ~/workspace
+catkin_make
+</code></pre>
+</li>
+</ol>
+<ul>
+<li>Inside the package, there are <code>src</code> folder, <code>package.xml</code>, <code>CMakeLists.txt</code>, and the <code>include</code> folders.
+<ul>
+<li><strong>CMakeLists.txt</strong>: This file has all the commands to build the ROS source code inside the package and create the executable. For more information about CMakeLists visit <a href="http://wiki.ros.org/catkin/CMakeLists.txt">here</a>.</li>
+<li><strong>package.xml</strong>: This is an XML file. It mainly contains the package dependencies, information, and so forth.</li>
+<li><strong>src</strong>: The source code of ROS packages are kept in this folder.</li>
+</ul>
+</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ros-master"><a class="header" href="#ros-master">ROS Master</a></h1>
+<ul>
+<li>
+<p>The <code>ROS Master</code> provides naming and registration services to the rest of the nodes in the ROS system.</p>
+</li>
+<li>
+<p>As you know ROS Nodes are building blocks of any ROS Application. A single ROS Application may have multiple ROS Nodes which communicate with each other. </p>
+</li>
+<li>
+<p>The role of the ROS Master is to enable individual ROS nodes to locate one another.</p>
+</li>
+<li>
+<p>Once these nodes have located each other they communicate with each other peer-to-peer.</p>
+</li>
+<li>
+<p>You can say, communication is established between nodes by the ROS Master. So, without <code>ROS Master</code> running ROS Nodes can not communicate with each other.</p>
+</li>
+</ul>
+<h2 id="start-ros-master"><a class="header" href="#start-ros-master">Start ROS Master</a></h2>
+<p>To start <code>ROS Master</code> you just have to enter the following command in the terminal.</p>
+<pre><code class="language-bash">roscore
+</code></pre>
+<p><img src="ROS_Theory/ROS_Master/ros-master.png" alt="ros-master.png" /></p>
+<p><code>roscore</code> is a collection of nodes and programs that are pre-requisites of a ROS-based system. You must have a roscore running in order for ROS nodes to communicate.</p>
+<p>So <a href="http://wiki.ros.org/roscore">roscore</a> will start the following:</p>
+<ol>
+<li>ROS Master</li>
+<li>ROS Parameter Server</li>
+<li><code>rosout</code> Logging Node</li>
+</ol>
+<p>In the preceding output, you can see information about the computer, parameter which list the name (noetic) and version number of ROS distribution, and some other information.</p>
+<h2 id="reading-assignment"><a class="header" href="#reading-assignment">Reading Assignment</a></h2>
+<ol>
+<li><a href="http://wiki.ros.org/Master">ROS Wiki - Master</a></li>
+<li><a href="http://wiki.ros.org/roscore">ROS Wiki - roscore</a></li>
+</ol>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introducing-ros-using-turtlesim"><a class="header" href="#introducing-ros-using-turtlesim">Introducing ROS using turtlesim</a></h1>
+<ul>
+<li>In this section, we will learn about <code>ROS Nodes</code>, <code>ROS Topics</code> and <code>ROS Services</code> using turtlesim examples.</li>
+<li>Commands will be directly executed from the bash terminal.</li>
+</ul>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="configuring-your-ros-environment"><a class="header" href="#configuring-your-ros-environment">Configuring your ROS environment</a></h1>
+<p><strong>Goal</strong>: This tutorial will show you how to prepare your ROS environment.</p>
+<h2 id="prerequisites"><a class="header" href="#prerequisites">Prerequisites</a></h2>
+<p>Before starting these tutorials please complete installation as described in the <a href="http://wiki.ros.org/ROS/Installation">ROS installation instructions</a>.</p>
+<h2 id="managing-your-environment"><a class="header" href="#managing-your-environment">Managing Your Environment</a></h2>
+<p>During the installation of ROS, you will see that you are prompted to source one of several setup.*sh files, or even add this ‘sourcing’ to your shell startup script. This is required because ROS relies on the notion of combining spaces using the shell environment. This makes developing against different versions of ROS or against different sets of packages easier.</p>
+<p>If you are ever having problems finding or using your ROS packages make sure that you have your environment properly setup. A good way to check is to ensure that environment variables like ROS_ROOT and ROS_PACKAGE_PATH are set: </p>
+<pre><code class="language-bash">$ printenv | grep ROS
+</code></pre>
+<pre><code class="language-bash">ROS_VERSION=1
+ROS_PYTHON_VERSION=3
+ROS_PACKAGE_PATH=/home/ubuntu/workspace/src:/opt/ros/noetic/share
+ROSLISP_PACKAGE_DIRECTORIES=/home/ubuntu/workspace/devel/share/common-lisp
+ROS_ETC_DIR=/opt/ros/noetic/etc/ros
+ROS_MASTER_URI=http://localhost:11311
+ROS_ROOT=/opt/ros/noetic/share/ros
+ROS_DISTRO=noetic
+</code></pre>
+<p>If they are not then you might need to ‘source’ some setup.*sh files. </p>
+<pre><code class="language-bash">$ source /opt/ros/noetic/setup.bash
+</code></pre>
+<blockquote>
+<p><strong>NOTE</strong>: You will need to run this command on every new shell you open to have access to the ROS commands, unless you add this line to your .bashrc.</p>
+</blockquote>
+<p>To add this line to .bashrc run this command:</p>
+<pre><code class="language-bash">echo &quot;source /opt/ros/noetic/setup.bash&quot; &gt;&gt; ~/.bashrc
+</code></pre>
+<p>To undo this (to change to another distro) in Linux and macOS, locate your system’s shell startup script and remove the appended source command.</p>
+<h2 id="summary"><a class="header" href="#summary">Summary</a></h2>
+<p>The ROS development environment needs to be correctly configured before use. This can be done in two ways: either sourcing the setup files in every new shell you open, or adding the source command to your startup script.</p>
+<p>If you ever face any problems locating or using packages with ROS, the first thing you should do is check your environment variables and ensure they are set to the version and distro you intended.</p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="introducing-turtlesim-and-rqt"><a class="header" href="#introducing-turtlesim-and-rqt">Introducing turtlesim and rqt</a></h1>
+<p><strong>Goal</strong>: Install and use the turtlesim package and rqt tools to prepare for upcoming tutorials.</p>
+<h2 id="background"><a class="header" href="#background">Background</a></h2>
+<p>Turtlesim is a lightweight simulator for learning ROS. It illustrates what ROS does at the most basic level, to give you an idea of what you will do with a real robot or robot simulation later on.</p>
+<p>rqt is a GUI tool for ROS. Everything done in rqt can be done on the command line, but it provides an easier, more user-friendly way to manipulate ROS elements.</p>
+<p>This tutorial touches on core ROS concepts, like the separation of nodes, topics, and services. All of these concepts will be elaborated on in later tutorials; for now, you will simply set up the tools and get a feel for them.</p>
+<h2 id="prerequisites-1"><a class="header" href="#prerequisites-1">Prerequisites</a></h2>
+<p>The previous tutorial, <a href="ROS_Theory/Additional_Sections/configuring_your_ros_environment.html">Configuring your ROS environment</a>, will show you how to set up your environment.</p>
+<h2 id="tasks"><a class="header" href="#tasks">Tasks</a></h2>
+<h3 id="1-start-rosmaster"><a class="header" href="#1-start-rosmaster">1 Start rosmaster</a></h3>
+<pre><code class="language-bash">roscore
+</code></pre>
+<h3 id="2-start-turtlesim"><a class="header" href="#2-start-turtlesim">2 Start turtlesim</a></h3>
+<p>To start turtlesim, enter the following command in your terminal:</p>
+<pre><code class="language-bash">rosrun turtlesim turtlesim_node
+</code></pre>
+<p>The simulator window should appear, with a random turtle in the center.</p>
+<p><img src="ROS_Theory/Additional_Sections/turtlesim_node-turtle1.png" alt="turtlesim_node-turtle1.png" /></p>
+<p>In the terminal under the command, you will see messages from the node:</p>
+<pre><code class="language-bash">[ INFO] [1622133713.331795042]: Starting turtlesim with node name /turtlesim
+[ INFO] [1622133713.335199049]: Spawning turtle [turtle1] at x=[5.544445], y=[5.544445], theta=[0.000000]
+</code></pre>
+<p>Here you can see your default turtle’s name is <code>turtle1</code>, and the default coordinates where it spawns.</p>
+<h3 id="3-use-turtlesim"><a class="header" href="#3-use-turtlesim">3 Use turtlesim</a></h3>
+<p>Open a new terminal and source ROS again.</p>
+<p>Now you will run a new node to control the turtle in the first node:</p>
+<pre><code class="language-bash">rosrun turtlesim turtle_teleop_key
+</code></pre>
+<p>At this point you should have four windows open: a terminal running <code>roscore</code>, a terminal running <code>turtlesim_node</code>, a terminal running <code>turtle_teleop_key</code> and the turtlesim window. Arrange these windows so that you can see the turtlesim window, but also have the terminal running <code>turtle_teleop_key</code> active so that you can control the turtle in turtlesim.</p>
+<p>Use the arrow keys on your keyboard to control the turtle. It will move around the screen, using its attached “pen” to draw the path it followed so far.</p>
+<blockquote>
+<p><strong>Note</strong>: Pressing an arrow key will only cause the turtle to move a short distance and then stop. This is because, realistically, you wouldn’t want a robot to continue carrying on an instruction if, for example, the operator lost the connection to the robot.</p>
+</blockquote>
+<p>You can see the nodes and their associated services, topics using the list command:</p>
+<pre><code class="language-bash">rosnode list
+rostopic list
+rosservice list
+</code></pre>
+<p>You will learn more about these concepts in the coming tutorials. Since the goal of this tutorial is only to get a general overview of turtlesim, we will use rqt (a graphical user interface for ROS) to look at services a little closer.</p>
+<h3 id="4-run-rqt"><a class="header" href="#4-run-rqt">4 Run rqt</a></h3>
+<p>Open a new terminal to run <code>rqt</code>:</p>
+<pre><code class="language-bash">rqt
+</code></pre>
+<p>After running rqt the first time, the window will be blank. No worries; just select Plugins &gt; Services &gt; Service Caller from the menu bar at the top.</p>
+<blockquote>
+<p><strong>Note</strong>: It may take some time for rqt to locate all the plugins itself. If you click on Plugins, but don’t see Services or any other options, you should close rqt, enter the command <code>rqt --force-discover</code> in your terminal.</p>
+</blockquote>
+<p>Use the refresh button to the left of the <strong>Service</strong> dropdown list to ensure all the services of your turtlesim node are available.</p>
+<p>Click on the Service dropdown list to see turtlesim’s services, and select the <code>/spawn</code> service.</p>
+<h4 id="41-try-the-spawn-service"><a class="header" href="#41-try-the-spawn-service">4.1 Try the spawn service</a></h4>
+<p>Let’s use rqt to call the <code>/spawn</code> service. You can guess from its name that <code>/spawn</code> will create another turtle in the turtlesim window.</p>
+<p>Give the new turtle a unique name, like <code>turtle2</code> by double-clicking between the empty single quotes in the Expression column. You can see that this expression corresponds to the <strong>name</strong> value, and is of type <strong>string</strong>.</p>
+<p>Enter new coordinates for the turtle to spawn at, like <code>x = 1.0</code> and <code>y = 1.0</code>.</p>
+<p><img src="ROS_Theory/Additional_Sections/rqt-spawn-turtle2.png" alt="rqt-spawn-turtle2.png" /></p>
+<blockquote>
+<p><strong>Note</strong>: If you try to spawn a new turtle with the same name as an existing turtle, like your default <code>turtle1</code>, you will get an error message in the terminal running <code>turtlesim_node</code>:</p>
+</blockquote>
+<pre><code class="language-bash">[ERROR] [1622134917.034342076]: A turtled named [turtle1] already exists
+</code></pre>
+<p>To spawn turtle2, you have to call the service by clicking the <strong>Call</strong> button on the upper right side of the rqt window.</p>
+<p>You will see a new turtle (again with a random design) spawn at the coordinates you input for <strong>x</strong> and <strong>y</strong>.</p>
+<p>If you refresh the service list in rqt, you will also see that now there are services related to the new turtle, <code>/turtle2/…</code>, in addition to <code>/turtle1/…</code>.</p>
+<h4 id="42-try-the-set_pen-service"><a class="header" href="#42-try-the-set_pen-service">4.2 Try the set_pen service</a></h4>
+<p>Now let’s give turtle1 a unique pen using the <code>/set_pen</code> service:</p>
+<p><img src="ROS_Theory/Additional_Sections/rqt-set-pen-turtle1.png" alt="rqt-set-pen-turtle1.png" /></p>
+<p>The values for <strong>r</strong>, <strong>g</strong> and <strong>b</strong>, between 0 and 255, will set the color of the pen turtle1 draws with, and <strong>width</strong> sets the thickness of the line.</p>
+<p>To have turtle1 draw with a distinct red line, change the value of <strong>r</strong> to 255, and the value of width to <strong>5</strong>. Don’t forget to call the service after updating the values.</p>
+<p>If you return to the terminal where <code>turtle_teleop_node</code> is running and press the arrow keys, you will see turtle1’s pen has changed.</p>
+<p><img src="ROS_Theory/Additional_Sections/turtlesim-set-pen-turtle1.png" alt="turtlesim-set-pen-turtle1.png" /></p>
+<p>You’ve probably noticed that there’s no way to move turtle2. You can accomplish this by remapping turtle1’s <code>cmd_vel</code> topic onto turtle2.</p>
+<h3 id="5-remapping"><a class="header" href="#5-remapping">5 Remapping</a></h3>
+<p>In a new terminal, source ROS, and run:</p>
+<pre><code class="language-bash">rosrun turtlesim turtlesim_node __name:=turtle2 --ros-args --remap turtle1/cmd_vel:=turtle2/cmd_vel
+</code></pre>
+<blockquote>
+<p><strong>Note</strong>: Notice that __name:=turtle2 starts the node with name <code>turtle2</code>. This avoids conflicts if we start two nodes with same name.</p>
+</blockquote>
+<p>Now you can move turtle2 when this terminal is active, and turtle1 when the other terminal running the <code>turtle_teleop_key</code> is active.</p>
+<p><img src="ROS_Theory/Additional_Sections/turtlesim-two-turtles.png" alt="turtlesim-two-turtles.png" /></p>
+<h3 id="close-turtlesim"><a class="header" href="#close-turtlesim">Close turtlesim</a></h3>
+<p>To stop the simulation, you can simply close the terminal windows where you ran <code>turtlesim_node</code> and <code>turtle_teleop_key</code>. If you want to keep those terminals open, but end the simulation, you can enter Ctrl + C in the turtlesim_node terminal, and q in the teleop terminal.</p>
+<h2 id="summary-1"><a class="header" href="#summary-1">Summary</a></h2>
+<p>Using turtlesim and rqt is a great way to learn the core concepts of ROS.</p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="understanding-ros-nodes"><a class="header" href="#understanding-ros-nodes">Understanding ROS nodes</a></h1>
+<p><strong>Goal</strong>: Learn about the function of nodes in ROS, and the tools to interact with them.</p>
+<h2 id="background-1"><a class="header" href="#background-1">Background</a></h2>
+<h3 id="1-the-ros-graph"><a class="header" href="#1-the-ros-graph">1 The ROS graph</a></h3>
+<p>Over the next few tutorials, you will learn about a series of core ROS concepts that make up what is referred to as the “ROS graph”.</p>
+<p>The ROS graph is a network of ROS elements processing data together at one time. It encompasses all executables and the connections between them if you were to map them all out and visualize them.</p>
+<h3 id="2-nodes-in-ros"><a class="header" href="#2-nodes-in-ros">2 Nodes in ROS</a></h3>
+<p>Each node in ROS should be responsible for a single, module purpose (e.g. one node for controlling wheel motors, one node for controlling a laser range-finder, etc). Each node can send and receive data to other nodes via topics, services, actions, or parameters.</p>
+<p><img src="ROS_Theory/Additional_Sections/node-graph.gif" alt="node-graph.gif" /></p>
+<p>A full robotic system is comprised of many nodes working in concert.</p>
+<h2 id="prerequisites-2"><a class="header" href="#prerequisites-2">Prerequisites</a></h2>
+<p>As always, don’t forget to source ROS in every new terminal you open. Also, run <code>roscore</code> in a
+separate terminal.</p>
+<h2 id="tasks-1"><a class="header" href="#tasks-1">Tasks</a></h2>
+<h3 id="1-rosrun"><a class="header" href="#1-rosrun">1 rosrun</a></h3>
+<p>The command <code>rosrun</code> launches an executable from a package.</p>
+<pre><code class="language-bash">rosrun &lt;package_name&gt; &lt;executable_name&gt;
+</code></pre>
+<p>To run turtlesim, open a new terminal, and enter the following command:</p>
+<pre><code class="language-bash">rosrun turtlesim turtlesim_node
+</code></pre>
+<p>Here, the package name is <code>turtlesim</code> and the executable name is <code>turtlesim_node</code>.</p>
+<p>We still don’t know the node name, however. You can find node names by using <code>rosnode list</code></p>
+<h3 id="2-rosnode-list"><a class="header" href="#2-rosnode-list">2 rosnode list</a></h3>
+<p><code>rosnode list</code> will show you the names of all running nodes. This is especially useful when you want to interact with a node, or when you have a system running many nodes and need to keep track of them.</p>
+<p>Open a new terminal while turtlesim is still running in the other one, and enter the following command:</p>
+<pre><code class="language-bash">rosnode list
+</code></pre>
+<p>The terminal will return the node name:</p>
+<pre><code class="language-bash">/rosout
+/turtlesim
+</code></pre>
+<p>Open another new terminal and start the teleop node with the command:</p>
+<pre><code class="language-bash">rosrun turtlesim turtle_teleop_key
+</code></pre>
+<p>Here, we are searching the <code>turtlesim</code> package again, this time for the executable named <code>turtle_teleop_key</code>.</p>
+<p>Return to the terminal where you ran <code>rosnode list</code> and run it again. You will now see the names of two active nodes:</p>
+<pre><code class="language-bash">/rosout
+/teleop_turtle
+/turtlesim
+</code></pre>
+<h4 id="21-remapping"><a class="header" href="#21-remapping">2.1 Remapping</a></h4>
+<p><a href="http://wiki.ros.org/Remapping%20Arguments">Remapping</a> allows you to reassign default node properties, like node name, topic names, service names, etc., to custom values. In the last tutorial, you used remapping on <code>turtle_teleop_key</code> to change the default turtle being controlled.</p>
+<p>Now, lets reassign the name of our <code>/turtlesim</code> node. In a new terminal, run the following command:</p>
+<pre><code class="language-bash">rosrun turtlesim turtlesim_node __name:=my_turtle
+</code></pre>
+<p>Since you’re calling <code>rosrun</code> on turtlesim again, another turtlesim window will open. However, now if you return to the terminal where you ran <code>rosnode list</code>, and run it again, you will see three node names:</p>
+<pre><code class="language-bash">/my_turtle
+/rosout
+/teleop_turtle
+/turtlesim
+</code></pre>
+<h3 id="3-rosnode-info"><a class="header" href="#3-rosnode-info">3 rosnode info</a></h3>
+<p>Now that you know the names of your nodes, you can access more information about them with:</p>
+<pre><code class="language-bash">rosnode info &lt;node_name&gt;
+</code></pre>
+<p>To examine your latest node, <code>my_turtle</code>, run the following command:</p>
+<pre><code class="language-bash">rosnode info /my_turtle
+</code></pre>
+<p><code>rosnode info</code> returns a list of subscribers, publishers, services, and actions (the ROS graph connections) that interact with that node. The output should look like this:</p>
+<pre><code class="language-bash">Node [/my_turtle]
+Publications: 
+ * /rosout [rosgraph_msgs/Log]
+ * /turtle1/color_sensor [turtlesim/Color]
+ * /turtle1/pose [turtlesim/Pose]
+
+Subscriptions: 
+ * /turtle1/cmd_vel [geometry_msgs/Twist]
+
+Services: 
+ * /clear
+ * /kill
+ * /my_turtle/get_loggers
+ * /my_turtle/set_logger_level
+ * /reset
+ * /spawn
+ * /turtle1/set_pen
+ * /turtle1/teleport_absolute
+ * /turtle1/teleport_relative
+
+
+contacting node http://ros-noetic:44953/ ...
+Pid: 878
+Connections:
+ * topic: /rosout
+    * to: /rosout
+    * direction: outbound (40097 - 10.104.247.68:60584) [18]
+    * transport: TCPROS
+ * topic: /turtle1/cmd_vel
+    * to: /teleop_turtle (http://ros-noetic:44321/)
+    * direction: inbound (58058 - ros-noetic:47853) [17]
+    * transport: TCPROS
+</code></pre>
+<p>Now try running the same command on the <code>/teleop_turtle node</code>, and see how its connections differ from <code>my_turtle</code>.</p>
+<p>You will learn more about ROS graph connection concepts in the upcoming tutorials.</p>
+<h2 id="summary-2"><a class="header" href="#summary-2">Summary</a></h2>
+<p>A node is a fundamental ROS element that serves a single, modular purpose in a robotics system.</p>
+<p>In this tutorial, you utilized nodes created from the <code>turtlesim</code> package by running the executables <code>turtlesim_node</code> and <code>turtle_teleop_key</code>.</p>
+<p>You learned how to use <code>rosnode list</code> to discover active node names and <code>rosnode info</code> to introspect on a single node. These tools are vital to understanding the flow of data in a complex, real-world robot system.</p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="understanding-ros-topics"><a class="header" href="#understanding-ros-topics">Understanding ROS topics</a></h1>
+<p><strong>Goal</strong>: Use rqt_graph and command line tools to introspect ROS topics.</p>
+<h2 id="background-2"><a class="header" href="#background-2">Background</a></h2>
+<p>ROS breaks complex systems down into many modular nodes. Topics are a vital element of the ROS graph that act as a bus for nodes to exchange messages.</p>
+<p><img src="ROS_Theory/Additional_Sections/topic-single-publisher-and-single-subscriber.gif" alt="topic-single-publisher-and-single-subscriber.gif" /></p>
+<p>A node may publish data to any number of topics and simultaneously have subscriptions to any number of topics.</p>
+<p><img src="ROS_Theory/Additional_Sections/topic-multiple.gif" alt="topic-multiple.gif" /></p>
+<p>Topics are one of the important ways that data moves between nodes, and therefore between different parts of the system.</p>
+<h2 id="prerequisites-3"><a class="header" href="#prerequisites-3">Prerequisites</a></h2>
+<p>As always, don’t forget to source ROS 2 in every new terminal you open. Run <code>roscore</code> in a separate terminal.</p>
+<h2 id="tasks-2"><a class="header" href="#tasks-2">Tasks</a></h2>
+<h3 id="1-setup"><a class="header" href="#1-setup">1 Setup</a></h3>
+<p>By now you should be comfortable starting up turtlesim.</p>
+<p>Open a new terminal and run:</p>
+<pre><code class="language-bash">rosrun turtlesim turtlesim_node
+</code></pre>
+<p>Open another terminal and run:</p>
+<pre><code class="language-bash">rosrun turtlesim turtle_teleop_key
+</code></pre>
+<p>Recall from the [previous tutorial] that the names of these nodes are <code>/turtlesim</code> and <code>/teleop_turtle</code> by default.</p>
+<h3 id="2-rqt_graph"><a class="header" href="#2-rqt_graph">2 rqt_graph</a></h3>
+<p>Throughout this tutorial, we will use <code>rqt_graph</code> to visualize the changing nodes and topics, as well as the connections between them.</p>
+<p>To run rqt_graph, open a new terminal and enter the command:</p>
+<pre><code class="language-bash">rqt_graph
+</code></pre>
+<p>You can also open <code>rqt_graph</code> by opening rqt and selecting <strong>Plugins</strong> &gt; <strong>Introspection</strong> &gt; <strong>Nodes Graph</strong>.</p>
+<p><img src="ROS_Theory/Additional_Sections/rqt-graph-rostopic.png" alt="rqt-graph-rostopic.png" /></p>
+<p>You should see the above nodes and topic. If you hover your mouse over the topic in the center, you’ll see the color highlighting like in the image above.</p>
+<p>The graph is depicting how the <code>/turtlesim</code> node and the <code>/teleop_turtle</code> node are communicating with each other over a topic. The <code>/teleop_turtle</code> node is publishing data (the keystrokes you enter to move the turtle around) to the <code>/turtle1/cmd_vel</code> topic, and the <code>/turtlesim</code> node is subscribed to that topic to receive the data.</p>
+<p>The highlighting feature of <strong>rqt_graph</strong> is very helpful when examining more complex systems with many nodes and topics connected in many different ways.</p>
+<p><code>rqt_graph</code> is a graphical introspection tool. Now we’ll look at some command line tools for introspecting topics.</p>
+<h3 id="rostopic-list"><a class="header" href="#rostopic-list">rostopic list</a></h3>
+<p>Running the <code>rostopic list</code> command in a new terminal will return a list of all the topics currently active in the system:</p>
+<pre><code class="language-bash">/rosout
+/rosout_agg
+/statistics
+/turtle1/cmd_vel
+/turtle1/color_sensor
+/turtle1/pose
+</code></pre>
+<p>Topics have names and types. These attributes, particularly the type, are how nodes know they’re talking about the same information as it moves over topics. To show the topic type run this command:</p>
+<pre><code class="language-bash">rostopic type /turtle1/cmd_vel 
+</code></pre>
+<pre><code class="language-bash">geometry_msgs/Twist
+</code></pre>
+<p>If you’re wondering where all these topics are in rqt_graph, you can uncheck all the boxes under Hide:</p>
+<p><img src="ROS_Theory/Additional_Sections/rqt-graph-unhidden.png" alt="rqt-graph-unhidden.png" /></p>
+<p>For now, though, leave those options checked to avoid confusion.</p>
+<h3 id="4-rostopic-echo"><a class="header" href="#4-rostopic-echo">4 rostopic echo</a></h3>
+<p>To see the data being published on a topic, use:</p>
+<pre><code class="language-bash">rostopic echo &lt;topic_name&gt;
+</code></pre>
+<p>Since we know that <code>/teleop_turtle</code> publishes data to <code>/turtlesim</code> over the <code>/turtle1/cmd_vel</code> topic, let’s use echo to introspect on that topic:</p>
+<pre><code class="language-bash">rostopic echo /turtle1/cmd_vel
+</code></pre>
+<p>At first, this command won’t return any data. That’s because it’s waiting for <code>/teleop_turtle</code> to publish something.</p>
+<p>Return to the terminal where <code>turtle_teleop_key</code> is running and use the arrows to move the turtle around. Watch the terminal where your <code>echo</code> is running at the same time, and you’ll see position data being published for every movement you make:</p>
+<pre><code class="language-bash">linear: 
+  x: 2.0
+  y: 0.0
+  z: 0.0
+angular: 
+  x: 0.0
+  y: 0.0
+  z: 0.0
+---
+</code></pre>
+<p>Now return to rqt_graph and uncheck the Debug box.</p>
+<p><img src="ROS_Theory/Additional_Sections/rqt-graph-cli.png" alt="rqt-graph-cli.png" /></p>
+<p><code>/rostopic_2309_1622187461192</code> is the node created by the <code>echo</code> we just ran (the number will change). Now you can see that the publisher is publishing data over the <code>cmd_vel</code> topic, and two subscribers are subscribed.</p>
+<h3 id="5-rostopic-info"><a class="header" href="#5-rostopic-info">5 rostopic info</a></h3>
+<p>Topics don’t have to only be point-to-point communication; it can be one-to-many, many-to-one, or many-to-many.</p>
+<p>Another way to look at this is running:</p>
+<pre><code class="language-bash">rostopic info /turtle1/cmd_vel
+</code></pre>
+<p>Which will return:</p>
+<pre><code class="language-bash">Type: geometry_msgs/Twist
+
+Publishers: 
+ * /teleop_turtle (http://ros-noetic:44037/)
+
+Subscribers: 
+ * /turtlesim (http://ros-noetic:44297/)
+ * /rostopic_2309_1622187461192 (http://ros-noetic:45255/)
+</code></pre>
+<h3 id="6-rosmsg-show"><a class="header" href="#6-rosmsg-show">6 rosmsg show</a></h3>
+<p>Nodes send data over topics using messages. Publishers and subscribers must send and receive the same type of message to communicate.</p>
+<p>The topic types we saw earlier after running <code>rostopic type &lt;topic-name&gt;</code> let us know what type of messages each topic can send. Recall that the <code>cmd_vel</code> topic has the type:</p>
+<pre><code class="language-bash">geometry_msgs/Twist
+</code></pre>
+<p>This means that in the package <code>geometry_msgs</code> there is a message called <code>Twist</code>.</p>
+<p>Now we can run `rosmsg show <type>.msg on this type to learn its details, specifically, what structure of data the message expects.</p>
+<pre><code class="language-bash">rosmsg show geometry_msgs/Twist
+</code></pre>
+<pre><code class="language-bash">geometry_msgs/Vector3 linear
+  float64 x
+  float64 y
+  float64 z
+geometry_msgs/Vector3 angular
+  float64 x
+  float64 y
+  float64 z
+</code></pre>
+<p>This tells you that the <code>/turtlesim</code> node is expecting a message with two vectors, <code>linear</code> and <code>angular</code>, of three elements each. If you recall the data we saw <code>/teleop_turtle</code> passing to <code>/turtlesim</code> with the <code>echo</code> command, it’s in the same structure:</p>
+<pre><code class="language-bash">linear: 
+  x: 2.0
+  y: 0.0
+  z: 0.0
+angular: 
+  x: 0.0
+  y: 0.0
+  z: 0.0
+---
+</code></pre>
+<h3 id="rostopic-pub"><a class="header" href="#rostopic-pub">rostopic pub</a></h3>
+<p>Now that you have the message structure, you can publish data onto a topic directly from the command line using:</p>
+<pre><code class="language-bash">rostopic pub &lt;topic_name&gt; &lt;msg_type&gt; '&lt;args&gt;'
+</code></pre>
+<p>The <code>'&lt;args&gt;'</code> argument is the actual data you’ll pass to the topic, in the structure you just discovered in the previous section.</p>
+<p>It’s important to note that this argument needs to be input in YAML syntax. Input the full command like so:</p>
+<pre><code class="language-bash">rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist &quot;{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}&quot;
+</code></pre>
+<p><code>-1</code> is an optional argument meaning “publish one message then exit”.</p>
+<p>You will receive the following message in the terminal:</p>
+<pre><code class="language-bash">publishing and latching message for 3.0 seconds
+</code></pre>
+<p>And you will see your turtle move like so:</p>
+<p><img src="ROS_Theory/Additional_Sections/turtle1-rostopic-pub-once.png" alt="turtle1-rostopic-pub-once.png" /></p>
+<p>The turtle (and commonly the real robots which it is meant to emulate) require a steady stream of commands to operate continuously. So, to get the turtle to keep moving, you can run:</p>
+<pre><code class="language-bash">rostopic pub -r 1 /turtle1/cmd_vel geometry_msgs/Twist &quot;{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}&quot;
+</code></pre>
+<p>The difference here is the removal of the <code>-1</code> option and the addition of the <code>--rate 1</code> option, which tells <code>rostopic pub</code> to publish the command in a steady stream at 1 Hz.</p>
+<p><img src="ROS_Theory/Additional_Sections/turtle1-rostopic-pub.gif" alt="turtle1-rostopic-pub.gif" /></p>
+<p>You can refresh <strong>rqt_graph</strong> to see what’s happening graphically. You will see the <code>rostopic pub ... </code> node (<code>/rostopic_3050_1622189437717</code>) is publishing over the <code>/turtle1/cmd_vel</code> topic, and is being received by both the <code>rostopic echo ... </code> node (<code>/rostopic_2309_1622187461192</code>) and the <code>/turtlesim node</code> now.</p>
+<p><img src="ROS_Theory/Additional_Sections/rqt_graph-pub.png" alt="rqt_graph-pub.png" /></p>
+<p>Finally, you can run <code>echo</code> on the <code>pose</code> topic and recheck rqt_graph:</p>
+<pre><code class="language-bash">rostopic echo /turtle1/pose
+</code></pre>
+<p><img src="ROS_Theory/Additional_Sections/rqt_graph-echo-pose.png" alt="rqt_graph-echo-pose.png" /></p>
+<p>In this case, <code>/turtlesim</code> is now publishing to the <code>pose</code> topic, and a new <code>echo</code> node is subscribed.</p>
+<h3 id="8-rostopic-hz"><a class="header" href="#8-rostopic-hz">8 rostopic hz</a></h3>
+<p>For one last introspection on this process, you can report the rate at which data is published using:</p>
+<pre><code class="language-bash">rostopic hz /turtle1/pose 
+</code></pre>
+<p>It will return data on the rate at which the <code>/turtlesim</code> node is publishing data to the <code>pose</code> topic.</p>
+<pre><code class="language-bash">average rate: 62.527
+	min: 0.015s max: 0.017s std dev: 0.00041s window: 62
+</code></pre>
+<p>Recall that you set the rate of <code>turtle1/cmd_vel</code> to publish at a steady 1 Hz using <code>rostopic pub -r 1</code>. If you run the above command with <code>turtle1/cmd_vel</code> instead of <code>turtle1/pose</code>, you will see an average reflecting that rate.</p>
+<h3 id="9-clean-up"><a class="header" href="#9-clean-up">9 Clean up</a></h3>
+<p>At this point you’ll have a lot of nodes running. Don’t forget to stop them, either by closing the terminal windows or entering <code>Ctrl+C</code> in each terminal.</p>
+<h2 id="summary-3"><a class="header" href="#summary-3">Summary</a></h2>
+<p>Nodes publish information over topics, which allows any number of other nodes to subscribe to and access that information. In this tutorial you examined the connections between several nodes over topics using rqt_graph and command line tools. You should now have a good idea of how data moves around a ROS system.</p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="understanding-ros-services"><a class="header" href="#understanding-ros-services">Understanding ROS Services</a></h1>
+<p><strong>Goal</strong>: Learn about services in ROS using command line tools.</p>
+<h2 id="background-3"><a class="header" href="#background-3">Background</a></h2>
+<p>Services are another method of communication for nodes in the ROS graph. Services are based on a call-and-response model, versus topics’ publisher-subscriber model. While topics allow nodes to subscribe to data streams and get continual updates, services only provide data when they are specifically called by a client.</p>
+<p><img src="ROS_Theory/Additional_Sections/Service-SingleServiceClient.gif" alt="Service-SingleServiceClient.gif" /></p>
+<p><img src="ROS_Theory/Additional_Sections/Service-MultipleServiceClient.gif" alt="Service-MultipleServiceClient.gif" /></p>
+<h2 id="prerequisites-4"><a class="header" href="#prerequisites-4">Prerequisites</a></h2>
+<p>As always, don’t forget to source ROS in every new terminal you open.</p>
+<p>Run <code>roscore</code> in a separate terminal.</p>
+<h2 id="tasks-3"><a class="header" href="#tasks-3">Tasks</a></h2>
+<h3 id="1-setup-1"><a class="header" href="#1-setup-1">1 Setup</a></h3>
+<p>Start up the two turtlesim nodes, <code>/turtlesim</code> and <code>/teleop_turtle</code>.</p>
+<p>Open a new terminal and run:</p>
+<pre><code class="language-bash">rosrun turtlesim turtlesim_node
+</code></pre>
+<p>Open another terminal and run:</p>
+<pre><code class="language-bash">rosrun turtlesim turtle_teleop_key
+</code></pre>
+<h3 id="2-rosservice-list"><a class="header" href="#2-rosservice-list">2 rosservice list</a></h3>
+<p>Running the <code>rosservice list</code> command in a new terminal will return a list of all the services currently active in the system:</p>
+<pre><code class="language-bash">/clear
+/kill
+/reset
+/rosout/get_loggers
+/rosout/set_logger_level
+/spawn
+/teleop_turtle/get_loggers
+/teleop_turtle/set_logger_level
+/turtle1/set_pen
+/turtle1/teleport_absolute
+/turtle1/teleport_relative
+/turtlesim/get_loggers
+/turtlesim/set_logger_level
+</code></pre>
+<p>For now, let’s focus on the turtlesim-specific services, <code>/clear</code>, <code>/kill</code>, <code>/reset</code>, <code>/spawn</code>, <code>/turtle1/set_pen</code>, <code>/turtle1/teleport_absolute</code>, and <code>/turtle1/teleport_relative</code>. You may recall interacting with some of these services using rqt in the `[<a href="ROS_Theory/Additional_Sections/introducing_turtlesim_and_rqt.html">“Introducing turtlesim and rqt”</a> tutorial.</p>
+<h3 id="3-rosservice-type"><a class="header" href="#3-rosservice-type">3 rosservice type</a></h3>
+<p>Services have types that describe how the request and response data of a service is structured. Service types are defined similarly to topic types, except service types have two parts: one message for the request and another for the response.</p>
+<p>To find out the type of a service, use the command:</p>
+<pre><code class="language-bash">rosservice type &lt;service_name&gt;
+</code></pre>
+<p>Let’s take a look at turtlesim’s <code>/clear</code> service. In a new terminal, enter the command:</p>
+<pre><code class="language-bash">rosservice type /clear
+</code></pre>
+<p>Which should return:</p>
+<pre><code class="language-bash">std_srvs/Empty
+</code></pre>
+<p>The <code>Empty</code> type means the service call sends no data when making a request and receives no data when receiving a response.</p>
+<h3 id="4-rosservice-find"><a class="header" href="#4-rosservice-find">4 rosservice find</a></h3>
+<p>If you want to find all the services of a specific type, you can use the command:</p>
+<pre><code class="language-bash">rosservice find &lt;type_name&gt;
+</code></pre>
+<p>For example, you can find all the <code>Empty</code> typed services like this:</p>
+<pre><code class="language-bash">rosservice find std_srvs/Empty 
+</code></pre>
+<p>Which will return:</p>
+<pre><code class="language-bash">/clear
+/reset
+</code></pre>
+<h3 id="5-rossrv-show"><a class="header" href="#5-rossrv-show">5 rossrv show</a></h3>
+<p>You can call services from the command line, but first you need to know the structure of the input arguments.</p>
+<pre><code class="language-bash">rossrv show &lt;type_name&gt;
+</code></pre>
+<p>To run this command on the <code>/clear</code> service’s type, <code>Empty</code>:</p>
+<pre><code class="language-bash">rossrv show std_srvs/Empty 
+</code></pre>
+<p>Which will return:</p>
+<pre><code class="language-bash">---
+</code></pre>
+<p>The <code>---</code> separates the request structure (above) from the response structure (below). But, as you learned earlier, the <code>Empty</code> type doesn’t send or receive any data. So, naturally, its structure is blank.</p>
+<p>Let’s introspect a service with a type that sends and receives data, like <code>/spawn</code>. From the results of <code>rosservice list</code> and <code>rosservice type</code>, we know <code>/spawn</code>’s type is <code>turtlesim/Spawn</code>.</p>
+<p>To see the arguments in a <code>/spawn</code> call-and-request, run the command:</p>
+<pre><code class="language-bash">rossrv show turtlesim/Spawn 
+</code></pre>
+<p>Which will return:</p>
+<pre><code class="language-bash">float32 x
+float32 y
+float32 theta
+string name
+---
+string name
+</code></pre>
+<p>The information above the <code>---</code> line tells us the arguments needed to call <code>/spawn</code>. <code>x</code>, <code>y</code> and <code>theta</code> determine the location of the spawned turtle, and <code>name</code> is clearly optional.</p>
+<p>The information below the line isn’t something you need to know in this case, but it can help you understand the data type of the response you get from the call.</p>
+<h3 id="6-rosservice-call"><a class="header" href="#6-rosservice-call">6 rosservice call</a></h3>
+<p>Now that you know what a service type is, how to find a service’s type, and how to find the structure of that type’s arguments, you can call a service using:</p>
+<pre><code class="language-bash">rosservice call &lt;service_name&gt; &lt;arguments&gt;
+</code></pre>
+<p>The <code>&lt;arguments&gt;</code> part is optional. For example, you know that <code>Empty</code> typed services don’t have any arguments:</p>
+<pre><code class="language-bash">rosservice call /clear
+</code></pre>
+<p>This command will clear the turtlesim window of any lines your turtle has drawn.</p>
+<p><img src="ROS_Theory/Additional_Sections/rosservice-call-clear-before.png" alt="rosservice-call-clear-before.png" /></p>
+<p><img src="ROS_Theory/Additional_Sections/rosservice-call-clear-after.png" alt="rosservice-call-clear-after.png" /></p>
+<p>Now let’s spawn a new turtle by calling <code>/spawn</code> and inputting arguments. Input <code>&lt;arguments&gt;</code> in a service call from the command-line need to be in YAML syntax.</p>
+<p>Enter the command:</p>
+<pre><code class="language-bash">rosservice call /spawn &quot;{x: 2, y: 2, theta: 0.2, name: ''}&quot;
+</code></pre>
+<p>You will get this output on terminal:</p>
+<pre><code class="language-bash">name: &quot;turtle2&quot;
+</code></pre>
+<p>Your turtlesim window will update with the newly spawned turtle right away:</p>
+<p><img src="ROS_Theory/Additional_Sections/rosservice-call-spawn.png" alt="rosservice-call-spawn.png" /></p>
+<h2 id="summary-4"><a class="header" href="#summary-4">Summary</a></h2>
+<p>Nodes can communicate using services in ROS. Unlike a topic - a one way communication pattern where a node publishes information that can be consumed by one or more subscribers - a service is a request/response pattern where a client makes a request to a node providing the service and the service processes the request and generates a reponse.</p>
+<p>You generally don’t want to use a service for continuous calls; topics or even actions would be better suited.</p>
+<p>In this tutorial you used command line tools to identify, elaborate on, and call services.</p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ros-parameter-server"><a class="header" href="#ros-parameter-server">ROS Parameter Server</a></h1>
+<ul>
+<li>
+<p>You can think Parameter Server as a space where all the necessary data that needs to be shared among various ROS Nodes is stored.</p>
+</li>
+<li>
+<p>Parameter Server runs inside ROS Master.</p>
+</li>
+<li>
+<p>ROS Nodes can view and even modify data stored in the Parameter Server.</p>
+</li>
+<li>
+<p>Typically Parameter Server is used to store configuration parameters.</p>
+</li>
+</ul>
+<h2 id="reading-assignment-1"><a class="header" href="#reading-assignment-1">Reading Assignment</a></h2>
+<ol>
+<li><a href="http://wiki.ros.org/Parameter%20Server">ROS Wiki - Parameter Server</a></li>
+</ol>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="load-parameters-using-yaml-file"><a class="header" href="#load-parameters-using-yaml-file">Load Parameters using YAML file</a></h1>
+<p>In this section we will learn how to load your own parameters in ROS Parameter Server using a YAML File.</p>
+<h2 id="steps"><a class="header" href="#steps">Steps</a></h2>
+<ol>
+<li>
+<p>Navigate to <code>pkg_ros_basics</code>.</p>
+<pre><code class="language-bash">cd ~/workspace/src/pkg_ros_basics
+</code></pre>
+<p>OR</p>
+<pre><code class="language-bash">roscd pkg_ros_basics
+</code></pre>
+<blockquote>
+<p><strong>NOTE</strong>: <code>roscd</code> will work only if you have sourced <code>setup.bash</code> of your catkin workspace.</p>
+</blockquote>
+</li>
+<li>
+<p>Create a <code>config</code> folder for your Python scripts and navigate into the folder.</p>
+<pre><code class="language-bash">mkdir config
+cd config
+</code></pre>
+</li>
+<li>
+<p>Create a configuration YAML file called <code>config_my.yaml</code>.</p>
+<pre><code class="language-bash">touch config_my.yaml
+</code></pre>
+</li>
+<li>
+<p>Open the script in any text-editor and start editing.</p>
+<pre><code class="language-bash">gedit config_my.yaml
+</code></pre>
+</li>
+<li>
+<p>Now fill your config file.</p>
+<pre><code class="language-yaml"># Comment: config_my.yaml Configuration
+details:
+    name:
+        first: &quot;Heisenberg&quot; # First Name
+        last: &quot;White&quot; # Last Name
+     contact:
+         address: &quot;ABQ Street, ABQ&quot; # Address
+         phone: 77777    # Contact
+</code></pre>
+<center><a href="ROS_Theory/ROS_Parameter_Server/config_my.yaml" download><button>Download</button></a></center>
+<ul>
+<li>
+<p>ROS Build system will create a Python Dictionary called <code>details</code>.</p>
+</li>
+<li>
+<p>This dictionary will have two keys,</p>
+<ol>
+<li>Dictionary <code>name</code></li>
+<li>Dictionary <code>contact</code></li>
+</ol>
+</li>
+<li>
+<p>In your ROS Node you can use <code>rospy</code> to get parameters stored in this <code>config_my</code> dictionary.</p>
+<pre><code class="language-python">param_config_my = rospy.get_param('details')
+
+first_name = param_config_my['name']['first']
+phone = param_config_my['contact']['phone']
+</code></pre>
+</li>
+</ul>
+<br />
+</li>
+<li>
+<p>Now if you want to load the parameters defined in the YAML file you have to first start the ROS Parameter Server.</p>
+<p>Open up a new terminal and enter the following.</p>
+<pre><code class="language-bash">roscore
+</code></pre>
+</li>
+<li>
+<p>Now load your parameters.</p>
+<pre><code class="language-bash">rosparam load config_my.yaml
+</code></pre>
+</li>
+<li>
+<p>Now get the list of parameters loaded in your ROS Parameter Server.</p>
+<pre><code class="language-bash">rosparam list
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-bash">/details/contact/address
+/details/contact/phone
+/details/name/first
+/details/name/last
+/rosdistro
+/roslaunch/uris/host_ros_noetic__35261
+/rosversion
+/run_id
+</code></pre>
+<p>Here you can see the first four parameters are loaded from our <code>config_my.yaml</code> file.</p>
+</li>
+<li>
+<p>Now to view the content of any parameter do the following.</p>
+<pre><code class="language-bash">rosparam get /details/contact/phone
+</code></pre>
+<p>Output:</p>
+<pre><code class="language-bash">77777
+</code></pre>
+<p>This is the value which we defined in the <code>config_my.yaml</code> file.</p>
+<p><img src="ROS_Theory/ROS_Parameter_Server/rosparam-load-config_my.png" alt="rosparam-load-config_my.png" /></p>
+</li>
+</ol>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="example-1-ros-node-to-get-and-set-parameters"><a class="header" href="#example-1-ros-node-to-get-and-set-parameters">Example #1: ROS Node to Get and Set Parameters</a></h1>
+<h2 id="aim"><a class="header" href="#aim">Aim</a></h2>
+<p>To write a ROS Node to read <code>config_my.yaml</code> file loaded in ROS Parameter Server (<a href="ROS_Theory/ROS_Parameter_Server/load_parameters_using_yaml_file.html#Load-Parameters-using-YAML-file">done here</a>), print it on the console and modify the phone number.</p>
+<h2 id="code"><a class="header" href="#code">Code</a></h2>
+<p><code>node_param_get_set.py</code></p>
+<pre><code class="language-python">#!/usr/bin/env python3
+
+import rospy
+
+
+def main():    
+    
+    # 1. Make the script a ROS Node.
+    rospy.init_node('node_param_get_set', anonymous=True)
+
+    # 2. Read from Parameter Server
+    rospy.loginfo(&quot;Reading from Parameter Server.&quot;)
+
+    
+    param_config_my = rospy.get_param('details')    # Get all the parameters inside 'details'
+
+    # Store the parameters in variables
+    first_name = param_config_my['name']['first']
+    last_name = param_config_my['name']['last']
+    address = param_config_my['contact']['address']
+    phone = param_config_my['contact']['phone']
+
+    # Print the parameters
+    rospy.loginfo(&quot;&gt;&gt; First Name: {}&quot;.format(first_name))
+    rospy.loginfo(&quot;&gt;&gt; Last Name: {}&quot;.format(last_name))
+    rospy.loginfo(&quot;&gt;&gt; Address: {}&quot;.format(address))
+    rospy.loginfo(&quot;&gt;&gt; Phone: {}&quot;.format(phone))
+
+    # 3. Modify the Phone Number 
+
+    rospy.set_param('/details/contact/phone', 55555)        # Modify only Phone Number in Parameter Server
+    new_phone = rospy.get_param('/details/contact/phone')   # Get only Phone Number from Parameter Server
+    rospy.loginfo(&quot;&gt;&gt; New Phone: {}&quot;.format(new_phone))     # Print the new Phone Number
+    
+
+if __name__ == '__main__':
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
+</code></pre>
+<center><a href="ROS_Theory/ROS_Parameter_Server/node_param_get_set.py" download><button>Download</button></a></center>
+<br />
+<blockquote>
+<p><strong>NOTE</strong>: Make sure you make the <code>pkg_ros_basics node_param_get_set.py</code> script executable.</p>
+</blockquote>
+<p>Output:</p>
+<pre><code class="language-bash">rosrun pkg_ros_basics node_param_get_set.py
+</code></pre>
+<p><img src="ROS_Theory/ROS_Parameter_Server/node-param-get-set-output.png" alt="node-param-get-set-output.png" /></p>
+<ul>
+<li>The code is self-explanatory.</li>
+<li>If you are not able to understand the code feel free to seek help from us.</li>
+</ul>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="create-a-ros-node"><a class="header" href="#create-a-ros-node">Create a ROS Node</a></h1>
+<p>In this section we will learn how to create a ROS Node inside <code>pkg_ros_basics</code> ROS Package which we created in the previous section.</p>
+<ol>
+<li>
+<p>Navigate to <code>pkg_ros_basics</code>.</p>
+<pre><code class="language-bash">cd ~/catkin_ws/src/pkg_ros_basics
+</code></pre>
+<p>OR</p>
+<pre><code class="language-bash">roscd pkg_ros_basics
+</code></pre>
+<p><strong>NOTE</strong>: <code>roscd</code> will work only if you have sourced <code>setup.bash</code> of your catkin workspace.</p>
+</li>
+<li>
+<p>Create a <code>scripts</code> folder for your Python scripts and navigate into the folder.</p>
+<pre><code class="language-bash">mkdir scripts
+cd scripts
+</code></pre>
+</li>
+<li>
+<p>Create a Python script called <code>node_hello_ros.py</code>.</p>
+<pre><code class="language-bash">touch node_hello_ros.py
+</code></pre>
+</li>
+<li>
+<p>Open the script in any text-editor and start editing.</p>
+<pre><code class="language-bash">gedit node_hello_ros.py
+</code></pre>
+</li>
+<li>
+<p>First line of all your Python ROS scripts should be the following shebang</p>
+<pre><code class="language-bash">#!/usr/bin/env python3
+</code></pre>
+</li>
+<li>
+<p>Now write a ROS Node to print <code>Hello World!</code> on the console.</p>
+<pre><code class="language-python">#!/usr/bin/env python3
+
+import rospy
+
+
+def main():    
+
+# 1. Make the script a ROS Node.
+rospy.init_node('node_hello_ros', anonymous=True)
+
+# 2. Print info on console.
+rospy.loginfo(&quot;Hello World!&quot;)
+
+# 3. Keep the node alive till it is killed by the user.
+rospy.spin()
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except rospy.ROSInterruptException:
+        pass
+</code></pre>
+</li>
+<li>
+<p>Now you have to make this script an executable.</p>
+<pre><code class="language-bash">sudo chmod +x node_hello_ros.py
+</code></pre>
+</li>
+<li>
+<p>Now in order to run your ROS Node,</p>
+<ol>
+<li>
+<p>Open up a terminal and run ROS Master.</p>
+<pre><code class="language-bash">roscore
+</code></pre>
+</li>
+<li>
+<p>Once the roscore is up running, open a new termminal and run the ROS Node.</p>
+<pre><code class="language-bash">rosrun pkg_ros_basics node_hello_ros.py
+
+</code></pre>
+<p><strong>NOTE</strong>: This command will work only if you have sourced <code>setup.bash</code> of your catkin workspace either manually or using <code>.bashrc</code>.</p>
+</li>
+</ol>
+</li>
+<li>
+<p>You should get some output like this,</p>
+<pre><code class="language-bash">[INFO] [1601277063.968749]: Hello World!
+</code></pre>
+</li>
+</ol>
+<hr><div style="break-before: page; page-break-before: always;"></div><h1 id="ros-launch-files"><a class="header" href="#ros-launch-files">ROS Launch Files</a></h1>
+<ul>
+<li>
+<p>In the previous sections you must have noticed that we need to use <code>roscore</code> command to start ROS Master and Parameter Server, <code>rosrun</code> command to run a ROS Node, <code>rosparam load</code> command to load parameters etc.</p>
+</li>
+<li>
+<p>This is a tedious process to manually run nodes and load parameters.</p>
+</li>
+<li>
+<p>Launch files provides the capability to do all these stuff using a single command.</p>
+</li>
+<li>
+<p>The idea is to mention all the nodes that you want to run, all the config file that you want to load etc. in a single file which you can run using <code>roslaunch</code> command.</p>
+</li>
+</ul>
+<h2 id="reading-assignment-2"><a class="header" href="#reading-assignment-2">Reading Assignment</a></h2>
+<ol>
+<li><a href="http://wiki.ros.org/roslaunch">ROS Wiki - roslaunch</a></li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="create-a-ros-launch-file"><a class="header" href="#create-a-ros-launch-file">Create a ROS Launch File</a></h1>
+<h2 id="roslaunch-command"><a class="header" href="#roslaunch-command">roslaunch Command</a></h2>
+<ul>
+<li>
+<p><code>roslaunch</code> is a tool for easily launching multiple ROS nodes locally and remotely via SSH. </p>
+</li>
+<li>
+<p>It includes options to automatically respawn processes that have already died. <code>roslaunch</code> takes in one or more XML configuration files (with the .launch extension) that specify the parameters to set and nodes to launch.</p>
+</li>
+<li>
+<p>Usage:</p>
+<pre><code class="language-bash">roslaunch &lt;package&gt; file.launch
+</code></pre>
+<p><code>&lt;package&gt;</code> is nothing but the package name which you have created using <code>catkin_create_pkg</code> command or used any other package.</p>
+</li>
+</ul>
+<h2 id="steps-to-create-a-launch-file"><a class="header" href="#steps-to-create-a-launch-file">Steps to create a launch file</a></h2>
+<ol>
+<li>
+<p>After creating a package, create a folder in the package names as a <code>launch</code> folder to store all the launch files in that folder.</p>
+<pre><code class="language-bash">cd ~/catkin_ws/src/&lt;package&gt;
+mkdir launch
+</code></pre>
+</li>
+<li>
+<p>Here we can create launch files by running this command by going into the <code>launch</code> directory, we can keep any name for the launch file,</p>
+<pre><code class="language-bash">cd launch
+touch filename.launch
+</code></pre>
+<p>Now you can edit your launch file by adding different nodes that you have to run simultaneously.</p>
+</li>
+</ol>
+<h2 id="steps-to-add-a-ros-node-in-the-launch-file"><a class="header" href="#steps-to-add-a-ros-node-in-the-launch-file">Steps to add a ROS node in the launch file</a></h2>
+<ol>
+<li>
+<p>Launch files always starts with</p>
+<pre><code class="language-xml">&lt;launch&gt;
+</code></pre>
+<p>and end with</p>
+<pre><code class="language-xml">&lt;/launch&gt;
+</code></pre>
+</li>
+<li>
+<p>Now to add any executable file which we have seen in the rosrun_command section, we have to add this line,</p>
+<pre><code class="language-xml">&lt;node pkg=&quot;name_of_package&quot; type=&quot;name_of_executable.py&quot; name=&quot;name_of_executable&quot; 
+output=&quot;screen&quot;/&gt;
+</code></pre>
+<ul>
+<li><code>pkg</code> is the package name which you have created</li>
+<li><code>type</code> is the name of executable file</li>
+<li><code>name</code> is the name of the node which is created in that executable</li>
+<li><code>output</code> means it will print the data given to the roslog command</li>
+</ul>
+</li>
+</ol>
+<h2 id="steps-to-load-config-yaml-file-in-ros-parameter-server"><a class="header" href="#steps-to-load-config-yaml-file-in-ros-parameter-server">Steps to load Config YAML file in ROS Parameter Server</a></h2>
+<ul>
+<li>You can use <code>rosparam</code> tag to load the YAML file.
+<pre><code class="language-xml">&lt;rosparam file =&quot;$(find name_of_package)/config/config.yaml&quot; command=&quot;load&quot;/&gt;
+</code></pre>
+<ul>
+<li><code>name_of_package</code> is the name of your ROS package.</li>
+<li><code>config.yaml</code> is the name of your configuration file.</li>
+</ul>
+</li>
+</ul>
+<h2 id="steps-to-add-a-shell-script-in-the-launch-file"><a class="header" href="#steps-to-add-a-shell-script-in-the-launch-file">Steps to add a Shell Script in the launch file</a></h2>
+<ul>
+<li>
+<p>You can use <code>node</code> tag to run any shell script using launch file</p>
+<pre><code class="language-xml">&lt;node pkg=&quot;name_of_package&quot; type=&quot;shell_script.sh&quot; name=&quot;shell_script&quot; output=&quot;screen&quot;&gt;
+        &lt;param name=&quot;cmd&quot; value=&quot;$(find name_of_package)/launch/shell_script.sh&quot;/&gt;
+&lt;/node&gt;
+</code></pre>
+<ul>
+<li><code>name_of_package</code> is the name of your ROS package.</li>
+<li><code>shell_script.sh</code> is the name of your configuration file.</li>
+<li><code>/launch/shell_script.sh</code> is the location of the shell script inside your ROS Package folder.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="example-1-launch-two-ros-nodes"><a class="header" href="#example-1-launch-two-ros-nodes">Example #1: Launch two ROS Nodes</a></h1>
+<h2 id="aim-1"><a class="header" href="#aim-1">Aim</a></h2>
+<ul>
+<li>To launch <code>talker</code> and <code>listener</code> node present in <code>rospy_tutorials</code> package.</li>
+<li>For this create a <code>chatter.launch</code> file and save it in the <code>launch</code> folder inside <code>pkg_ros_basics</code> package.</li>
+</ul>
+<blockquote>
+<p><strong>NOTE</strong>: To install <code>rospy_tutorials</code> package in your system you can run <code>sudo apt-get install ros-noetic-ros-tutorials</code> this command.</p>
+</blockquote>
+<p>Once installed, you can use <code>listener</code> python script and talker executable written in C++ present in <code>rospy_tutorials</code> package.</p>
+<h2 id="code-1"><a class="header" href="#code-1">Code</a></h2>
+<p><code>chatter.launch</code></p>
+<pre><code class="language-xml">&lt;launch&gt;
+  &lt;node name=&quot;talker&quot; pkg=&quot;rospy_tutorials&quot; type=&quot;talker&quot; output=&quot;screen&quot;/&gt;
+  &lt;node name=&quot;listener&quot; pkg=&quot;rospy_tutorials&quot; type=&quot;listener.py&quot; output=&quot;screen&quot;/&gt;
+&lt;/launch&gt;
+</code></pre>
+<center><a href="ROS_Theory/ROS_Launch_Files/chatter.launch" download><button>Download</button></a></center>
+<ul>
+<li>Here first <code>talker.cpp</code> file (for cpp file we dont need to add .cpp extension) has been included with the node name as talker and also set output as screen so you can see the output from talker node.</li>
+<li>Next we have added <code>listener.py</code> which has node name as listener and here also we have set output as screen.</li>
+</ul>
+<h2 id="run-command"><a class="header" href="#run-command">Run Command</a></h2>
+<p>Now run these command to run the launch file,</p>
+<pre><code class="language-bash">roslaunch pkg_ros_basics chatter.launch
+</code></pre>
+<h2 id="output"><a class="header" href="#output">Output</a></h2>
+<p><img src="ROS_Theory/ROS_Launch_Files/chatter.png" alt="chatter.png" /></p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="example-2-launch-turtle-in-forest"><a class="header" href="#example-2-launch-turtle-in-forest">Example #2: Launch Turtle in Forest</a></h1>
+<h2 id="aim-2"><a class="header" href="#aim-2">Aim</a></h2>
+<ul>
+<li>
+<p>To write a launch file to run <code>turtlesim_node</code> node and <code>turtle_teleop_key</code> node present in <code>turtlesim</code> package.</p>
+</li>
+<li>
+<p>While launching the <code>turtlesim_node</code> make sure to change the background colour of the simulator from blue to forest green.</p>
+</li>
+<li>
+<p>Name the launch file <code>turtlesim.launch</code> and save it in <code>launch</code> folder inside <code>pkg_ros_basics</code> package.</p>
+</li>
+</ul>
+<h2 id="code-2"><a class="header" href="#code-2">Code</a></h2>
+<p><code>turtlesim.launch</code></p>
+<pre><code class="language-xml">&lt;launch&gt;
+    
+    &lt;node pkg=&quot;turtlesim&quot; type=&quot;turtlesim_node&quot; name=&quot;node_turtlesim_node&quot;&gt;
+        &lt;param name=&quot;/background_r&quot; value=&quot;34&quot; /&gt;
+        &lt;param name=&quot;/background_g&quot; value=&quot;139&quot; /&gt;
+        &lt;param name=&quot;/background_b&quot; value=&quot;34&quot; /&gt;
+    &lt;/node&gt;
+    
+    &lt;node pkg=&quot;turtlesim&quot; type=&quot;turtle_teleop_key&quot; name=&quot;node_turtle_teleop_key&quot; /&gt;
+
+&lt;/launch&gt;
+</code></pre>
+<center><a href="ROS_Theory/ROS_Launch_Files/turtlesim.launch" download><button>Download</button></a></center>
+<h2 id="run-command-1"><a class="header" href="#run-command-1">Run Command</a></h2>
+<pre><code class="language-bash">roslaunch pkg_ros_basics turtlesim.launch
+</code></pre>
+<h2 id="output-1"><a class="header" href="#output-1">Output</a></h2>
+<p><img src="ROS_Theory/ROS_Launch_Files/turtlesim.png" alt="turtlesim.png" /></p>
+<br />
+- The code is self-explanatory.
+- If you are not able to understand the code feel free to seek help from us.
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ros-with-gazebo"><a class="header" href="#ros-with-gazebo">ROS with Gazebo</a></h1>
+<h2 id="difficulty-intermediate"><a class="header" href="#difficulty-intermediate">Difficulty: Intermediate</a></h2>
+<hr />
+<p>This page is just to quick overview of the simulation and visualization tools in ROS. </p>
+<blockquote>
+<p><strong>Note</strong>: ROS and Gazebo together are a great combination to simulate how your algoirthm would work in real time scenarios. </p>
+</blockquote>
+<h2 id="gazebo-simulator"><a class="header" href="#gazebo-simulator">Gazebo Simulator</a></h2>
+<ul>
+<li>
+<p>Robot simulation is an essential tool in every roboticist’s toolbox.</p>
+</li>
+<li>
+<p>A robust physics engine, high-quality graphics, and convenient programmatic and graphical interfaces, makes Gazebo a top Choice for 3D Simulator.</p>
+</li>
+</ul>
+<p><strong>.world</strong> File: The file used to describe a collection of objects (such as buildings, tables, and lights), and global parameters including the sky, ambient light, and physics properties.</p>
+<h3 id="reference-1"><a class="header" href="#reference-1">Reference</a></h3>
+<ol>
+<li><a href="http://gazebosim.org/tutorials">Gazebo Tutorials</a></li>
+</ol>
+<hr />
+<h2 id="rviz"><a class="header" href="#rviz">RViz</a></h2>
+<ul>
+<li>
+<p>Visualizing sensor information is an important part in developing and debugging controllers. </p>
+</li>
+<li>
+<p>Rviz is a powerful 3D visualization tool in ROS that will hep you do exactly that.</p>
+</li>
+<li>
+<p>It allows the user to view the simulated robot model, log sensor information from the robot’s sensors, and replay the logged sensor information.</p>
+</li>
+</ul>
+<h3 id="reference-2"><a class="header" href="#reference-2">Reference</a></h3>
+<ol>
+<li><a href="http://wiki.ros.org/rviz">ROS Wiki: RViz</a></li>
+<li><a href="http://gazebosim.org/tutorials?tut=drcsim_visualization&amp;cat=drcsim">Gazebo: Visualization and logging</a></li>
+</ol>
+<hr />
+<h2 id="urdf"><a class="header" href="#urdf">URDF</a></h2>
+<ul>
+<li>
+<p>The Unified Robot Description Format (URDF) contains a number of XML specifications for robot models, sensors, scenes, etc. </p>
+</li>
+<li>
+<p>It describes the position of all the joints, sensors, type of joints, structure of the robot base, arm etc. </p>
+</li>
+</ul>
+<h3 id="reference-3"><a class="header" href="#reference-3">Reference</a></h3>
+<ol>
+<li><a href="http://wiki.ros.org/urdf">ROS Wiki: URDF overview</a></li>
+<li><a href="http://wiki.ros.org/urdf/Tutorials">ROS Wiki: URDF Tutorials</a></li>
+</ol>
+<hr />
+<h2 id="xacro"><a class="header" href="#xacro">XACRO</a></h2>
+<ul>
+<li>Xacro (XML Macros) Xacro is an XML macro language. </li>
+<li>With xacro, you can construct shorter and more readable XML files by using macros that expand to larger XML expressions.</li>
+<li>Xacro is useful when the structure of the robot is complex so instead of describing the whole structure in an urdf we can divide the structure in small parts and call those macro files in the main xacro file.</li>
+<li>Xacros also make it easier to define common structures. For example, let’s say the robot has 2 wheels, we just need to make macros of a cylindrical structure(wheels), call it in the main xacro file and then define 2 different joints using the same structure but giving different joint location. </li>
+</ul>
+<h3 id="reference-4"><a class="header" href="#reference-4">Reference</a></h3>
+<ol>
+<li><a href="http://wiki.ros.org/urdf/Tutorials/Using%20Xacro%20to%20Clean%20Up%20a%20URDF%20File">ROS Wiki: Using Xacro to Clean Up a URDF File</a></li>
+<li><a href="http://wiki.ros.org/xacro">ROS Wiki: Xacro overview</a></li>
+</ol>
+<hr />
+<h2 id="gazebo-plugins"><a class="header" href="#gazebo-plugins">Gazebo Plugins</a></h2>
+<ul>
+<li>A Gazebo plugin needs to be added to your URDF that actually parses the transmission tags and loads the appropriate hardware interfaces and controller manager. </li>
+<li>Plugins basically replicate exact architecture of the sensors in use or the control system used to control the movement of the robot. </li>
+</ul>
+<h3 id="what-are-transmission-tags"><a class="header" href="#what-are-transmission-tags">What are Transmission Tags?</a></h3>
+<ul>
+<li>Transmission tags are used to link actuators to joints. </li>
+<li>If the transmission tags the joints won’t move in Gazebo and they will be considered as stationary objects.</li>
+<li>We need to define transmission for every dynamic(moving) joint. </li>
+</ul>
+<h3 id="reference-5"><a class="header" href="#reference-5">Reference</a></h3>
+<ol>
+<li><a href="http://gazebosim.org/tutorials/?tut=ros_control#Aboutros_control">Gazebo tutorials: ROS Control</a></li>
+</ol>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gazebo-simulator-1"><a class="header" href="#gazebo-simulator-1">Gazebo Simulator</a></h1>
+<p>Gazebo is a 3D dynamic simulator with the ability to accurately and efficiently simulate populations of robots in complex indoor and outdoor environments. While similar to game engines, Gazebo offers physics simulation at a much higher degree of fidelity, a suite of sensors, and interfaces for both users and programs.</p>
+<h2 id="features"><a class="header" href="#features">Features</a></h2>
+<ul>
+<li>
+<p>multiple physics engines,</p>
+</li>
+<li>
+<p>a rich library of robot models and environments,</p>
+</li>
+<li>
+<p>a wide variety of sensors,</p>
+</li>
+<li>
+<p>convenient programmatic and graphical interfaces</p>
+</li>
+</ul>
+<h2 id="understanding-the-gui"><a class="header" href="#understanding-the-gui">Understanding the GUI</a></h2>
+<p>To get a brief overview of the GUI of gazebo, open this <a href="http://gazebosim.org/tutorials?cat=guided_b&amp;tut=guided_b2">link</a>.</p>
+<h2 id="adding-models-to-simulator"><a class="header" href="#adding-models-to-simulator">Adding models to Simulator</a></h2>
+<ol>
+<li>
+<p>Let’s first open a gazebo simulator environment.</p>
+<pre><code class="language-bash">roslaunch gazebo_ros empty_world.launch 
+</code></pre>
+<p><img src="ROS_Theory/ROS_with_gazebo/gazebo.png" alt="Gazebo" /></p>
+</li>
+<li>
+<p>You can add primitive shapes like cube, sphere and sphere from upper toolbar.</p>
+<p><img src="ROS_Theory/ROS_with_gazebo/sphere.png" alt="Sphere" /></p>
+</li>
+<li>
+<p>You can also add some other models by going to <code>Insert</code> on the left panel. Let’s try adding <code>Ambulance</code> to the scene which is under <code>http://models.gazebosim.org/</code>. <em>It can take some time to download and load.</em></p>
+<p><img src="ROS_Theory/ROS_with_gazebo/ambulance.png" alt="Ambulance" /></p>
+</li>
+<li>
+<p>You can also add some other custom models saved on you hard disk by adding path.</p>
+</li>
+</ol>
+<h2 id="applying-forcetorque-to-a-model"><a class="header" href="#applying-forcetorque-to-a-model">Applying force/torque to a model</a></h2>
+<p>First, select sphere. Right-click on it and select apply force/torque. Fill in the details as shown below.</p>
+<center>
+<p><img src="ROS_Theory/ROS_with_gazebo/apply_force.png" alt="Applying force" /></p>
+</center>
+<blockquote>
+<p><strong>Note</strong>: Don’t forget to click on play button to start the simulation.</p>
+</blockquote>
+<p>Now click on apply force. You can see the force being applied. Notice that the force is applied for <strong>1ms</strong>, so we’ve provided such high force for such a small ball to increase the impulse.</p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="rviz-1"><a class="header" href="#rviz-1">RViz</a></h1>
+<br/>
+<ul>
+<li>
+<p>RViz is short for <code>ROS Visualization</code>.</p>
+</li>
+<li>
+<p>It is a 3D visualization software tool for robots, sensors, and algorithms.</p>
+</li>
+<li>
+<p>It enables you to see the robot’s perception of its world (real or simulated).</p>
+</li>
+<li>
+<p>The purpose of rviz is to enable you to visualize the state of a robot. It uses sensor data to try to create an accurate depiction of what is going on in the robot’s environment.</p>
+</li>
+</ul>
+<br/>
+<p>To launch rviz, type the following command in your terminal:</p>
+<pre><code class="language-bash">roscore
+</code></pre>
+<p>And in a different terminal tab, type:</p>
+<pre><code class="language-bash">rosrun rviz rviz
+</code></pre>
+<p>Here is the screen you should see when you launch rviz:</p>
+<p><img src="ROS_Theory/ROS_with_gazebo/rviz.png" alt="RViz" /></p>
+<p>The left panel is the Displays panel. It has a list of plugins. These plugins enable you to view sensor data and robot state information. To add a plugin, you would click the Add button on the bottom left of the window.</p>
+<h2 id="difference-between-rviz-and-gazebo"><a class="header" href="#difference-between-rviz-and-gazebo">Difference between RViz and Gazebo</a></h2>
+<p>The difference between the two can be summed up in the following excerpt from Morgan Quigley (one of the original developers of ROS) in his book <em>Programming Robots with ROS</em>:</p>
+<p>“rviz shows you what the robot thinks is happening, while Gazebo shows you what is really happening.”</p>
+<ul>
+<li>
+<p><code>gazebo</code> shows the simulated environment in which a robot is placed.</p>
+</li>
+<li>
+<p><code>rviz</code> shows the same environment through the eyes of a robot with the help of sensors.</p>
+</li>
+</ul>
+<br/>
+<blockquote>
+<p><strong>Note</strong>: To get more familiar with the RViz tool, check out the tutorial videos in this <a href="http://wiki.ros.org/rviz/Tutorials">link</a>.</p>
+</blockquote>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="ros-exercises"><a class="header" href="#ros-exercises">ROS Exercises</a></h1>
+<ul>
+<li>This section contains tasks based on <code>ROS Noetic</code>.</li>
+<li>Make sure you’ve configured <code>ROS</code> and <code>ROS Workspace</code> properly before proceeding further.</li>
+</ul>
+<center> 
+<h2 id="all-the-best"><a class="header" href="#all-the-best">All the best!!!</a></h2>
+</center><div style="break-before: page; page-break-before: always;"></div><h1 id="task-on-turtlesim"><a class="header" href="#task-on-turtlesim">Task on Turtlesim</a></h1>
+<h2 id="welcome-to-task-on-turtlesim"><a class="header" href="#welcome-to-task-on-turtlesim">Welcome to task on turtlesim!</a></h2>
+<blockquote>
+<p>The aim of this task is to make you familiar with <code>rostopics</code> and <code>rosservices</code>. You need to install the mentioned software &amp; libraries by running the provided instructions in the <strong>provided sequence only</strong>; and if any error occurs at any step, please do not proceed unless the error has been rectified from your end.</p>
+</blockquote>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="problem-statement"><a class="header" href="#problem-statement">Problem Statement</a></h1>
+<ul>
+<li>
+<p>The objective of this task is to spawn a turtle in a <strong>turtlesim</strong> window and move it in a circle using ros nodes.</p>
+</li>
+<li>
+<p>You can do this by creating a node name, <code>node_do_circle</code> with a python script, <code>node_do_circle.py</code>.</p>
+</li>
+<li>
+<p>Change the color of the pen of the turtle.</p>
+<ul>
+<li><strong>turtle1</strong>
+<ul>
+<li><code>r: 255</code></li>
+<li><code>g: 255</code></li>
+<li><code>b: 0</code></li>
+<li><code>width: 5</code></li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>You will need to use <code>rosservices</code> to do this part of the task.</p>
+</blockquote>
+</li>
+<li>
+<p>Change the background to <strong>forestgreen</strong>. </p>
+<ul>
+<li><code>background_r: 34</code></li>
+<li><code>background_g: 139</code></li>
+<li><code>background_b: 34</code></li>
+</ul>
+<blockquote>
+<p>You will need to use <code>rosparam</code> to do this part of the task.</p>
+</blockquote>
+</li>
+</ul>
+<h2 id="procedure"><a class="header" href="#procedure">Procedure</a></h2>
+<ol>
+<li>First, create a package name <code>pkg_move_turtle</code>, within your catkin workspace. Once done, compile and source the packages.</li>
+</ol>
+<pre><code class="language-bash">cd ~/workspace
+catkin_make
+source devel/setup.bash
+</code></pre>
+<ol>
+<li>Within this package, you should have a <code>scripts</code> folder inside which you’ll create a python script, named <code>node_do_circle.py</code>.</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: Fill the script with proper programming ethics. Doing this will help us understand your code better and quicker than usual.</p>
+</blockquote>
+<ol>
+<li>After completing the python script. Make it executable, if it isn’t already. To do that, enter the following code.</li>
+</ol>
+<pre><code class="language-bash">chmod +x ~/workspace/src/pkg_move_turtle/scripts/node_do_circle.py
+</code></pre>
+<ol>
+<li>Before executing make sure that <code>roscore</code> is running along with <code>turtlesim_node</code>. You can either run them in separate terminals or simply create a <code>move_in_a_circle.launch</code> file inside the <code>~/workspace/src/pkg_move_turtle/launch/</code> folder. Launch file can run multiple nodes unlike a python/cpp script. Run the launch file, enter,</li>
+</ol>
+<pre><code class="language-bash">roslaunch pkg_move_turtle move_in_a_circle.launch 
+</code></pre>
+<ul>
+<li>This should run these processes in parallel.
+<ul>
+<li>roscore</li>
+<li>turtlesim_node</li>
+<li>node_do_circle.py</li>
+</ul>
+</li>
+</ul>
+<h2 id="hints"><a class="header" href="#hints">Hints</a></h2>
+<ul>
+<li>You can use linear velocity as well as angular velocity with some combination to get this done. </li>
+<li>Keep tracking the distance travelled so as to know when to stop.</li>
+</ul>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="expected-output"><a class="header" href="#expected-output">Expected Output</a></h1>
+<p><img src="ROS_Exercises/turtlesim_task/expected_output.gif" alt="expected output" /></p>
+<h2 id="rqt-graph"><a class="header" href="#rqt-graph">RQT Graph</a></h2>
+<p><img src="ROS_Exercises/turtlesim_task/rqt_graph.png" alt="rqt graph" /></p>
+<hr />
+<div style="break-before: page; page-break-before: always;"></div><h1 id="task-on-ur5e"><a class="header" href="#task-on-ur5e">Task on UR5e</a></h1>
+<center><iframe width="824" height="476"
+src="https://www.youtube.com/embed/iBVKiT81Tys">
+</iframe></center>
+<hr />
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            MathJax.Hub.Register.StartupHook('End', function() {
+                window.setTimeout(window.print, 100);
+            });
+        });
+        </script>
+
+    </body>
+</html>
