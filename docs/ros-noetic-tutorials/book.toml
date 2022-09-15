@@ -17,7 +17,7 @@ mathjax-support = true
 copy-fonts = true
 no-section-label = false
 git-repository-url = "mailto:shivam.shivam@stud.th-deg.de"
-git-repository-icon = "fa-github"
+git-repository-icon = "fa-envelope"
 edit-url-template = "https://github.com/rust-lang/mdBook/edit/master/guide/{path}"
 
 [output.html.print]
