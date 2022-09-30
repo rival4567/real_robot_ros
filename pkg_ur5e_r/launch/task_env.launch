@@ -2,9 +2,6 @@
 <launch> 
     <arg name="sim" default="true"/>
 
-    <!-- Spawn bottle -->
-    <node name ="node_spawn_cricket_ball" pkg="pkg_ur5e_r" type="node_spawn_bottle.py"/>
-
     <group if="$(arg sim)">
         <node name ="node_service_server_gazebo_gripper" pkg="pkg_ur5e_r" type="node_service_server_gazebo_gripper.py"/>
     </group>

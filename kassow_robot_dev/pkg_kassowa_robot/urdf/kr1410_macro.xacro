@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot name="kr1410" xmlns:xacro="http://wiki.ros.org/xacro">
+    <!-- Author: Shivam -->
+
+    <xacro:include filename="$(find pkg_kassowa_robot)/urdf/kr1410_model.xacro"/>
+    <xacro:include filename="$(find pkg_kassowa_robot)/urdf/kr1410_transmissions.xacro"/>
+    <xacro:include filename="$(find pkg_kassowa_robot)/urdf/kr1410_gazebo.xacro"/>
+
+    <!-- Create a dummy link base_link -->
+    <link name="base_link"/>
+    <joint name="base_link_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_link_1"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+</robot>
