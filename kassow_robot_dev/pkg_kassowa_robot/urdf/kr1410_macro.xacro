@@ -13,5 +13,11 @@
         <child link="base_link_1"/>
         <origin rpy="0 0 0" xyz="0 0 0"/>
     </joint>
-
+    <!-- Create end effector link -->
+    <link name="ee_link"/>
+    <joint name="ee_joint" type="fixed">
+        <parent link="tool_io"/>
+        <child link="ee_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0.05"/>
+    </joint>
 </robot>

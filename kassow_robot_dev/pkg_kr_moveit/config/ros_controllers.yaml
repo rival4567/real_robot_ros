@@ -1,0 +1,93 @@
+end_effector_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - finger_joint
+  gains:
+    finger_joint:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+arm_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - joint_1
+    - joint_2
+    - joint_3
+    - joint_4
+    - joint_5
+    - joint_6
+    - joint_tool_io
+  gains:
+    joint_1:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_2:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_3:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_4:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_5:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_6:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+    joint_tool_io:
+      p: 100
+      d: 1
+      i: 1
+      i_clamp: 1
+gazebo_ros_control:
+  pid_gains:
+    right_outer_knuckle_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+    left_inner_finger_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+    right_inner_finger_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+    left_inner_knuckle_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true
+    right_inner_knuckle_joint:
+      p: 1.0
+      i: 0.0
+      d: 0.0
+      i_clamp: 0.2
+      antiwindup: false
+      publish_state: true

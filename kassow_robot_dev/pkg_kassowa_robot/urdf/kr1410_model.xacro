@@ -233,7 +233,7 @@
     </collision>
   </link>
   <joint name="joint_tool_io" type="revolute">
-    <origin rpy="1.5708 -1.5708 0" xyz="0 0.053 -0.0465"/>
+    <origin rpy="1.5708 -1.5708 3.14" xyz="0 0.053 -0.0465"/>
     <parent link="link_6"/>
     <child link="tool_io"/>
     <axis xyz="0 0 1"/>
