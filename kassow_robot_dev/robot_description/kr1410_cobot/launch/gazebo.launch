@@ -1,0 +1,43 @@
+<launch>
+
+    <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+    <arg name="paused" default="false"/>
+    <arg name="use_sim_time" default="true"/>
+    <arg name="gui" default="true"/>
+    <arg name="headless" default="false"/>
+    <arg name="debug" default="false"/>
+    <arg name="model" default="$(find kr1410_cobot)/urdf/kr1410.urdf"/>
+    <arg name="extra_gazebo_args" default="--verbose"/>
+    <arg name="use_rviz" default="true" />
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <!-- <arg name="world_name" value="$(find pkg_ur5e_r)/worlds/ur5e.world"/> -->
+        <arg name="debug" value="$(arg debug)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)"/>
+        <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+        <arg name="headless" value="$(arg headless)"/>
+        <arg name="extra_gazebo_args" value="$(arg extra_gazebo_args)"/>
+    </include>
+
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
+    <rosparam file="$(find kr1410_moveit_config)/config/ros_controllers.yaml" command="load"/>
+
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
+    <rosparam file="$(find kr1410_moveit_config)/config/gazebo_controllers.yaml" command="load"/>
+
+    <node name="controller_spawner" pkg ="controller_manager" type="spawner" ns="/" args="
+        arm_controller joint_state_controller"/>
+
+    <!-- push robot_description to factory and spawn robot in gazebo -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+        args="-x 0.0 -y 0.0 -z 0.0 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
+
+    <!-- Launch Move group -->
+    <include file="$(find kr1410_moveit_config)/launch/move_group.launch"/>
+
+        <!-- Run RViz with Moveit! Plugin -->
+    <include file="$(find kr1410_moveit_config)/launch/moveit_rviz.launch" if="$(arg use_rviz)">
+        <arg name="rviz_config" value="$(find ur5e_moveit_config)/launch/moveit.rviz"/>
+    </include>
+</launch>

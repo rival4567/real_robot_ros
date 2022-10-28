@@ -2,9 +2,10 @@
 <robot name="kr1410_robot" xmlns:xacro="http://wiki.ros.org/xacro">
     <!-- Author: Shivam -->
 
-    <xacro:include filename="$(find pkg_kassowa_robot)/urdf/kr1410_model.xacro"/>
-    <xacro:include filename="$(find pkg_kassowa_robot)/urdf/kr1410_transmissions.xacro"/>
-    <xacro:include filename="$(find robotiq_2f_85_gripper_visualization)/urdf/robotiq_arg2f_85_model.xacro"/>
+    <xacro:include filename="$(find kr1410_cobot)/urdf/kr1410_model.xacro"/>
+    <xacro:include filename="$(find kr1410_cobot)/urdf/kr1410_transmissions.xacro"/>
+    <xacro:include filename="$(find robotiq_2f_85_gripper)/urdf/robotiq_arg2f_85_model_macro.xacro" />
+    <xacro:robotiq_arg2f_85 parent="ee_link" prefix=""/>
     <xacro:include filename="$(find pkg_kr_sim)/urdf/gazebo.xacro"/>
 
     <!-- Create a dummy link base_link -->
@@ -38,27 +39,12 @@
         </inertial>
     </link>
 
-
-    <joint name="pedestal_joint" type="fixed">
-        <!-- <origin rpy="0 0 0" xyz="0.5 1.8 0.0"/> -->
-        <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
-        <parent link="world"/>
-        <child link="pedestal_link"/>
-    </joint>
-
-    <!-- Create end effector link -->
+    <!-- Create end effector link. On this link gripper will be mounted -->
     <link name="ee_link"/>
     <joint name="ee_joint" type="fixed">
         <parent link="tool_io"/>
         <child link="ee_link"/>
-        <origin rpy="0 0 0" xyz="0 0 0.05"/>
-    </joint>
-
-    <!-- Attach Robotiq Gripper to Kassow Robot -->
-    <joint name="gripper_joint" type="fixed">
-        <parent link="ee_link"/>
-        <child link="robotiq_arg2f_base_link"/>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <origin rpy="0 0 0" xyz="0 0 0.0465"/>
     </joint>
 
 </robot>
