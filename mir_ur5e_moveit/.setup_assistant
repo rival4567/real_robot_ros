@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: mir_ur5e_ar
+    relative_path: urdf/mir_ur5e.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/mir_ur5e_autonomous_robot.srdf
+  CONFIG:
+    author_name: Shivam Shivam
+    author_email: shivam.shivam@stud.th-deg.de
+    generated_timestamp: 1667036010

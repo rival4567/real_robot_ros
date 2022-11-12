@@ -3,7 +3,7 @@ authors = ["Shivam"]
 language = "en"
 multilingual = false
 src = "src"
-title = "THD - Summer School: ROS"
+title = "THD - ROS Noetic Tutorials"
 
 [preprocessor.index]
 

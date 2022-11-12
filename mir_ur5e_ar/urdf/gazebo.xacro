@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+    <gazebo reference="control_box_support_structure_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+
+    <xacro:macro name="self_collision" params="link">
+    <!-- Configure self collision properties per link -->
+        <gazebo reference="${link}">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+    </xacro:macro>
+
+    <!-- Self collision in gazebo for robotic arm -->
+    <xacro:self_collision link="ur5e_shoulder_link"/>
+    <xacro:self_collision link="ur5e_upper_arm_link"/>
+    <xacro:self_collision link="ur5e_forearm_link"/>
+    <xacro:self_collision link="ur5e_wrist_1_link"/>
+    <xacro:self_collision link="ur5e_wrist_2_link"/>
+    <xacro:self_collision link="ur5e_wrist_3_link"/>
+    <xacro:self_collision link="base_footprint"/>
+
+
+    <!-- Gazebo Plugins -->
+    <!-- loading plugin: mimic joints works in gazebo now-->
+    <xacro:property name="parent_joint" value="finger_joint"/>
+    <xacro:macro name="mimic_joint_plugin_gazebo" params="parent_joint:=${parent_joint} mimic_joint has_pid:=false multiplier:=1.0 offset:=0.0 max_effort:=5.0 sensitiveness:=0.0 robot_namespace:=''">
+        <gazebo>
+            <plugin name="${mimic_joint}_mimic_plugin" filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so">
+                <joint>${parent_joint}</joint>
+                <mimicJoint>${mimic_joint}</mimicJoint>
+                <xacro:if value="${has_pid}">
+                    <hasPID />
+                </xacro:if>
+                <multiplier>${multiplier}</multiplier>
+                <offset>${offset}</offset>
+                <sensitiveness>${sensitiveness}</sensitiveness>
+                <maxEffort>${max_effort}</maxEffort>
+                <xacro:unless value="${robot_namespace == ''}">
+                    <robotNamespace>${robot_namespace}</robotNamespace>
+                </xacro:unless>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_outer_knuckle_joint" multiplier="1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="left_inner_finger_joint" multiplier="-1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_inner_finger_joint" multiplier="-1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="left_inner_knuckle_joint" multiplier="1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_inner_knuckle_joint" multiplier="1.0"/>
+
+    <gazebo>
+        <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+            <arm>
+                <arm_name>mir_ur5e_autonomous_robot</arm_name>
+                <palm_link>left_outer_knuckle</palm_link>
+                <palm_link>right_outer_knuckle</palm_link>
+                <gripper_link>left_inner_finger</gripper_link>
+                <gripper_link>right_inner_finger</gripper_link>
+            </arm>
+        <forces_angle_tolerance>100</forces_angle_tolerance>
+        <update_rate>4</update_rate>
+        <grip_count_threshold>4</grip_count_threshold>
+        <max_grip_count>8</max_grip_count>
+        <release_tolerance>0.005</release_tolerance>
+        <disable_collisions_on_attach>false</disable_collisions_on_attach>
+        <contact_topic>__default_topic__</contact_topic>
+        </plugin>
+    </gazebo>
+
+
+    <!-- Define the autonomous robot position and orientation in the world coordinate system -->
+    <!-- <link name="world"/>
+    <joint name="world_joint" type="fixed">
+        <parent link="world"/>
+        <child link="base_footprint"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+    </joint> -->
+
+</robot>

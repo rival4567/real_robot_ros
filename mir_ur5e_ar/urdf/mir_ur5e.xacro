@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<robot name="mir_ur5e_autonomous_robot" xmlns:xacro="http://wiki.ros.org/xacro">
+    <!-- Author: Shivam -->
+    <!-- University: Technologie Hochschule Deggendorf -->
+    <xacro:property name="support_str_height" value="0.463"/>
+    <xacro:property name="support_str_width" value="0.436"/>
+    <xacro:property name="support_str_length" value="0.646"/>
+    <xacro:property name="support_str_mass" value="40"/>
+    <xacro:property name="arm" value="ur5e_"/>
+
+    <xacro:include filename="$(find mir_description)/urdf/mir.urdf.xacro"/>
+    <xacro:include filename="$(find ur_description)/urdf/inc/ur5e_macro.xacro"/>
+    <xacro:ur5e_robot prefix="${arm}"/>
+    <xacro:include filename="$(find robotiq_2f_85_gripper)/urdf/robotiq_arg2f_85_model_macro.xacro" />
+    <xacro:robotiq_arg2f_85 parent="ee_link" prefix=""/>
+    <xacro:include filename="$(find mir_ur5e_ar)/urdf/gazebo.xacro"/>
+
+    <link name="control_box_support_structure_link">
+        <visual>
+            <origin xyz="${-support_str_length/2} ${-support_str_width/2} 0"/>
+            <geometry>
+                <mesh filename="package://mir_ur5e_ar/meshes/visual/control_box_support_structure.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="${-support_str_length/2} ${-support_str_width/2} 0"/>
+            <geometry>
+                <mesh filename="package://mir_ur5e_ar/meshes/collision/control_box_support_structure.stl" scale="0.001 0.001 0.001"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${support_str_mass}"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="${support_str_mass/12*(support_str_width*support_str_width + support_str_height*support_str_height)}" 
+                ixy="0" ixz="0" iyy="${support_str_mass/12*(support_str_length*support_str_length + support_str_height*support_str_height)}" 
+                iyz="0" izz="${support_str_mass/12*(support_str_width*support_str_width + support_str_length*support_str_length)}"/>
+        </inertial>
+    </link>
+
+    <joint name="support_structure_joint" type="fixed">
+        <parent link="surface"/>
+        <child link="control_box_support_structure_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+    <link name="${arm}mount_link"/>
+    <joint name="support_str_surface_joint" type="fixed">
+        <parent link="control_box_support_structure_link"/>
+        <child link="ur5e_mount_link"/>
+        <origin xyz="0.0 0.0 ${support_str_height}" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <joint name="${arm}mount_joint" type="fixed">
+        <parent link="${arm}mount_link"/>
+        <child link="${arm}base_link"/>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    </joint>
+
+    <!-- Create end effector link. On this link gripper will be mounted -->
+    <link name="ee_link"/>
+    <joint name="ee_joint" type="fixed">
+        <parent link="${arm}tool0"/>
+        <child link="ee_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+</robot>
