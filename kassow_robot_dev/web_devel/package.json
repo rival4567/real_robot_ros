@@ -1,0 +1,19 @@
+{
+  "name": "web_devel",
+  "version": "1.0.0",
+  "description": "Kassow robotic arm online version.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rival4567/real_robot_ros.git"
+  },
+  "author": "Shivam Shivam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rival4567/real_robot_ros/issues"
+  },
+  "homepage": "https://github.com/rival4567/real_robot_ros#readme"
+}

@@ -1,5 +1,0 @@
-filename,Is turtle2 spawned?,Does turtle2 reach turtle1 spawn position?,Is turtle2 following turtle1?,Remark,Is Manual Evaluation required if a query is raised?
-other_run,True,False,False,Task Failed! turtle2 Couldn't reach turtle1 at it's spawn position.,True
-my_turtle,True,True,True,Passed.,False
-new,True,False,True,Task Failed! turtle2 Couldn't reach turtle1 at it's spawn position.,True
-turtle_record,True,True,True,Passed.,False

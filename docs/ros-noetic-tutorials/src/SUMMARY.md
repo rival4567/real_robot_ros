@@ -29,4 +29,5 @@
     - [Problem Statement](./ROS_Exercises/task0/turtle-task.md)
     - [Expected Output](./ROS_Exercises/task0/expected-output.md)
     - [Recording Logs](./ROS_Exercises/task0/recording-logs.md)
+    - [Submission Instructions](./ROS_Exercises/task0/submission.md)
   - [Task on UR5e](./ROS_Exercises/ur5e_task/ur5e.md)
