@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="https://ros.org/wiki/xacro" name="mounted_ur3e">
+
+    <!-- Mounting Table -->
+    <xacro:include filename="$(find pkg_ur3e)/urdf/mounting_table.xacro"/>
+    <!-- UR5e -->
+    <xacro:include filename="$(find ur_description)/urdf/ur3e.xacro"/>
+    <!-- End effector -->
+    <xacro:include filename="$(find robotiq_2f_85_gripper)/urdf/robotiq_arg2f_85_model_macro.xacro" />
+    <xacro:robotiq_arg2f_85 parent="ee_link" prefix=""/>
+    <!-- Gazebo settings -->
+    <xacro:include filename="$(find pkg_ur3e)/urdf/ur3e_gazebo.xacro"/>
+
+    <!-- Connect Mounting table to UR5e base link -->
+    <xacro:mounting_table prefix="" connected_to="base_link"/>
+
+    <!-- Connect world to base link -->
+    <xacro:ur3e_gazebo prefix="" connected_to="base_link"/>
+    
+    <!-- Create end effector link. On this link gripper will be mounted -->
+    <link name="ee_link"/>
+    <joint name="ee_joint" type="fixed">
+        <parent link="tool0"/>
+        <child link="ee_link"/>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+    </joint>
+
+</robot>
+

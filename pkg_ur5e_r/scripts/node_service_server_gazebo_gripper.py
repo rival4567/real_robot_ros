@@ -2,8 +2,8 @@
 
 import rospy
 
-from pkg_ur5e_r.srv import SchunkGripper
-from pkg_ur5e_r.srv import SchunkGripperResponse
+from schunk_gripper.srv import SchunkGripper
+from schunk_gripper.srv import SchunkGripperResponse
 
 from gazebo_msgs.msg import LinkStates
 from gazebo_msgs.msg import ModelState

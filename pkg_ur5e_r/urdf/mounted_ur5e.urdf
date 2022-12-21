@@ -390,12 +390,12 @@
   <link name="schunk_gripper">
     <visual>
       <geometry>
-        <mesh filename="package://pkg_ur5e_r/meshes/visual/schunk_gripper.dae"/>
+        <mesh filename="package://schunk_gripper/meshes/visual/schunk_gripper.dae"/>
       </geometry>
     </visual>
     <collision>
       <geometry>
-        <mesh filename="package://pkg_ur5e_r/meshes/visual/schunk_gripper.dae"/>
+        <mesh filename="package://schunk_gripper/meshes/visual/schunk_gripper.dae"/>
       </geometry>
     </collision>
     <inertial>

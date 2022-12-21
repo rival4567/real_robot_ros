@@ -12,7 +12,7 @@ import tf2_ros
 import tf2_msgs.msg
 import math
 
-from pkg_ur5e_r.srv import SchunkGripper
+from schunk_gripper.srv import SchunkGripper
 
 
 class CartesianPath:

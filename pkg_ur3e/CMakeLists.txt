@@ -12,8 +12,10 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  urdf
   tf
   tf2
+  xacro
 )
 
 ## System dependencies are found with CMake's conventions
@@ -73,7 +75,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate added messages and services with any dependencies listed here
 # generate_messages(
 #   DEPENDENCIES
-#   geometry_msgs#   std_msgs
+#   geometry_msgs
 # )
 
 ################################################
@@ -108,7 +110,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES pkg_ur3e
-#  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs tf tf2
+#  CATKIN_DEPENDS geometry_msgs roscpp rospy std_mgs urdf xacro
 #  DEPENDS system_lib
 )
 

@@ -6,7 +6,7 @@
     <!-- UR5e -->
     <xacro:include filename="$(find ur_description)/urdf/ur5e.xacro"/>
     <!-- End effector -->
-    <xacro:include filename="$(find pkg_ur5e_r)/urdf/schunk_gripper.xacro"/>
+    <xacro:include filename="$(find schunk_gripper)/urdf/schunk_gripper.xacro"/>
     <!-- Gazebo settings -->
     <xacro:include filename="$(find pkg_ur5e_r)/urdf/ur5e_gazebo.xacro"/>
 

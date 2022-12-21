@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <gazebo reference="robotiq_arg2f_base_link">
+       <material>Gazebo/Black</material>
+    </gazebo>
+
+
+    <xacro:macro name="ur3e_gazebo" params="prefix connected_to">
+    <!-- Configure self collision properties per link -->
+        <gazebo reference="${prefix}shoulder_link">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+        <gazebo reference="${prefix}upper_arm_link">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+        <gazebo reference="${prefix}forearm_link">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+        <gazebo reference="${prefix}wrist_1_link">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+        <gazebo reference="${prefix}wrist_3_link">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+        <gazebo reference="${prefix}wrist_2_link">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+        <gazebo reference="${prefix}mounting_table">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+        <gazebo reference="${prefix}schunk_gripper">
+            <selfCollide>true</selfCollide>
+        </gazebo>
+
+        <gazebo>
+            <plugin name="ros_control" filename="libgazebo_ros_control.so">
+                <!--robotNamespace>/</robotNamespace-->
+                <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+            </plugin>
+        </gazebo>
+
+
+    <!-- loading plugin: mimic joints works in gazebo now-->
+    <xacro:property name="parent_joint" value="finger_joint"/>
+    <xacro:macro name="mimic_joint_plugin_gazebo" params="parent_joint:=${parent_joint} mimic_joint has_pid:=false multiplier:=1.0 offset:=0.0 max_effort:=5.0 sensitiveness:=0.0         robot_namespace:=''">
+        <gazebo>
+            <plugin name="${mimic_joint}_mimic_plugin" filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so">
+                <joint>${parent_joint}</joint>
+                <mimicJoint>${mimic_joint}</mimicJoint>
+                <xacro:if value="${has_pid}">
+                    <hasPID />
+                </xacro:if>
+                <multiplier>${multiplier}</multiplier>
+                <offset>${offset}</offset>
+                <sensitiveness>${sensitiveness}</sensitiveness>
+                <maxEffort>${max_effort}</maxEffort>
+                <xacro:unless value="${robot_namespace == ''}">
+                    <robotNamespace>${robot_namespace}</robotNamespace>
+                </xacro:unless>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_outer_knuckle_joint" multiplier="1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="left_inner_finger_joint" multiplier="-1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_inner_finger_joint" multiplier="-1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="left_inner_knuckle_joint" multiplier="1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_inner_knuckle_joint" multiplier="1.0"/>
+
+    <gazebo>
+        <plugin name="gazebo_grasp_fix" filename="libgazebo_grasp_fix.so">
+            <arm>
+                <arm_name>kr1410_robot</arm_name>
+                <palm_link>left_outer_knuckle</palm_link>
+                <palm_link>right_outer_knuckle</palm_link>
+                <gripper_link>left_inner_finger</gripper_link>
+                <gripper_link>right_inner_finger</gripper_link>
+            </arm>
+        <forces_angle_tolerance>100</forces_angle_tolerance>
+        <update_rate>4</update_rate>
+        <grip_count_threshold>4</grip_count_threshold>
+        <max_grip_count>8</max_grip_count>
+        <release_tolerance>0.005</release_tolerance>
+        <disable_collisions_on_attach>false</disable_collisions_on_attach>
+        <contact_topic>__default_topic__</contact_topic>
+        </plugin>
+    </gazebo>
+    <!-- define the ur3e's position and orientation in the world coordinate system -->
+    <link name="world" />
+    <joint name="world_joint" type="fixed">
+    	<parent link="world"/>
+    	<child link="${connected_to}"/>
+    	<origin xyz="0.0 0.0 0.75" rpy="0.0 0.0 0.0"/>
+	</joint>
+
+
+    </xacro:macro>
+</robot>

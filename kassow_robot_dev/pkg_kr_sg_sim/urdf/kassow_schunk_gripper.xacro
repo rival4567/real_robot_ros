@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="https://ros.org/wiki/xacro" name="kassow_schunk_gripper_robot">
+
+    <!-- Kassow Robot -->
+    <xacro:include filename="$(find kr1410_cobot)/urdf/kr1410_model.xacro"/>
+    <xacro:include filename="$(find kr1410_cobot)/urdf/kr1410_transmissions.xacro"/>
+    <!-- End effector -->
+    <xacro:include filename="$(find greifeinheit_pneumatisch_schunk_gripper)/urdf/gripper.xacro"/>
+    <!-- Gazebo settings -->
+    <xacro:include filename="$(find pkg_kr_sg_sim)/urdf/gazebo.xacro"/>
+    <!-- Connect Schunk gripper end effector to the robotic arm -->
+    <xacro:greifeinheit_pneumatisch_schunk_gripper prefix="" connected_to="tool_io"/>
+
+</robot>

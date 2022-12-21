@@ -126,7 +126,7 @@ You’ve probably noticed that there’s no way to move turtle2. You can accompl
 In a new terminal, source ROS, and run:
 
 ```bash
-rosrun turtlesim turtlesim_node __name:=turtle2 --ros-args --remap turtle1/cmd_vel:=turtle2/cmd_vel
+rosrun turtlesim turtle_teleop_key __name:=turtle2 --ros-args --remap turtle1/cmd_vel:=turtle2/cmd_vel
 ```
 
 > **Note**: Notice that __name:=turtle2 starts the node with name `turtle2`. This avoids conflicts if we start two nodes with same name.
