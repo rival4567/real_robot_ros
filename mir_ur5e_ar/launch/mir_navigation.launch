@@ -1,0 +1,18 @@
+<launch>
+    <!-- Gazebo-->
+    <include file="$(find mir_ur5e_ar)/launch/gazebo_common.launch"/>
+    
+    <!-- Localization-->
+    <include file="$(find mir_navigation)/launch/amcl.launch">
+        <arg name="initial_pose_x" value="25.0" />
+        <arg name="initial_pose_y" value="25.0" />
+    </include>
+
+    <!-- Navigation -->
+    <include file="$(find mir_navigation)/launch/start_planner.launch">
+        <arg name="map_file" value="$(find mir_ur5e_ar)/maps/campus.yaml" />
+        <arg name="virtual_walls_map_file" value="$(find mir_ur5e_ar)/maps/campus.yaml" />
+    </include>
+
+    <include file="$(find mir_ur5e_ar)/launch/rviz.launch" />
+</launch>

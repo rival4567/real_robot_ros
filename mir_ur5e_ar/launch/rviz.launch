@@ -1,0 +1,7 @@
+<launch>
+    <!-- Run RViz with Moveit! Plugin -->
+    <include file="$(find mir_ur5e_moveit)/launch/moveit_rviz.launch">
+        <!-- <arg name="rviz_config" value="$(find mir_ur5e_ar)/config/rviz/mir_ur5e.rviz"/> -->
+        <arg name="rviz_config" value="$(find mir_ur5e_ar)/config/rviz/navigation.rviz"/>
+    </include>
+</launch>

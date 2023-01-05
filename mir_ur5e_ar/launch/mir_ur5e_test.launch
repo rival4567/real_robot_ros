@@ -21,7 +21,7 @@
         <remap from="mobile_base_controller/odom"    to="odom" />
         
         <include file="$(find gazebo_ros)/launch/empty_world.launch">
-            <arg name="world_name" value="$(find mir_ur5e_ar)/worlds/campus_chamv2.world"/>
+            <arg name="world_name" value="$(find mir_ur5e_ar)/worlds/campus_enclosed.world"/>
             <arg name="debug" value="$(arg debug)" />
             <arg name="gui" value="$(arg gui)" />
             <arg name="paused" value="$(arg paused)"/>
@@ -34,7 +34,7 @@
     <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
     <!-- push robot_description to factory and spawn robot in gazebo -->
     <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
-        args="-x 0.0 -y 0.0 -z 0.0 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
+        args="-x 0.0 -y 0.0 -z 0.01 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" />
 
 
       <!-- Load ros_control controller configurations -->

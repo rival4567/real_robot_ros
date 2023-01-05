@@ -1,0 +1,17 @@
+<launch>
+    <!-- Gazebo-->
+    <include file="$(find mir_ur5e_ar)/launch/gazebo_common.launch"/>
+    
+    <!-- Mapping-->
+    <include file="$(find mir_navigation)/launch/hector_mapping.launch">
+        <arg name="disable_localization" value="false" />
+        <arg name="map_size" value="4096" />
+    </include>
+
+    <!-- Navigation -->
+    <include file="$(find mir_navigation)/launch/move_base.xml">
+        <arg name="with_virtual_walls" value="false" />
+    </include>
+    <include file="$(find mir_ur5e_ar)/launch/rviz.launch" />
+    <include file="$(find mir_ur5e_ar)/launch/mir_teleop.launch" />
+</launch>

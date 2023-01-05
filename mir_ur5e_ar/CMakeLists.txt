@@ -2,12 +2,19 @@ cmake_minimum_required(VERSION 3.0.2)
 project(mir_ur5e_ar)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  message_generation
+  gazebo_msgs
+  nav_msgs
+  std_srvs
+  dynamic_reconfigure
+  gazebo_dev
+  gazebo_ros
   geometry_msgs
   roscpp
   rospy
@@ -17,8 +24,12 @@ find_package(catkin REQUIRED COMPONENTS
   tf2
 )
 
+find_package(gazebo REQUIRED)
+include_directories(include ${GAZEBO_INCLUDE_DIRS})
+
 ## System dependencies are found with CMake's conventions
-# find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED COMPONENTS thread)
+include_directories(${Boost_INCLUDE_DIRS})
 
 
 ## Uncomment this if the package has a setup.py. This macro ensures
@@ -107,10 +118,9 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES mir_ur5e_ar
-#  CATKIN_DEPENDS geometry_msgs roscpp rospy rviz std_msgs tf tf2
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES mir_ur5e_ar
+  CATKIN_DEPENDS dynamic_reconfigure gazebo_dev gazebo_ros geometry_msgs roscpp rospy rviz std_msgs tf tf2
 )
 
 ###########
