@@ -8,6 +8,8 @@ project(pkg_kr_sim)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  control_msgs
+  actionlib_msgs
   geometry_msgs
   roscpp
   rospy
@@ -15,6 +17,11 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   tf2
   xacro
+  message_generation
+  robotiq_2f_85_gripper
+  kr1410_cobot
+  rosbridge_server
+  tf2_web_republisher
 )
 
 ## System dependencies are found with CMake's conventions
@@ -65,17 +72,18 @@ find_package(catkin REQUIRED COMPONENTS
 # )
 
 ## Generate actions in the 'action' folder
-# add_action_files(
-#   FILES
-#   Action1.action
+add_action_files(
+  FILES
+  goPose.action
+  goJoint.action
 #   Action2.action
-# )
+)
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   std_msgs
-# )
+generate_messages(
+  DEPENDENCIES
+  geometry_msgs  std_msgs  actionlib_msgs  control_msgs
+)
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -109,7 +117,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES pkg_kr_sim
-#  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs tf tf2 xacro
+  CATKIN_DEPENDS geometry_msgs roscpp rospy std_msgs tf tf2 xacro actionlib_msgs
 #  DEPENDS system_lib
 )
 

@@ -1,6 +1,6 @@
 image: /home/ubuntu/workspace/src//mir_ur5e_ar/maps/campus.pgm
 resolution: 0.050000
-origin: [-11.2, 15, 0.000000]
+origin: [-11, 15, 0.000000]
 negate: 0
 occupied_thresh: 0.65
 free_thresh: 0.196

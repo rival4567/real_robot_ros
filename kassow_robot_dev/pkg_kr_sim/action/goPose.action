@@ -1,0 +1,10 @@
+# goal
+std_msgs/Header header
+actionlib_msgs/GoalID goal_id
+geometry_msgs/Pose pose
+---
+# result
+control_msgs/FollowJointTrajectoryActionResult action_result
+---
+# feedback
+control_msgs/FollowJointTrajectoryActionFeedback action_feedback
