@@ -2,10 +2,10 @@
 std_msgs/Header header
 actionlib_msgs/GoalID goal_id
 string controller
-control_msgs/FollowJointTrajectoryActionGoal joint
+control_msgs/FollowJointTrajectoryGoal joint
 ---
 # result
-control_msgs/FollowJointTrajectoryActionResult action_result
+control_msgs/FollowJointTrajectoryResult result
 ---
 # feedback
-control_msgs/FollowJointTrajectoryActionFeedback action_feedback
+control_msgs/FollowJointTrajectoryFeedback feedback

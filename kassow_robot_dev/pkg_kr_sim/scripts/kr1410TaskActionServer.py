@@ -18,10 +18,18 @@ import threading
 
 from kr1410_moveit.kr1410 import KR1410Moveit
 
+from control_msgs.msg import FollowJointTrajectoryActionFeedback
+
 from pkg_kr_sim.msg import goPoseAction
 from pkg_kr_sim.msg import goPoseActionResult
 from pkg_kr_sim.msg import goJointAction
 from pkg_kr_sim.msg import goJointActionResult
+from pkg_kr_sim.msg import goJointActionFeedback
+from pkg_kr_sim.srv import saveTrajectory, saveTrajectoryResponse
+from moveit_msgs.msg import RobotTrajectory
+from moveit_msgs.msg import MoveItErrorCodes
+
+from geometry_msgs.msg import Pose
 
 
 class KR1410ActionServer():
@@ -58,6 +66,17 @@ class KR1410ActionServer():
         # To synchonize the threads, we are using lock
         self.lock = threading.Lock()
 
+        rospy.Subscriber("/manipulator_controller/follow_joint_trajectory/feedback",
+                         FollowJointTrajectoryActionFeedback, self.manipulator_feedback_sub)
+
+        self.pose_pub = rospy.Publisher(
+            '/kr1410/current_pose', Pose, queue_size=10)
+        self.manipulator_feedback = goJointActionFeedback()
+
+        self.trajectory_srv = rospy.Service(
+            '/kr1410/save_trajectory', saveTrajectory, self.handle_save_trajectory_srv)
+        self.temp_goal_handle = None
+
         rospy.loginfo(
             '\033[92m' + 'Started "Go to Pose" Action Server.' + '\033[0m')
 
@@ -67,6 +86,36 @@ class KR1410ActionServer():
         # Planner is RRTConnect. Comment to use RRTStar planner.
         self.kr1410.group.set_planning_time(5)
         self.kr1410.group.set_planner_id("RRTConnect")
+
+        self.rate = rospy.Rate(10)
+
+    def handle_save_trajectory_srv(self, req):
+        print("Request is", req)
+        computed_plan = ''
+        joints = []
+        pose = Pose()
+        trajectories = RobotTrajectory()
+        error_codes = MoveItErrorCodes()
+
+        if req.use_joints:
+            joints = req.joints
+            self.kr1410.group.set_joint_value_target(joints)
+
+        else:
+            pose = req.pose
+            self.kr1410.group.set_pose_target(pose)
+
+        computed_plan = self.kr1410.group.plan()
+        trajectories = computed_plan[1]
+        error_codes = computed_plan[3]
+        return saveTrajectoryResponse(computed_plan[0], trajectories, computed_plan[2], error_codes)
+
+    def manipulator_feedback_sub(self, msg):
+        '''Subscriber to '/manipulator_controller/follow_joint_trajectory/feedback'
+        :param msg: message from the rostopic
+        :type msg: ROS message type FollowJointTrajectoryActionFeedback()
+        '''
+        self.manipulator_feedback.feedback = msg.feedback
 
     def on_goal(self, goal_handle):
         '''Callback to get new goals
@@ -106,6 +155,8 @@ class KR1410ActionServer():
 
         goal = goal_handle.get_goal()
 
+        self.temp_goal_handle = goal_handle
+
         planning_group = self.kr1410
 
         if hasattr(goal, 'controller'):
@@ -113,28 +164,29 @@ class KR1410ActionServer():
             if goal.controller == "end_effector":
                 planning_group = self.gripper
 
-            target_joints = goal.joint.goal.trajectory.points[0].positions
-            rospy.logwarn("Received request for joint control ({}).".format(
-                goal.joint.goal.trajectory.points[0]))
-            planning_group.set_joint_angles(target_joints)
+            target_joints = goal.joint.trajectory.points[0].positions
+            rospy.loginfo("Received request for joint control ({}).".format(
+                goal.joint.trajectory.points[0]))
+            result = planning_group.set_joint_angles(target_joints)
 
         else:
-            print("AKJLFLAKFAKJFE213131", goal.pose)
             target_pose = goal.pose
-            rospy.logwarn("Received request to go to Pose ({}, {})".format(
+            rospy.loginfo("Received request to go to Pose ({}, {})".format(
                 goal.pose.position, goal.pose.orientation))
-            self.kr1410.go_to_pose(target_pose)
+            result = self.kr1410.go_to_pose(target_pose)
 
+        print(result)
         # Goal Result
         rospy.loginfo("Send goal result to client.")
         if result:
             rospy.loginfo("Succeeded!")
-            goal_handle.set_succeeded(result)
+            goal_handle.set_succeeded()
         else:
             rospy.loginfo("Failed goal. Aborting.")
-            goal_handle.set_aborted(result)
+            goal_handle.set_aborted()
 
         rospy.loginfo("Goal ID: " + str(goal_id.id) + " Goal Processing Done.")
+        self.temp_goal_handle = None
         self.lock.release()
 
     @staticmethod
@@ -167,17 +219,20 @@ def main():
     # 2. Create Action Server object
     server = KR1410ActionServer()
     server.kr1410.set_joint_angles([0, 0, 0, 0, 0, 0, 0])
-    server.gripper.set_joint_angles([0.8])
-    rospy.sleep(1)
+    server.kr1410.save_planned_trajectories([1.57, 0, 0, 0, 0, 0, 0])
+    # server.gripper.set_joint_angles([0.8])
 
     while not rospy.is_shutdown():
         # Infinite loop until Ctrl+C
+        server.pose_pub.publish(server.kr1410.group.get_current_pose().pose)
         if len(server.thread_list) >= 1 and (not server.lock.locked()):
             server.thread_list[0].start()
-            print("AAKJDADKJAJD ", len(server.thread_list), server.thread_list)
             server.thread_list.pop(0)
-            print("flajfkakfjlkaf ", len(server.thread_list), server.thread_list)
 
+        if server.temp_goal_handle:
+            server.temp_goal_handle.publish_feedback(
+                server.manipulator_feedback)
+        server.rate.sleep()
     del server
 
 

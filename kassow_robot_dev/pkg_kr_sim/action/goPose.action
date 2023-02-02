@@ -4,7 +4,7 @@ actionlib_msgs/GoalID goal_id
 geometry_msgs/Pose pose
 ---
 # result
-control_msgs/FollowJointTrajectoryActionResult action_result
+control_msgs/FollowJointTrajectoryResult result
 ---
 # feedback
-control_msgs/FollowJointTrajectoryActionFeedback action_feedback
+control_msgs/FollowJointTrajectoryFeedback feedback

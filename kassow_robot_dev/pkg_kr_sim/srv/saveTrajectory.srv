@@ -1,0 +1,8 @@
+bool use_joints
+float64[] joints
+geometry_msgs/Pose pose
+---
+bool success
+moveit_msgs/RobotTrajectory trajectories
+float64 value
+moveit_msgs/MoveItErrorCodes error_codes

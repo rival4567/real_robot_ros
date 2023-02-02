@@ -147,7 +147,7 @@ class KR1410Moveit():
         # Move to desired joint angles
         self.group.set_joint_value_target(arg_list_joint_angles)
         self._computed_plan = self.group.plan()
-        flag_plan = self.group.g\o(wait=True)
+        flag_plan = self.group.go(wait=True)
 
         list_joint_values = self.group.get_current_joint_values()
         rospy.loginfo('\033[94m' + ">>> Final Joint Values:" + '\033[0m')
@@ -177,7 +177,7 @@ class KR1410Moveit():
         '''
         number_attempts = 0
         flag_success = False
-        self.group.set_planner_id("RRTConnect")
+        self.group.set_planner_id("RRTStar")
         self.group.set_planning_time(5)
 
         while ((number_attempts <= arg_max_attempts) and (flag_success is False)):
