@@ -25,7 +25,10 @@ from pkg_kr_sim.msg import goPoseActionResult
 from pkg_kr_sim.msg import goJointAction
 from pkg_kr_sim.msg import goJointActionResult
 from pkg_kr_sim.msg import goJointActionFeedback
+
 from pkg_kr_sim.srv import saveTrajectory, saveTrajectoryResponse
+from pkg_kr_sim.srv import playTrajectory, playTrajectoryResponse
+
 from moveit_msgs.msg import RobotTrajectory
 from moveit_msgs.msg import MoveItErrorCodes
 
@@ -59,15 +62,36 @@ class KR1410ActionServer():
                                                self.on_cancel,
                                                auto_start=False)
 
-        # Starting Action Server
-        self._goPoseAS.start()
-        self._jointAS.start()
+        self.kr1410 = None
+        self.gripper = None
+
+        for topic in rospy.get_published_topics():
+            if "/manipulator_controller/follow_joint_trajectory/goal" in topic[0]:
+                rospy.loginfo("manipulator_controller topic found!")
+                self.kr1410 = KR1410Moveit('', 'manipulator')
+                # Planner is RRTConnect. Comment to use RRTStar planner.
+                self.kr1410.group.set_planning_time(5)
+                self.kr1410.group.set_planner_id("RRTConnect")
+                # Starting Action Server
+                self._goPoseAS.start()
+
+                rospy.loginfo(
+                    '\033[92m' + 'Started "Go to Pose" Action Server.' + '\033[0m')
+                self._jointAS.start()
+
+                rospy.loginfo(
+                    '\033[92m' + 'Started "Joint" Action Server.' + '\033[0m')
+
+                rospy.Subscriber("/manipulator_controller/follow_joint_trajectory/feedback",
+                                 FollowJointTrajectoryActionFeedback, self.manipulator_feedback_sub)
+
+            if "/end_effector_controller/follow_joint_trajectory/goal" in topic[0]:
+                rospy.loginfo("end_effector_controller topic found!")
+                self.gripper = KR1410Moveit('', 'end_effector')
+
         self.thread_list = []
         # To synchonize the threads, we are using lock
         self.lock = threading.Lock()
-
-        rospy.Subscriber("/manipulator_controller/follow_joint_trajectory/feedback",
-                         FollowJointTrajectoryActionFeedback, self.manipulator_feedback_sub)
 
         self.pose_pub = rospy.Publisher(
             '/kr1410/current_pose', Pose, queue_size=10)
@@ -75,17 +99,11 @@ class KR1410ActionServer():
 
         self.trajectory_srv = rospy.Service(
             '/kr1410/save_trajectory', saveTrajectory, self.handle_save_trajectory_srv)
+
+        self.play_trajectory_srv = rospy.Service(
+            '/kr1410/play_trajectory', playTrajectory, self.handle_play_trajectory_srv)
+
         self.temp_goal_handle = None
-
-        rospy.loginfo(
-            '\033[92m' + 'Started "Go to Pose" Action Server.' + '\033[0m')
-
-        self.kr1410 = KR1410Moveit('', 'manipulator')
-        self.gripper = KR1410Moveit('', 'end_effector')
-
-        # Planner is RRTConnect. Comment to use RRTStar planner.
-        self.kr1410.group.set_planning_time(5)
-        self.kr1410.group.set_planner_id("RRTConnect")
 
         self.rate = rospy.Rate(10)
 
@@ -109,6 +127,12 @@ class KR1410ActionServer():
         trajectories = computed_plan[1]
         error_codes = computed_plan[3]
         return saveTrajectoryResponse(computed_plan[0], trajectories, computed_plan[2], error_codes)
+
+    def handle_play_trajectory_srv(self, req):
+        '''Plays the loaded from over a rosservice request.'''
+        print(req.trajectories)
+        ret = self.kr1410.group.execute(req.trajectories)
+        return playTrajectoryResponse(ret)
 
     def manipulator_feedback_sub(self, msg):
         '''Subscriber to '/manipulator_controller/follow_joint_trajectory/feedback'
@@ -167,7 +191,9 @@ class KR1410ActionServer():
             target_joints = goal.joint.trajectory.points[0].positions
             rospy.loginfo("Received request for joint control ({}).".format(
                 goal.joint.trajectory.points[0]))
-            result = planning_group.set_joint_angles(target_joints)
+
+            result = planning_group.set_joint_angles(
+                target_joints) if planning_group else False
 
         else:
             target_pose = goal.pose
@@ -189,7 +215,7 @@ class KR1410ActionServer():
         self.temp_goal_handle = None
         self.lock.release()
 
-    @staticmethod
+    @ staticmethod
     def on_cancel(goal_handle):
         '''This function will be called when Goal Cancel request is send to
             the Action Server
@@ -219,7 +245,8 @@ def main():
     # 2. Create Action Server object
     server = KR1410ActionServer()
     server.kr1410.set_joint_angles([0, 0, 0, 0, 0, 0, 0])
-    server.kr1410.save_planned_trajectories([1.57, 0, 0, 0, 0, 0, 0])
+    # server.kr1410.save_planned_trajectories([1.57, 0, 0, 0, 0, 0, 0])
+
     # server.gripper.set_joint_angles([0.8])
 
     while not rospy.is_shutdown():

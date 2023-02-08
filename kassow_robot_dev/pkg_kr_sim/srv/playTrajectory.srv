@@ -1,0 +1,6 @@
+bool success
+moveit_msgs/RobotTrajectory trajectories
+float64 value
+moveit_msgs/MoveItErrorCodes error_codes
+---
+bool result

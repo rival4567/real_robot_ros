@@ -106,7 +106,7 @@ class KR1410Moveit():
         # To save planned path into a directory
         self._pkg_path = rospkg.RosPack().get_path('pkg_kr_sim')
         self.file_path = self._pkg_path + \
-            '/config/saved_trajectories/' + self._planning_group
+            '/config/saved_trajectories/'
         rospy.loginfo("Package Path: {}".format(self.file_path))
 
         rospy.loginfo('\033[94m' + " >>> KR1410Moveit init done." + '\033[0m')
@@ -289,6 +289,7 @@ class KR1410Moveit():
             number_attempts += 1
             self.group.set_joint_value_target(arg_list_joint_angles)
             self._computed_plan = self.group.plan()
+            print(self._computed_plan)
             flag_plan = self.group.go(wait=True)
             self.group.stop()
 

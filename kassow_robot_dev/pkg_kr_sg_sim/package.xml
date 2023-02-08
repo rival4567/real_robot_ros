@@ -57,6 +57,8 @@
   <build_depend>tf2</build_depend>
   <build_depend>urdf</build_depend>
   <build_depend>xacro</build_depend>
+  <build_depend>pkg_kr_sim</build_depend>
+
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>roscpp</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
@@ -65,6 +67,7 @@
   <build_export_depend>tf2</build_export_depend>
   <build_export_depend>urdf</build_export_depend>
   <build_export_depend>xacro</build_export_depend>
+  
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>roscpp</exec_depend>
   <exec_depend>rospy</exec_depend>
@@ -73,6 +76,7 @@
   <exec_depend>tf2</exec_depend>
   <exec_depend>urdf</exec_depend>
   <exec_depend>xacro</exec_depend>
+  <exec_depend>pkg_kr_sim</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

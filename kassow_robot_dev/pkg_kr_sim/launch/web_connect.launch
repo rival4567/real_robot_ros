@@ -1,7 +1,17 @@
 <launch>
-    <include file="$(find pkg_kr_sim)/launch/kr1410_test.launch" />
+    <arg name="gripper" default="schunk"/>
+    <arg name="topic_ns" value="/rviz_moveit_motion_planning_display/robot_interaction_interactive_marker_topic"/>
+    <arg name="target_frame" value="world"/>
+
+    <include if="$(eval arg('gripper') == 'schunk')" file="$(find pkg_kr_sg_sim)/launch/kr1410_sg_test.launch" />
+
+    <include if="$(eval arg('gripper') == 'robotiq')" file="$(find pkg_kr_sim)/launch/kr1410_test.launch" />
+
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
     <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> -->
+    <node name="interactive_marker_proxy" pkg="interactive_marker_proxy" type="proxy" args="$(arg topic_ns) $(arg target_frame)"/>
+    
     <node name="tf2_web_republisher" pkg="tf2_web_republisher" type="tf2_web_republisher" />
+    
     <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
 </launch>

@@ -1,6 +1,13 @@
 <%- include('partials/header') %>
-   
-  <body onload="init()">
+  <script src="/ros_modules/roslib.js"></script>
+  <script src="/ros_modules/ros3d.js"></script>
+  <script>
+    const init = <%- ros %>
+    console.log(init)
+    // Trigger init after DOM loads
+    document.addEventListener('DOMContentLoaded', init)
+  </script>
+  <body>
     <h1><img src="/images/kassow_robots_logo.jpg" id="img-h1" alt="logo"> Kassow Robots</h1>
     <main>
       <div id="display">

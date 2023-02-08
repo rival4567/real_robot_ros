@@ -21,7 +21,7 @@
     </include>
 
     <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
-    <rosparam file="$(find kr1410_schunk_gripper_moveit_config)/config/ros_controllers.yaml" command="load"/>
+    <rosparam file="$(find pkg_kr_sg_sim)/config/controllers.yaml" command="load"/>
 
     <rosparam file="$(find kr1410_schunk_gripper_moveit_config)/config/gazebo_controllers.yaml" command="load"/>
 
