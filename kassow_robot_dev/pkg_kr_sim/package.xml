@@ -65,6 +65,11 @@
   <build_depend>rosbridge_server</build_depend>
   <build_depend>tf2_web_republisher</build_depend>
   <build_depend>moveit_msgs</build_depend>
+  <build_depend>interactive_marker_proxy</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>moveit_commander</build_depend>
+  <build_depend>moveit_ros_move_group</build_depend>
+  <build_depend>moveit_ros_planning_interface</build_depend>
 
   <build_export_depend>actionlib_msgs</build_export_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
@@ -91,6 +96,10 @@
   <exec_depend>rosbridge_server</exec_depend>
   <exec_depend>tf2_web_republisher</exec_depend>
   <exec_depend>moveit_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>moveit_commander</exec_depend>
+  <exec_depend>moveit_ros_move_group</exec_depend>
+  <exec_depend>moveit_ros_planning_interface</exec_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

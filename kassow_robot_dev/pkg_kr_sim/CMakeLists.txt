@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  sensor_msgs
   tf
   tf2
   xacro
@@ -23,6 +24,11 @@ find_package(catkin REQUIRED COMPONENTS
   rosbridge_server
   tf2_web_republisher
   moveit_msgs
+  interactive_marker_proxy
+  moveit_visual_tools
+  moveit_commander
+  moveit_ros_move_group
+  moveit_ros_planning_interface
 )
 
 ## System dependencies are found with CMake's conventions
@@ -84,7 +90,7 @@ add_action_files(
 ## Generate added messages and services with any dependencies listed here
 generate_messages(
   DEPENDENCIES
-  geometry_msgs  std_msgs  actionlib_msgs  control_msgs moveit_msgs
+  geometry_msgs  std_msgs  actionlib_msgs  control_msgs sensor_msgs moveit_msgs
 )
 
 ################################################
@@ -149,11 +155,16 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/pkg_kr_sim_node.cpp)
 
+
+add_executable(robot_state_tf_publisher src/robot_state_tf_publisher.cpp)
+target_link_libraries(robot_state_tf_publisher ${catkin_LIBRARIES})
+add_dependencies(robot_state_tf_publisher pkg_kr_sim_generate_messages_cpp)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
 ## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
-# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
+## set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above

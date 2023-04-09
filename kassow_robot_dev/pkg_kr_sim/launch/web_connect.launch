@@ -8,8 +8,16 @@
     <include if="$(eval arg('gripper') == 'robotiq')" file="$(find pkg_kr_sim)/launch/kr1410_test.launch" />
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-    <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> -->
-    <node name="interactive_marker_proxy" pkg="interactive_marker_proxy" type="proxy" args="$(arg topic_ns) $(arg target_frame)"/>
+
+    <group ns="kr1410/query_start/">
+        <param name="tf_prefix" value="/kr1410/query_start"/>
+
+        <remap from="/tf" to="/kr1410/query_start/tf"/>
+        <node pkg="robot_state_publisher" name="kr1410_query_start_pub" type="robot_state_publisher" output="screen"/>
+    </group>
+
+    <node name="kr1410_task_action_server" pkg="pkg_kr_sim" type="kr1410_task_action_server.py"/>
+    <node name="interactive_marker_proxy" pkg="interactive_marker_proxy" type="proxy" args="topic_ns:=$(arg topic_ns) target_frame:=$(arg target_frame)"/>
     
     <node name="tf2_web_republisher" pkg="tf2_web_republisher" type="tf2_web_republisher" />
     
