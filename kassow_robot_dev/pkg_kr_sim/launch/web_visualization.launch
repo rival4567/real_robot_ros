@@ -20,5 +20,7 @@
         <arg name="use_roswww" value="$(arg use_roswww)" />
     </include>
 
-    <node name="kr1410_display_trajectory_link" pkg="pkg_kr_sim" type="kr1410_display_planned_path.py" args="-fk_link_name tool_io" output="screen"/>
+    <node name="kr1410_display_trajectory_link" pkg="pkg_kr_sim" type="kr1410_display_planned_path.py" args="-fk_link_name $(arg fk_link_name)" output="screen"/>
+    <!-- <node name="kr1410_display_trajectory_link2" pkg="pkg_kr_sim" type="kr1410_display_planned_path.py" args="-fk_link_name link_3" output="screen"/> -->
+
 </launch>
