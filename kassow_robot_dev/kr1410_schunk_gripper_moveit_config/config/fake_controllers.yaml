@@ -9,6 +9,10 @@ controller_list:
       - joint_5
       - joint_6
       - joint_tool_io
+  - name: fake_end_effector_controller
+    type: $(arg fake_execution_type)
+    joints:
+      []
 initial:  # Define initial robot poses per group
   - group: manipulator
     pose: up

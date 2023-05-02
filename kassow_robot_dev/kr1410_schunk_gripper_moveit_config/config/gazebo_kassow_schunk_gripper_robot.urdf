@@ -307,14 +307,11 @@
             <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
-    <gazebo reference="pedestal_link">
-        <material>Gazebo/DarkGray</material>
+    <gazebo reference="schunk_gripper">
+        <material>Gazebo/Black</material>
         <plugin name="gazebo_ros_control">
             <robotNamespace>/</robotNamespace>
         </plugin>
-    </gazebo>
-    <gazebo reference="robotiq_arg2f_base_link">
-        <material>Gazebo/Black</material>
     </gazebo>
     <!-- Configure self collision properties per link -->
     <gazebo reference="base_link_1">
