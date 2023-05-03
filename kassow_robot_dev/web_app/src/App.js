@@ -1,4 +1,5 @@
 import './App.css';
+import ROSLoader from './components/ROSLoader';
 
 function App() {
   return (
@@ -46,8 +47,8 @@ function App() {
         <div id="slider-pane">
         </div>
       </div>
-
       </header>
+      <ROSLoader />
     </div>
   );
 }
