@@ -759,7 +759,7 @@ export default class ROSLoader extends Component {
 
     return (
         <>
-            <div id="urdf" />
+            <div id="urdf" onload="init()"/>
         </>
     );
     }
