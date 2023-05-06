@@ -22,6 +22,7 @@ export default class ROSLoader2 extends React.Component {
 
         this.state = {
             link_group: {},
+            inputValues: []
         };
         this.end_effector_link = null;
         this.start_initial_flag = true;
@@ -297,8 +298,9 @@ export default class ROSLoader2 extends React.Component {
 
                 let fk_link_name;
 
-                if (this.end_effector_link[this.current_group] === null) {
+                if (this.end_effector_link[this.current_group] === undefined) {
                     fk_link_name = "schunk_gripper";
+                    console.log("HELLO")
                 }
                 else {
                     fk_link_name = this.end_effector_link[this.current_group];
@@ -343,19 +345,12 @@ export default class ROSLoader2 extends React.Component {
                 for (let idx = 0; idx < this.start_joint_states.name.length; idx++) {                
                     for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
                         if (link_group[this.current_group][jdx] === this.start_joint_states.name[idx]) {
-                            let min = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("min");
-                            let max = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("max");
-                            let percent = parseInt((this.start_joint_states.position[idx] - min)/(max - min) * 100);
-                            const html = "<div role='slider' style='width: " + percent + "%;' aria-valuenow=" + this.start_joint_states.position[idx] + " aria-value-text='0.5' title=" + this.start_joint_states.position[idx] + "> " + this.start_joint_states.position[idx] + " </div>";
-                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.start_joint_states.position[idx]);
-                            document.querySelector('input#' + link_group[this.current_group][jdx]).parentElement.innerHTML = html;
-                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.start_joint_states.position[idx]);
+                            let input_slider = document.querySelector('input#' + link_group[this.current_group][jdx]);
+                            input_slider.setAttribute("value", this.start_joint_states.position[idx]);
                             break;
                         }
                     }
                 }
-                                                
-
             });
 
             this.goal_listener.subscribe( (message) => {
@@ -365,7 +360,7 @@ export default class ROSLoader2 extends React.Component {
 
                 let fk_link_name;
 
-                if (this.end_effector_link[this.current_group] == null) {
+                if (this.end_effector_link[this.current_group] === undefined) {
                     fk_link_name = "schunk_gripper";
                 }
                 else {
@@ -411,13 +406,8 @@ export default class ROSLoader2 extends React.Component {
                 for (let idx = 0; idx < this.goal_joint_states.name.length; idx++) {                
                     for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
                         if (link_group[this.current_group][jdx] === this.goal_joint_states.name[idx]) {
-                            const min = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("min");
-                            const max = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("max");
-                            let percent = parseInt((this.goal_joint_states.position[idx] - min)/(max - min) * 100);
-                            const html = "<div style='width: " + percent + "%;' aria-valuenow=" + this.goal_joint_states.position[idx] + " aria-value-text='0.5' title=" + this.goal_joint_states.position[idx] + "></div>";
-                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.goal_joint_states.position[idx]);
-                            document.querySelector('input#' + link_group[this.current_group][jdx]).parentElement.innerHTML = html;
-                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.goal_joint_states.position[idx]);
+                            let input_slider = document.querySelector('input#' + link_group[this.current_group][jdx]);
+                            input_slider.setAttribute("value", this.goal_joint_states.position[idx]);
                             break;
                         }
                     }
@@ -426,81 +416,82 @@ export default class ROSLoader2 extends React.Component {
             this.create_joint_position_msg(1, true);
         }, 3000);
 
-        // setTimeout( () => {
-        //     // Setup the URDF client.
-        //     let goalState = new ROS3D.UrdfClient({
-        //         ros : this.ros,
-        //         tfPrefix : 'goal',
-        //         tfClient : this.tfClient,
-        //         param : 'robot_description',
-        //         path : 'robot_description',
-        //         rootObject : this.viewer.scene,
-        //         colorMaterial: new ROS3D.makeColorMaterial(1.0, 0, 0, 0.75)
-        //     });
+        setTimeout( () => {
 
-        //     let urdfClient = new ROS3D.UrdfClient({
-        //         ros : this.ros,
-        //         tfClient : this.tfClient,
-        //         param : 'robot_description',
-        //         path : 'robot_description',
-        //         rootObject : this.viewer.scene,
-        //     });
+            // Setup the URDF client.
+            // let goalState = new ROS3D.UrdfClient({
+            //     ros : this.ros,
+            //     tfPrefix : 'goal',
+            //     tfClient : this.tfClient,
+            //     param : 'robot_description',
+            //     path : 'robot_description',
+            //     rootObject : this.viewer.scene,
+            //     colorMaterial: new ROS3D.makeColorMaterial(1.0, 0, 0, 0.75)
+            // });
 
-        //     let startState = new ROS3D.UrdfClient({
-        //         ros : this.ros,
-        //         tfPrefix : 'start',
-        //         color : 0x00df00,
-        //         tfClient : this.tfClient,
-        //         param : 'robot_description',
-        //         path : 'robot_description',
-        //         rootObject : this.viewer.scene,
-        //         colorMaterial: new ROS3D.makeColorMaterial(0, 1.0, 0, 0.75) 
-        //     });
+            // let urdfClient = new ROS3D.UrdfClient({
+            //     ros : this.ros,
+            //     tfClient : this.tfClient,
+            //     param : 'robot_description',
+            //     path : 'robot_description',
+            //     rootObject : this.viewer.scene,
+            // });
+
+            // let startState = new ROS3D.UrdfClient({
+            //     ros : this.ros,
+            //     tfPrefix : 'start',
+            //     color : 0x00df00,
+            //     tfClient : this.tfClient,
+            //     param : 'robot_description',
+            //     path : 'robot_description',
+            //     rootObject : this.viewer.scene,
+            //     colorMaterial: new ROS3D.makeColorMaterial(0, 1.0, 0, 0.75) 
+            // });
 
 
-        //     document.querySelector('#start_state').addEventListener("change", function() {
-        //         if(this.checked) {
-        //             if (document.querySelectorAll('input[name="manip"]')[0].checked) {
-        //                 this.start_im_client.rootObject.children[0].visible = true;
-        //             }
-        //             this.viewer.scene.add(startState.urdf);
-        //         }
-        //         else {
-        //             this.start_im_client.rootObject.children[0].visible = false;
-        //             this.viewer.scene.remove(startState.urdf);
-        //         }
-        //     });
+            // document.querySelector('#start_state').addEventListener("change", function() {
+            //     if(this.checked) {
+            //         if (document.querySelectorAll('input[name="manip"]')[0].checked) {
+            //             this.start_im_client.rootObject.children[0].visible = true;
+            //         }
+            //         this.viewer.scene.add(startState.urdf);
+            //     }
+            //     else {
+            //         this.start_im_client.rootObject.children[0].visible = false;
+            //         this.viewer.scene.remove(startState.urdf);
+            //     }
+            // });
 
-        //     document.querySelector('#goal_state').addEventListener("change", function() {
-        //         if(this.checked) {
-        //             if (document.querySelectorAll('input[name="manip"]')[1].checked) {
-        //                 this.goal_im_client.rootObject.children[1].visible = true;
-        //             }
-        //             this.viewer.scene.add(goalState.urdf);
-        //         }
-        //         else {
-        //             this.goal_im_client.rootObject.children[1].visible = false;
-        //             this.viewer.scene.remove(goalState.urdf);
-        //         }
-        //     });
+            // document.querySelector('#goal_state').addEventListener("change", function() {
+            //     if(this.checked) {
+            //         if (document.querySelectorAll('input[name="manip"]')[1].checked) {
+            //             this.goal_im_client.rootObject.children[1].visible = true;
+            //         }
+            //         this.viewer.scene.add(goalState.urdf);
+            //     }
+            //     else {
+            //         this.goal_im_client.rootObject.children[1].visible = false;
+            //         this.viewer.scene.remove(goalState.urdf);
+            //     }
+            // });
 
-        //     document.querySelectorAll('input[name="manip"]').forEach(input => {
-        //         input.addEventListener("change", function() {
-        //         if(this.value == "0"){
-        //             if(document.querySelector('#start_state').checked) {
-        //                 this.start_im_client.rootObject.children[0].visible = true;
-        //             }
-        //             this.goal_im_client.rootObject.children[1].visible = false;
-        //         } else {
-        //             if(document.querySelector('#goal_state').checked) {
-        //                 this.goal_im_client.rootObject.children[1].visible = true;
-        //             }
-        //             this.start_im_client.rootObject.children[0].visible = false;
-        //         }
-        //     });
-        //     });
+            // document.querySelectorAll('input[name="manip"]').forEach(input => {
+            //     input.addEventListener("change", function() {
+            //     if(this.value == "0"){
+            //         if(document.querySelector('#start_state').checked) {
+            //             this.start_im_client.rootObject.children[0].visible = true;
+            //         }
+            //         this.goal_im_client.rootObject.children[1].visible = false;
+            //     } else {
+            //         if(document.querySelector('#goal_state').checked) {
+            //             this.goal_im_client.rootObject.children[1].visible = true;
+            //         }
+            //         this.start_im_client.rootObject.children[0].visible = false;
+            //     }
+            // });
+            // });
 
-        // }, 1500);
+        }, 1500);
     }
 
 
@@ -532,9 +523,9 @@ export default class ROSLoader2 extends React.Component {
 
         document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
             let dim = new ROSLIB.Message({
-                label: label.getAttribute("id").split("-")[0],
-                size: label.getAttribute("id").split("-")[0].length,
-                stride: label.getAttribute("id").split("-")[0].length
+                label: label.getAttribute("for").split("-")[0],
+                size: label.getAttribute("for").split("-")[0].length,
+                stride: label.getAttribute("for").split("-")[0].length
             });
             dims.push(dim);
             if (type === 0) {
@@ -547,8 +538,8 @@ export default class ROSLoader2 extends React.Component {
                 }
             }
             else {
-            positions.push(parseFloat(label.nextElementSibling.nextElementSibling.getAttribute("aria-valuenow")));
-            }
+            positions.push(parseFloat(label.nextElementSibling.value));
+        }
         });
 
         let msg;
@@ -584,7 +575,7 @@ export default class ROSLoader2 extends React.Component {
         return msg;
     }
 
-    callback = () => {
+    handleInputCallback = (event) => {
         let msg = this.create_joint_position_msg(1, true);
         if(document.querySelector('input[name="manip"]').checked === false) {
             this.start_pub.publish(msg);
@@ -617,25 +608,22 @@ export default class ROSLoader2 extends React.Component {
                 for (let idx = 0;idx < names.length;idx++) {
                     if (link_group[group_name].indexOf(names[idx]) !== -1) {
                         let child = document.createElement('label');
-                        child.id = names[idx];
-                        child.for = names[idx];
+                        child.htmlFor = names[idx];
                         child.textContent = names[idx];
                         let child2 = document.createElement('input');
                         child2.type = "range";
                         child2.name = names[idx];
                         child2.id = names[idx];
-                        child2.value = 0;
-                        child2.max = value.names[idx];
-                        console.log(typeof(child2.max))
+                        child2.setAttribute("value", 0);
+                        child2.max = eval("value." + names[idx] + ".max");
                         child2.min = eval("value." + names[idx] + ".min");
                         child2.step = 0.000001;
-                        child2.setAttribute("data-highlight", "true");
-                        child2.setAttribute("data-mini", "true");
-                        child2.addEventListener("change", this.callback);
+                        child2.addEventListener("change", this.handleInputCallback);
                         document.querySelector("#" + group_name).appendChild(child);
                         document.querySelector("#" + group_name).appendChild(child2);
-                        
                     }
+
+                    // Write a function to update input values
                 }
             }
             let msg = new ROSLIB.Message({
@@ -693,7 +681,7 @@ export default class ROSLoader2 extends React.Component {
                                     Maniplation
                                     </td>
                                     <td>
-                                    <input type="radio" name="manip" id="manip" value="0" defaultChecked/>
+                                    <input type="radio" name="manip" id="manip" value="0"/>
                                     </td>
                                     <td>
                                     <input type="radio" name="manip" id="manip" value="1"/>
