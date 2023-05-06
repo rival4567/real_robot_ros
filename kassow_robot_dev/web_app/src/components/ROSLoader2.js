@@ -2,7 +2,6 @@ import React from 'react';
 import * as ROS3D from 'ros3d';
 import * as ROSLIB from 'roslib';
 import AutoRos from './AutoRos';
-import './ROSLoader.css';
 
 
 /**
@@ -22,7 +21,7 @@ export default class ROSLoader2 extends React.Component {
         this.current_group = null;
 
         this.state = {
-            link_group: {}
+            link_group: {},
         };
         this.end_effector_link = null;
         this.start_initial_flag = true;
@@ -158,6 +157,13 @@ export default class ROSLoader2 extends React.Component {
 
         this.initViewer();
         this.initResizeObserver();
+        this.end_effector_link_param.get( (value) => {
+            this.end_effector_link = value;
+        });
+    
+        this.plan_listener.subscribe( (message) => {
+            this.message_stock.push(message);
+        });
         this.fixed_frame_param.get(this.handleFixedFrameUpdate);
         this.link_group_param.get(this.handleLinkGroupUpdate);
     }
@@ -277,149 +283,150 @@ export default class ROSLoader2 extends React.Component {
 
     handleLinkGroupUpdate = (value) => {
         this.setState({ link_group : value });
-        setTimeout(() => {
-            const link_group = this.state.link_group;
+        setTimeout( () => {
             this.createSliderView();
 
-        //     this.joint_listener.subscribe(function(message) {
-        //         this.joint_states = message;
-        //     });
+            this.joint_listener.subscribe( (message) => {
+                this.joint_states = message;
+            });
 
-        //     this.start_listener.subscribe(function(message) {
-        //         this.start_joint_states = message;
-        //         if(document.querySelector('input[name="manip"]').checked) return;
+            this.start_listener.subscribe( (message) => {
+                const link_group = this.state.link_group;
+                this.start_joint_states = message;
+                if(document.querySelector('input[name="manip"]').checked) return;
 
-        //         let fk_link_name;
+                let fk_link_name;
 
-        //         if (this.end_effector_link[this.current_group] == null) {
-        //             fk_link_name = "schunk_gripper";
-        //         }
-        //         else {
-        //             fk_link_name = this.end_effector_link[this.current_group];
-        //         }
+                if (this.end_effector_link[this.current_group] === null) {
+                    fk_link_name = "schunk_gripper";
+                }
+                else {
+                    fk_link_name = this.end_effector_link[this.current_group];
+                }
 
-        //         // Update interactive marker poisition
-        //         let request = new ROSLIB.ServiceRequest({
-        //             header: {
-        //                 seq: 0,
-        //                 stamp: 0,
-        //                 frame_id: this.fixed_frame
-        //             },
-        //             fk_link_names: [fk_link_name],
-        //             robot_state: {
-        //                 joint_state: this.start_joint_states
-        //             }
-        //         });
+                // Update interactive marker poisition
+                let request = new ROSLIB.ServiceRequest({
+                    header: {
+                        seq: 0,
+                        stamp: 0,
+                        frame_id: this.fixed_frame
+                    },
+                    fk_link_names: [fk_link_name],
+                    robot_state: {
+                        joint_state: this.start_joint_states
+                    }
+                });
 
-        //         this.computefkClient.callService(request, function(result) {
+                this.computefkClient.callService(request, (result) => {
                     
-        //             let interactive_msg = new ROSLIB.Message({
-        //                 marker_name: "start",
-        //                 event_type: 0,
-        //                 pose: {
-        //                     position: {
-        //                         x: result.pose_stamped[0].pose.position.x,
-        //                         y: result.pose_stamped[0].pose.position.y,
-        //                         z: result.pose_stamped[0].pose.position.z
-        //                     },
-        //                     orientation: {
-        //                         x: result.pose_stamped[0].pose.orientation.x,
-        //                         y: result.pose_stamped[0].pose.orientation.y,
-        //                         z: result.pose_stamped[0].pose.orientation.z,
-        //                         w: result.pose_stamped[0].pose.orientation.w
-        //                     }
-        //                 }
-        //             });
-        //             this.start_interactive_pub.publish(interactive_msg);
-        //         });
+                    let interactive_msg = new ROSLIB.Message({
+                        marker_name: "start",
+                        event_type: 0,
+                        pose: {
+                            position: {
+                                x: result.pose_stamped[0].pose.position.x,
+                                y: result.pose_stamped[0].pose.position.y,
+                                z: result.pose_stamped[0].pose.position.z
+                            },
+                            orientation: {
+                                x: result.pose_stamped[0].pose.orientation.x,
+                                y: result.pose_stamped[0].pose.orientation.y,
+                                z: result.pose_stamped[0].pose.orientation.z,
+                                w: result.pose_stamped[0].pose.orientation.w
+                            }
+                        }
+                    });
+                    this.start_interactive_pub.publish(interactive_msg);
+                });
 
 
-        //         for (let idx = 0; idx < this.start_joint_states.name.length; idx++) {                
-        //             for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
-        //                 if (link_group[this.current_group][jdx] == this.start_joint_states.name[idx]) {
-        //                     let min = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("min");
-        //                     let max = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("max");
-        //                     let percent = parseInt((this.start_joint_states.position[idx] - min)/(max - min) * 100);
-        //                     const html = "<div style='width: " + percent + "%;' aria-valuenow=" + this.start_joint_states.position[idx] + " aria-value-text='0.5' title=" + this.start_joint_states.position[idx] + "></div>";
-        //                     document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.start_joint_states.position[idx]);
-        //                     document.querySelector('input#' + link_group[this.current_group][jdx]).innerHTML = html;
-        //                     document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.start_joint_states.position[idx]);
-        //                     break;
-        //                 }
-        //             }
-        //         }
+                for (let idx = 0; idx < this.start_joint_states.name.length; idx++) {                
+                    for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
+                        if (link_group[this.current_group][jdx] === this.start_joint_states.name[idx]) {
+                            let min = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("min");
+                            let max = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("max");
+                            let percent = parseInt((this.start_joint_states.position[idx] - min)/(max - min) * 100);
+                            const html = "<div role='slider' style='width: " + percent + "%;' aria-valuenow=" + this.start_joint_states.position[idx] + " aria-value-text='0.5' title=" + this.start_joint_states.position[idx] + "> " + this.start_joint_states.position[idx] + " </div>";
+                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.start_joint_states.position[idx]);
+                            document.querySelector('input#' + link_group[this.current_group][jdx]).parentElement.innerHTML = html;
+                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.start_joint_states.position[idx]);
+                            break;
+                        }
+                    }
+                }
                                                 
 
-        //     });
+            });
 
-        //     this.goal_listener.subscribe(function(message) {
-        //         this.goal_joint_states = message;
-        //         if(document.querySelector('input[name="manip"]').checked == false) return;
+            this.goal_listener.subscribe( (message) => {
+                const link_group = this.state.link_group;
+                this.goal_joint_states = message;
+                if(document.querySelector('input[name="manip"]').checked === false) return;
 
-        //         let fk_link_name;
+                let fk_link_name;
 
-        //         if (this.end_effector_link[this.current_group] == null) {
-        //             fk_link_name = "schunk_gripper";
-        //         }
-        //         else {
-        //             fk_link_name = this.end_effector_link[this.current_group];
-        //         }
+                if (this.end_effector_link[this.current_group] == null) {
+                    fk_link_name = "schunk_gripper";
+                }
+                else {
+                    fk_link_name = this.end_effector_link[this.current_group];
+                }
 
-        //         // Update interactive marker poisition
-        //         let request = new ROSLIB.ServiceRequest({
-        //             header: {
-        //                 seq: 0,
-        //                 stamp: 0,
-        //                 frame_id: this.fixed_frame
-        //             },
-        //             fk_link_names: [fk_link_name],
-        //             robot_state: {
-        //                 joint_state: this.goal_joint_states
-        //             }
-        //         });
+                // Update interactive marker poisition
+                let request = new ROSLIB.ServiceRequest({
+                    header: {
+                        seq: 0,
+                        stamp: 0,
+                        frame_id: this.fixed_frame
+                    },
+                    fk_link_names: [fk_link_name],
+                    robot_state: {
+                        joint_state: this.goal_joint_states
+                    }
+                });
 
-        //         this.computefkClient.callService(request, function(result) {
+                this.computefkClient.callService(request, (result) => {
                         
-        //             let interactive_msg = new ROSLIB.Message({
-        //                 marker_name: "goal",
-        //                 event_type: 0,
-        //                 pose: {
-        //                     position: {
-        //                         x: result.pose_stamped[0].pose.position.x,
-        //                         y: result.pose_stamped[0].pose.position.y,
-        //                         z: result.pose_stamped[0].pose.position.z
-        //                     },
-        //                     orientation: {
-        //                         x: result.pose_stamped[0].pose.orientation.x,
-        //                         y: result.pose_stamped[0].pose.orientation.y,
-        //                         z: result.pose_stamped[0].pose.orientation.z,
-        //                         w: result.pose_stamped[0].pose.orientation.w
-        //                     }
-        //                 }
-        //             });
-        //             this.goal_interactive_pub.publish(interactive_msg);
-        //             this.goal_initial_flag = false;
-        //         });
+                    let interactive_msg = new ROSLIB.Message({
+                        marker_name: "goal",
+                        event_type: 0,
+                        pose: {
+                            position: {
+                                x: result.pose_stamped[0].pose.position.x,
+                                y: result.pose_stamped[0].pose.position.y,
+                                z: result.pose_stamped[0].pose.position.z
+                            },
+                            orientation: {
+                                x: result.pose_stamped[0].pose.orientation.x,
+                                y: result.pose_stamped[0].pose.orientation.y,
+                                z: result.pose_stamped[0].pose.orientation.z,
+                                w: result.pose_stamped[0].pose.orientation.w
+                            }
+                        }
+                    });
+                    this.goal_interactive_pub.publish(interactive_msg);
+                    this.goal_initial_flag = false;
+                });
 
-        //         for (let idx = 0; idx < this.goal_joint_states.name.length; idx++) {                
-        //             for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
-        //                 if (link_group[this.current_group][jdx] == this.goal_joint_states.name[idx]) {
-        //                     let min = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("min");
-        //                     let max = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("max");
-        //                     let percent = parseInt((this.goal_joint_states.position[idx] - min)/(max - min) * 100);
-        //                     const html = "<div style='width: " + percent + "%;' aria-valuenow=" + this.goal_joint_states.position[idx] + " aria-value-text='0.5' title=" + this.goal_joint_states.position[idx] + "></div>";
-        //                     document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.goal_joint_states.position[idx]);
-        //                     document.querySelector('input#' + link_group[this.current_group][jdx]).innerHTML = html;
-        //                     document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.goal_joint_states.position[idx]);
-        //                     break;
-        //                 }
-        //             }
-        //         }                          
-        //     });
-        //     this.create_joint_position_msg(1, true);
+                for (let idx = 0; idx < this.goal_joint_states.name.length; idx++) {                
+                    for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
+                        if (link_group[this.current_group][jdx] === this.goal_joint_states.name[idx]) {
+                            const min = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("min");
+                            const max = document.querySelector('input#' + link_group[this.current_group][jdx]).getAttribute("max");
+                            let percent = parseInt((this.goal_joint_states.position[idx] - min)/(max - min) * 100);
+                            const html = "<div style='width: " + percent + "%;' aria-valuenow=" + this.goal_joint_states.position[idx] + " aria-value-text='0.5' title=" + this.goal_joint_states.position[idx] + "></div>";
+                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.goal_joint_states.position[idx]);
+                            document.querySelector('input#' + link_group[this.current_group][jdx]).parentElement.innerHTML = html;
+                            document.querySelector('input#' + link_group[this.current_group][jdx]).setAttribute("value", this.goal_joint_states.position[idx]);
+                            break;
+                        }
+                    }
+                }                          
+            });
+            this.create_joint_position_msg(1, true);
         }, 3000);
 
-        // setTimeout(function() {
+        // setTimeout( () => {
         //     // Setup the URDF client.
         //     let goalState = new ROS3D.UrdfClient({
         //         ros : this.ros,
@@ -496,7 +503,8 @@ export default class ROSLoader2 extends React.Component {
         // }, 1500);
     }
 
-    handleGroupChange() {
+
+    handleGroupChange = () => {
         let selector = document.querySelectorAll("select#group option");
         selector.forEach(selection => {
             document.querySelector("#" + selection.value).style.display="none";
@@ -515,7 +523,7 @@ export default class ROSLoader2 extends React.Component {
         this.create_joint_position_msg(1, true);
     }
 
-    create_joint_position_msg(type, plan_only) {
+    create_joint_position_msg = (type, plan_only) => {
 
         let positions = new Array();
         let start_positions = new Array();
@@ -529,9 +537,9 @@ export default class ROSLoader2 extends React.Component {
                 stride: label.getAttribute("id").split("-")[0].length
             });
             dims.push(dim);
-            if (type == 0) {
+            if (type === 0) {
                 for (let idx = 0; idx < this.start_joint_states.name.length;idx++) {
-                    if (this.start_joint_states.name[idx] == dim.label) {
+                    if (this.start_joint_states.name[idx] === dim.label) {
                         start_positions.push(this.start_joint_states.position[idx]);
                         goal_positions.push(this.goal_joint_states.position[idx]);
                         break;
@@ -539,12 +547,12 @@ export default class ROSLoader2 extends React.Component {
                 }
             }
             else {
-            positions.push(parseFloat(label.nextElementSibling.firstElementChild.getAttribute("aria-valuenow")));
+            positions.push(parseFloat(label.nextElementSibling.nextElementSibling.getAttribute("aria-valuenow")));
             }
         });
 
         let msg;
-        if (type == 0) {
+        if (type === 0) {
             msg = new ROSLIB.Message({
                 start_joint: {
                     layout: {
@@ -576,9 +584,9 @@ export default class ROSLoader2 extends React.Component {
         return msg;
     }
 
-    callback() {
+    callback = () => {
         let msg = this.create_joint_position_msg(1, true);
-        if(document.querySelector('input[name="manip"]').checked == false) {
+        if(document.querySelector('input[name="manip"]').checked === false) {
             this.start_pub.publish(msg);
         }
         else {
@@ -594,7 +602,7 @@ export default class ROSLoader2 extends React.Component {
             let group_div = document.createElement('div');
             group_div.id = group_name
             document.querySelector("#slider-pane").appendChild(group_div);
-            if (idx != 0) {
+            if (idx !== 0) {
                 document.querySelector("#" + group_name).style.display="none";
             }
             else {
@@ -603,10 +611,11 @@ export default class ROSLoader2 extends React.Component {
             }
         }
         this.joint_names.get( (value) => {
+
             let names = value.names;
             for (let group_name in link_group) {
                 for (let idx = 0;idx < names.length;idx++) {
-                    if (link_group[group_name].indexOf(names[idx]) != -1) {
+                    if (link_group[group_name].indexOf(names[idx]) !== -1) {
                         let child = document.createElement('label');
                         child.id = names[idx];
                         child.for = names[idx];
@@ -616,7 +625,8 @@ export default class ROSLoader2 extends React.Component {
                         child2.name = names[idx];
                         child2.id = names[idx];
                         child2.value = 0;
-                        child2.max = eval("value." + names[idx] + ".max");
+                        child2.max = value.names[idx];
+                        console.log(typeof(child2.max))
                         child2.min = eval("value." + names[idx] + ".min");
                         child2.step = 0.000001;
                         child2.setAttribute("data-highlight", "true");
@@ -624,6 +634,7 @@ export default class ROSLoader2 extends React.Component {
                         child2.addEventListener("change", this.callback);
                         document.querySelector("#" + group_name).appendChild(child);
                         document.querySelector("#" + group_name).appendChild(child2);
+                        
                     }
                 }
             }
@@ -639,11 +650,14 @@ export default class ROSLoader2 extends React.Component {
 
     render() {
 
+
         const link_group = this.state.link_group;
-        const group_name = Object.keys(link_group).map((key) => {
-            const value = link_group[key];
+        const joint = this.state.joint_name;
+        const group_name = Object.keys(link_group).map( (key) => {
             return <option key={key} value={key}>{key}</option>
         });
+
+
 
         return (
             <>
@@ -657,7 +671,38 @@ export default class ROSLoader2 extends React.Component {
                     <select id="group" name="group>" onChange={this.handleGroupChange}>
                         {group_name}
                     </select>
-                    <div id="slider-pane"></div>
+                    <div id="slider-pane">
+                        <table>
+                            <thead>
+                                <tr><td></td><td>startState</td><td>goalState</td></tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                    View
+                                    </td>
+                                    <td>
+                                    <input type="checkbox" name="start_state" id="start_state"/>
+                                    </td>
+                                    <td>
+                                    <input type="checkbox" name="goal_state" id="goal_state"/>
+                                    </td>
+                                </tr>  
+                                <tr>
+                                    <td>
+                                    Maniplation
+                                    </td>
+                                    <td>
+                                    <input type="radio" name="manip" id="manip" value="0" defaultChecked/>
+                                    </td>
+                                    <td>
+                                    <input type="radio" name="manip" id="manip" value="1"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
                     </>
                     )}
                 </div>
