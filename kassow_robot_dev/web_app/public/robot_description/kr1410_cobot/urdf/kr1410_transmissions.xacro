@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+    <!-- Author: Shivam -->
+
+    <!-- Macro for joint transmission -->
+    <xacro:macro name="joint_transmission" params="joint hw_interface">
+        <transmission name="${joint}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${joint}">
+                <hardwareInterface>${hw_interface}</hardwareInterface>
+            </joint>
+            <actuator name="${joint}_motor">
+                <mechanicalReduction>1.0</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+    <!-- Type of transmission used -->
+    <xacro:property name="transmission_hw_interface" value="hardware_interface/PositionJointInterface" />
+
+    <!-- Adding transmission to joints of KR1410 robot -->
+    <xacro:joint_transmission joint="joint_1" hw_interface="${transmission_hw_interface}" />
+    <xacro:joint_transmission joint="joint_2" hw_interface="${transmission_hw_interface}" />
+    <xacro:joint_transmission joint="joint_3" hw_interface="${transmission_hw_interface}" />
+    <xacro:joint_transmission joint="joint_4" hw_interface="${transmission_hw_interface}" />
+    <xacro:joint_transmission joint="joint_5" hw_interface="${transmission_hw_interface}" />
+    <xacro:joint_transmission joint="joint_6" hw_interface="${transmission_hw_interface}" />
+    <xacro:joint_transmission joint="joint_tool_io" hw_interface="${transmission_hw_interface}" />
+</robot>

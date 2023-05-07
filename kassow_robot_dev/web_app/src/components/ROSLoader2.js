@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ROS3D from 'ros3d';
+import * as ROS3D from './ros3d';
 import * as ROSLIB from 'roslib';
 import AutoRos from './AutoRos';
 
@@ -22,7 +22,6 @@ export default class ROSLoader2 extends React.Component {
 
         this.state = {
             link_group: {},
-            inputValues: []
         };
         this.end_effector_link = null;
         this.start_initial_flag = true;
@@ -213,32 +212,32 @@ export default class ROSLoader2 extends React.Component {
     
         this.viewer.selectableObjects.castShadow = true
     
-        // const drawer = new ROS3D.MeshResource({
-        //     resource: 'ablagebox.dae',
-        //     path : '/meshes/',
-        //     warnings : true,
-        //     material : new ROS3D.makeColorMaterial(0.21176470588, 0.27058823529, 0.30980392156, 1.0)
-        // });
+        const drawer = new ROS3D.MeshResource({
+            resource: 'ablagebox.dae',
+            path : '/meshes/',
+            warnings : true,
+            material : new ROS3D.makeColorMaterial(0.21176470588, 0.27058823529, 0.30980392156, 1.0)
+        });
     
-        // const pedestal = new ROS3D.MeshResource({
-        // resource: 'Roboter_sockel.dae',
-        // path : '/meshes/',
-        // warnings : true,
-        // material : new ROS3D.makeColorMaterial(0.21176470588, 0.27058823529, 0.30980392156, 0.5)
-        // });
+        const pedestal = new ROS3D.MeshResource({
+            resource: 'Roboter_sockel.dae',
+            path : '/meshes/',
+            warnings : true,
+            material : new ROS3D.makeColorMaterial(0.21176470588, 0.27058823529, 0.30980392156, 0.5)
+        });
     
-        // drawer.position.set(0, 0, -0.41)
-        // drawer.scale.set(0.3, 0.3, 0.3)
-        // drawer.castShadow = true
-        // drawer.receiveShadow = true
+        drawer.position.set(0, 0, -0.41)
+        drawer.scale.set(0.3, 0.3, 0.3)
+        drawer.castShadow = true
+        drawer.receiveShadow = true
     
-        // pedestal.position.set(-0.2, 0.225, -0.41)
-        // pedestal.scale.set(0.0025, 0.0025, 0.0025)
-        // pedestal.castShadow = true
-        // pedestal.receiveShadow = true
+        pedestal.position.set(-0.2, 0.225, -0.41)
+        pedestal.scale.set(0.0025, 0.0025, 0.0025)
+        pedestal.castShadow = true
+        pedestal.receiveShadow = true
     
-        // this.viewer.addObject(drawer);
-        // this.viewer.addObject(pedestal);
+        this.viewer.addObject(drawer);
+        this.viewer.addObject(pedestal);
     
         // Add a grid.
         this.viewer.addObject(new ROS3D.Grid());
@@ -286,7 +285,6 @@ export default class ROSLoader2 extends React.Component {
         this.setState({ link_group : value });
         setTimeout( () => {
             this.createSliderView();
-
             this.joint_listener.subscribe( (message) => {
                 this.joint_states = message;
             });
@@ -300,7 +298,6 @@ export default class ROSLoader2 extends React.Component {
 
                 if (this.end_effector_link[this.current_group] === undefined) {
                     fk_link_name = "schunk_gripper";
-                    console.log("HELLO")
                 }
                 else {
                     fk_link_name = this.end_effector_link[this.current_group];
@@ -419,77 +416,75 @@ export default class ROSLoader2 extends React.Component {
         setTimeout( () => {
 
             // Setup the URDF client.
-            // let goalState = new ROS3D.UrdfClient({
-            //     ros : this.ros,
-            //     tfPrefix : 'goal',
-            //     tfClient : this.tfClient,
-            //     param : 'robot_description',
-            //     path : 'robot_description',
-            //     rootObject : this.viewer.scene,
-            //     colorMaterial: new ROS3D.makeColorMaterial(1.0, 0, 0, 0.75)
-            // });
+            let goalState = new ROS3D.UrdfClient({
+                ros : this.ros,
+                tfPrefix : 'goal',
+                tfClient : this.tfClient,
+                param : 'robot_description',
+                path : 'robot_description',
+                rootObject : this.viewer.scene,
+                colorMaterial: new ROS3D.makeColorMaterial(0, 0, 0, 0)
+            });
 
-            // let urdfClient = new ROS3D.UrdfClient({
-            //     ros : this.ros,
-            //     tfClient : this.tfClient,
-            //     param : 'robot_description',
-            //     path : 'robot_description',
-            //     rootObject : this.viewer.scene,
-            // });
+            let urdfClient = new ROS3D.UrdfClient({
+                ros : this.ros,
+                tfClient : this.tfClient,
+                param : 'robot_description',
+                path : 'robot_description',
+                rootObject : this.viewer.scene,
+            });
 
-            // let startState = new ROS3D.UrdfClient({
-            //     ros : this.ros,
-            //     tfPrefix : 'start',
-            //     color : 0x00df00,
-            //     tfClient : this.tfClient,
-            //     param : 'robot_description',
-            //     path : 'robot_description',
-            //     rootObject : this.viewer.scene,
-            //     colorMaterial: new ROS3D.makeColorMaterial(0, 1.0, 0, 0.75) 
-            // });
+            let startState = new ROS3D.UrdfClient({
+                ros : this.ros,
+                tfPrefix : 'start',
+                tfClient : this.tfClient,
+                param : 'robot_description',
+                path : 'robot_description',
+                rootObject : this.viewer.scene,
+                colorMaterial: new ROS3D.makeColorMaterial(0, 0, 0, 0) 
+            });
 
+            document.querySelector('#start_state').addEventListener("change", () => {
+                if(document.querySelector('#start_state').checked) {
+                    if (document.querySelectorAll('input[name="manip"]')[0].checked) {
+                        this.start_im_client.rootObject.children[0].visible = true;
+                    }
+                    this.viewer.scene.add(startState.urdf);
+                }
+                else {
+                    this.start_im_client.rootObject.children[0].visible = false;
+                    this.viewer.scene.remove(startState.urdf);
+                }
+            });
 
-            // document.querySelector('#start_state').addEventListener("change", function() {
-            //     if(this.checked) {
-            //         if (document.querySelectorAll('input[name="manip"]')[0].checked) {
-            //             this.start_im_client.rootObject.children[0].visible = true;
-            //         }
-            //         this.viewer.scene.add(startState.urdf);
-            //     }
-            //     else {
-            //         this.start_im_client.rootObject.children[0].visible = false;
-            //         this.viewer.scene.remove(startState.urdf);
-            //     }
-            // });
+            document.querySelector('#goal_state').addEventListener("change", () => {
+                if(document.querySelector('#goal_state').checked) {
+                    if (document.querySelectorAll('input[name="manip"]')[1].checked) {
+                        this.goal_im_client.rootObject.children[1].visible = true;
+                    }
+                    this.viewer.scene.add(goalState.urdf);
+                }
+                else {
+                    this.goal_im_client.rootObject.children[1].visible = false;
+                    this.viewer.scene.remove(goalState.urdf);
+                }
+            });
 
-            // document.querySelector('#goal_state').addEventListener("change", function() {
-            //     if(this.checked) {
-            //         if (document.querySelectorAll('input[name="manip"]')[1].checked) {
-            //             this.goal_im_client.rootObject.children[1].visible = true;
-            //         }
-            //         this.viewer.scene.add(goalState.urdf);
-            //     }
-            //     else {
-            //         this.goal_im_client.rootObject.children[1].visible = false;
-            //         this.viewer.scene.remove(goalState.urdf);
-            //     }
-            // });
-
-            // document.querySelectorAll('input[name="manip"]').forEach(input => {
-            //     input.addEventListener("change", function() {
-            //     if(this.value == "0"){
-            //         if(document.querySelector('#start_state').checked) {
-            //             this.start_im_client.rootObject.children[0].visible = true;
-            //         }
-            //         this.goal_im_client.rootObject.children[1].visible = false;
-            //     } else {
-            //         if(document.querySelector('#goal_state').checked) {
-            //             this.goal_im_client.rootObject.children[1].visible = true;
-            //         }
-            //         this.start_im_client.rootObject.children[0].visible = false;
-            //     }
-            // });
-            // });
+            document.querySelectorAll('input[name="manip"]').forEach(input => {
+                input.addEventListener("change", () => {
+                if(this.value == "0"){
+                    if(document.querySelector('#start_state').checked) {
+                        this.start_im_client.rootObject.children[0].visible = true;
+                    }
+                    this.goal_im_client.rootObject.children[1].visible = false;
+                } else {
+                    if(document.querySelector('#goal_state').checked) {
+                        this.goal_im_client.rootObject.children[1].visible = true;
+                    }
+                    this.start_im_client.rootObject.children[0].visible = false;
+                }
+            });
+            });
 
         }, 1500);
     }
@@ -622,8 +617,6 @@ export default class ROSLoader2 extends React.Component {
                         document.querySelector("#" + group_name).appendChild(child);
                         document.querySelector("#" + group_name).appendChild(child2);
                     }
-
-                    // Write a function to update input values
                 }
             }
             let msg = new ROSLIB.Message({
@@ -640,7 +633,6 @@ export default class ROSLoader2 extends React.Component {
 
 
         const link_group = this.state.link_group;
-        const joint = this.state.joint_name;
         const group_name = Object.keys(link_group).map( (key) => {
             return <option key={key} value={key}>{key}</option>
         });

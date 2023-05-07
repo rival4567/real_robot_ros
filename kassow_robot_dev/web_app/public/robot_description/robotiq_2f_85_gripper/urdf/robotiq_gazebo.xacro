@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+    <!-- Define the kr1410 robot position and orientation in the world coordinate system -->
+    <link name="world"/>
+    <joint name="world_joint" type="fixed">
+        <parent link="world"/>
+        <child link="base_link"/>
+        <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.1"/>
+    </joint>
+
+    <gazebo reference="robotiq_arg2f_base_link">
+        <material>Gazebo/Black</material>
+    </gazebo>
+
+    <!-- Gazebo Plugins -->
+    <gazebo>
+        <plugin name="ros_control" filename="libgazebo_ros_control.so">
+            <!--robotNamespace>/</robotNamespace-->
+            <!--robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType-->
+        </plugin>
+    </gazebo>
+
+    <!-- loading plugin: mimic joints works in gazebo now-->
+    <xacro:property name="parent_joint" value="finger_joint"/>
+    <xacro:macro name="mimic_joint_plugin_gazebo" params="parent_joint:=${parent_joint} mimic_joint has_pid:=false multiplier:=1.0 offset:=0.0 max_effort:=5.0 sensitiveness:=0.0 robot_namespace:=''">
+        <gazebo>
+            <plugin name="${mimic_joint}_mimic_plugin" filename="libroboticsgroup_upatras_gazebo_mimic_joint_plugin.so">
+                <joint>${parent_joint}</joint>
+                <mimicJoint>${mimic_joint}</mimicJoint>
+                <xacro:if value="${has_pid}">
+                    <hasPID />
+                </xacro:if>
+                <multiplier>${multiplier}</multiplier>
+                <offset>${offset}</offset>
+                <sensitiveness>${sensitiveness}</sensitiveness>
+                <maxEffort>${max_effort}</maxEffort>
+                <xacro:unless value="${robot_namespace == ''}">
+                    <robotNamespace>${robot_namespace}</robotNamespace>
+                </xacro:unless>
+            </plugin>
+        </gazebo>
+    </xacro:macro>
+
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_outer_knuckle_joint" multiplier="1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="left_inner_finger_joint" multiplier="-1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_inner_finger_joint" multiplier="-1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="left_inner_knuckle_joint" multiplier="1.0"/>
+    <xacro:mimic_joint_plugin_gazebo mimic_joint="right_inner_knuckle_joint" multiplier="1.0"/>
+
+</robot>
