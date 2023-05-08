@@ -423,7 +423,7 @@ export default class ROSLoader2 extends React.Component {
                 param : 'robot_description',
                 path : 'robot_description',
                 rootObject : this.viewer.scene,
-                colorMaterial: new ROS3D.makeColorMaterial(0, 0, 0, 0)
+                colorMaterial: new ROS3D.makeColorMaterial(0, 1.0, 0, 0.75)
             });
 
             let urdfClient = new ROS3D.UrdfClient({
@@ -441,7 +441,7 @@ export default class ROSLoader2 extends React.Component {
                 param : 'robot_description',
                 path : 'robot_description',
                 rootObject : this.viewer.scene,
-                colorMaterial: new ROS3D.makeColorMaterial(0, 0, 0, 0) 
+                colorMaterial: new ROS3D.makeColorMaterial(1.0, 0, 0, 0.75) 
             });
 
             document.querySelector('#start_state').addEventListener("change", () => {
