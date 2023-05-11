@@ -56768,7 +56768,6 @@ var Path = /*@__PURE__*/(function (superclass) {
     this.rosTopic = undefined;
     this.subscribe();
   }
-
   if ( superclass ) Path.__proto__ = superclass;
   Path.prototype = Object.create( superclass && superclass.prototype );
   Path.prototype.constructor = Path;

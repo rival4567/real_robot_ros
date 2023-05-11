@@ -2,6 +2,7 @@ import React from 'react';
 import * as ROS3D from './ros3d';
 import * as ROSLIB from 'roslib';
 import AutoRos from './AutoRos';
+import axios from 'axios';
 
 
 /**
@@ -21,7 +22,8 @@ export default class ROSLoader2 extends React.Component {
         this.current_group = null;
 
         this.state = {
-            link_group: {},
+            link_group : {},
+            imSize : 0.3,
         };
         this.end_effector_link = null;
         this.start_initial_flag = true;
@@ -157,6 +159,11 @@ export default class ROSLoader2 extends React.Component {
 
         this.initViewer();
         this.initResizeObserver();
+        this.fixed_frame_param.get( (value) => {
+            this.handleFixedFrameUpdate(value);
+            this.initUrdfClient();
+        });
+
         this.end_effector_link_param.get( (value) => {
             this.end_effector_link = value;
         });
@@ -164,8 +171,13 @@ export default class ROSLoader2 extends React.Component {
         this.plan_listener.subscribe( (message) => {
             this.message_stock.push(message);
         });
-        this.fixed_frame_param.get(this.handleFixedFrameUpdate);
-        this.link_group_param.get(this.handleLinkGroupUpdate);
+
+        this.link_group_param.get( (value) => {
+            this.setState({ link_group : value });
+            setTimeout( ()=> {
+                this.handleLinkGroupUpdate(value);
+            }, 5000);
+        });
     }
 
     componentDidUpdate(prevProps) {
@@ -173,6 +185,164 @@ export default class ROSLoader2 extends React.Component {
         if (prevProps.width !== width || prevProps.height !== height) {
             this.viewer.resize(width, height);
         }
+        document.querySelector("button#init").addEventListener("pointerdown", () => {
+
+            let positions = new Array();
+            let dims = new Array();
+            document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
+                let dim = new ROSLIB.Message({
+                    label: (label.getAttribute("for").split("-")[0]),
+                    size: (label.getAttribute("for").split("-")[0]).length,
+                    stride: (label.getAttribute("for").split("-")[0]).length
+                });
+                dims.push(dim);
+                for (let i = 0; i < this.joint_states.name.length;i++) {
+                    if (this.joint_states.name[i] == dim.label) {
+                        positions.push(this.joint_states.position[i]);
+                        break;
+                    }
+                }
+            });
+
+            let msg;
+            msg = new ROSLIB.Message({
+                layout: {
+                    dim: dims,
+                    data_offset: 0
+                },
+                data: positions
+            });
+            if(document.querySelector('input[name="manip"]').checked === true) {
+                this.start_pub.publish(msg);
+            }
+            else {
+                this.goal_pub.publish(msg);
+            }
+        });
+    
+        document.querySelector("button#preview").addEventListener("pointerdown", () => {
+            if(typeof this.message_stock !== 'undefined' && this.message_stock.length > 0) {
+                let idx = 0;
+                let tmp_start_joint_states = this.start_joint_states;
+                console.log("start joint states", this.start_joint_states)
+                console.log(this.message_stock)
+                let timer = setInterval( () => {
+                    this.start_pub.publish(this.message_stock[idx]);
+                    idx++;
+                    if(idx == this.message_stock.length) {
+    
+                        let positions = new Array();
+                        let dims = new Array();
+    
+                        document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
+                            let dim = new ROSLIB.Message({
+                                label: (label.attr("for").split("-")[0]),
+                                size: (label.attr("for").split("-")[0]).length,
+                                stride: (label.attr("for").split("-")[0]).length
+                            });
+                            dims.push(dim);
+                            for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
+                                if (tmp_start_joint_states.name[idx] == dim.label) {
+                                    positions.push(tmp_start_joint_states.position[idx]);
+                                    break;
+                                }
+                            }
+                        });
+    
+                        let msg;
+                        msg = new ROSLIB.Message({
+                            layout: {
+                                dim: dims,
+                                data_offset: 0
+                            },
+                            data: positions
+                        });
+                        console.log("MEssage", msg)
+                        this.start_pub.publish(msg);
+                        clearInterval(timer);
+                    }
+                },100);
+            }
+        });
+
+        document.querySelector("button#moveit").addEventListener("pointerdown", () => {
+            let msg = this.create_joint_position_msg(0, false);
+            this.moveit_pub.publish(msg);
+        });
+
+        document.querySelector("button#plan").addEventListener("pointerdown", () => {
+            let msg = this.create_joint_position_msg(0, true);
+            this.moveit_pub.publish(msg);
+        });
+
+        document.querySelector("button#execute").addEventListener("pointerdown", () => {
+            if(typeof this.message_stock !== 'undefined' && this.message_stock.length > 0) {
+                let sim_mode = new ROSLIB.Param({
+                    ros: this.ros,
+                    name: '/sim_mode'
+                });
+                sim_mode.get( (value) => {
+                    console.log(value)
+                    if (value == true) {
+                        let timer = setInterval( () => {
+                            if(this.message_stock.length == 0) {
+                                clearInterval(timer);
+                            }
+                            else {
+                                this.joint_pub.publish(this.message_stock.shift());
+                            }
+                        }, 100);
+                    }
+                    else {
+                        let msg = new ROSLIB.Message({
+                        });
+                        this.execute_pub.publish(msg);
+                    }                
+                });
+            }
+        });
+
+        document.querySelector('#start_state').addEventListener("change", () => {
+            if(document.querySelector('#start_state').checked) {
+                if (document.querySelectorAll('input[name="manip"]')[0].checked) {
+                    this.start_im_client.rootObject.children[0].visible = true;
+                }
+                this.viewer.scene.add(this.startState.urdf);
+            }
+            else {
+                this.start_im_client.rootObject.children[0].visible = false;
+                this.viewer.scene.remove(this.startState.urdf);
+            }
+        });
+
+        document.querySelector('#goal_state').addEventListener("change", () => {
+            if(document.querySelector('#goal_state').checked) {
+                if (document.querySelectorAll('input[name="manip"]')[1].checked) {
+                    this.goal_im_client.rootObject.children[1].visible = true;
+                }
+                this.viewer.scene.add(this.goalState.urdf);
+            }
+            else {
+                this.goal_im_client.rootObject.children[1].visible = false;
+                this.viewer.scene.remove(this.goalState.urdf);
+            }
+        });
+
+        document.querySelectorAll('input[name="manip"]').forEach(input => {
+            input.addEventListener("change", () => {
+            if(document.querySelector('input[name="manip"]').checked) {
+                if(document.querySelector('#start_state').checked) {
+                    this.start_im_client.rootObject.children[0].visible = true;
+                }
+                this.goal_im_client.rootObject.children[1].visible = false;
+            } else {
+                if(document.querySelector('#goal_state').checked) {
+                    this.goal_im_client.rootObject.children[1].visible = true;
+                }
+                this.start_im_client.rootObject.children[0].visible = false;
+            }
+        });
+        });
     }
 
     componentWillUnmount() {
@@ -241,6 +411,7 @@ export default class ROSLoader2 extends React.Component {
     
         // Add a grid.
         this.viewer.addObject(new ROS3D.Grid());
+        this.viewer.scene.visible = false;
     }
 
     initResizeObserver() {
@@ -250,6 +421,38 @@ export default class ROSLoader2 extends React.Component {
             this.viewer.resize(width, height);
         });
         this.resizeObserver.observe(targetNode);
+    }
+
+    initUrdfClient = () => {
+        // Setup the URDF client.
+
+        const urdfClient = new ROS3D.UrdfClient({
+            ros : this.ros,
+            tfClient : this.tfClient,
+            param : 'robot_description',
+            path : 'robot_description',
+            rootObject : this.viewer.scene,
+        });
+
+        this.goalState = new ROS3D.UrdfClient({
+            ros : this.ros,
+            tfPrefix : 'goal',
+            tfClient : this.tfClient,
+            param : 'robot_description',
+            path : 'robot_description',
+            rootObject : this.viewer.scene,
+            colorMaterial: new ROS3D.makeColorMaterial(1.0, 0.0, 0, 0.25)
+        });
+
+        this.startState = new ROS3D.UrdfClient({
+            ros : this.ros,
+            tfPrefix : 'start',
+            tfClient : this.tfClient,
+            param : 'robot_description',
+            path : 'robot_description',
+            rootObject : this.viewer.scene,
+            colorMaterial: new ROS3D.makeColorMaterial(0.0, 1.0, 0, 0.25) 
+        });
     }
 
     handleFixedFrameUpdate = (value) => {
@@ -266,7 +469,6 @@ export default class ROSLoader2 extends React.Component {
         this.start_im_client = new ROS3D.InteractiveMarkerClient({
             ros : this.ros,
             tfClient : this.tfClient,
-            hidden : true,
             topic : '/start/marker',
             camera : this.viewer.camera,
             rootObject : this.viewer.selectableObjects
@@ -274,7 +476,6 @@ export default class ROSLoader2 extends React.Component {
         this.goal_im_client = new ROS3D.InteractiveMarkerClient({
             ros : this.ros,
             tfClient : this.tfClient,
-            hidden : true,
             topic : '/goal/marker',
             camera : this.viewer.camera,
             rootObject : this.viewer.selectableObjects
@@ -282,211 +483,134 @@ export default class ROSLoader2 extends React.Component {
     }
 
     handleLinkGroupUpdate = (value) => {
-        this.setState({ link_group : value });
-        setTimeout( () => {
-            this.createSliderView();
-            this.joint_listener.subscribe( (message) => {
-                this.joint_states = message;
+        this.createSliderView();
+        this.joint_listener.subscribe( (message) => {
+            this.joint_states = message;
+        });
+
+        this.start_listener.subscribe( (message) => {
+            const link_group = this.state.link_group;
+            this.start_joint_states = message;
+            if(document.querySelector('input[name="manip"]').checked === false) return;
+
+            let fk_link_name;
+
+            if (this.end_effector_link[this.current_group] === undefined) {
+                fk_link_name = "schunk_gripper";
+            }
+            else {
+                fk_link_name = this.end_effector_link[this.current_group];
+            }
+
+            // Update interactive marker poisition
+            let request = new ROSLIB.ServiceRequest({
+                header: {
+                    seq: 0,
+                    stamp: 0,
+                    frame_id: this.fixed_frame
+                },
+                fk_link_names: [fk_link_name],
+                robot_state: {
+                    joint_state: this.start_joint_states
+                }
             });
 
-            this.start_listener.subscribe( (message) => {
-                const link_group = this.state.link_group;
-                this.start_joint_states = message;
-                if(document.querySelector('input[name="manip"]').checked) return;
-
-                let fk_link_name;
-
-                if (this.end_effector_link[this.current_group] === undefined) {
-                    fk_link_name = "schunk_gripper";
-                }
-                else {
-                    fk_link_name = this.end_effector_link[this.current_group];
-                }
-
-                // Update interactive marker poisition
-                let request = new ROSLIB.ServiceRequest({
-                    header: {
-                        seq: 0,
-                        stamp: 0,
-                        frame_id: this.fixed_frame
-                    },
-                    fk_link_names: [fk_link_name],
-                    robot_state: {
-                        joint_state: this.start_joint_states
+            this.computefkClient.callService(request, (result) => {
+                
+                let interactive_msg = new ROSLIB.Message({
+                    marker_name: "start",
+                    event_type: 0,
+                    pose: {
+                        position: {
+                            x: result.pose_stamped[0].pose.position.x,
+                            y: result.pose_stamped[0].pose.position.y,
+                            z: result.pose_stamped[0].pose.position.z
+                        },
+                        orientation: {
+                            x: result.pose_stamped[0].pose.orientation.x,
+                            y: result.pose_stamped[0].pose.orientation.y,
+                            z: result.pose_stamped[0].pose.orientation.z,
+                            w: result.pose_stamped[0].pose.orientation.w
+                        }
                     }
                 });
+                this.start_interactive_pub.publish(interactive_msg);
+            });
 
-                this.computefkClient.callService(request, (result) => {
+
+            for (let idx = 0; idx < this.start_joint_states.name.length; idx++) {                
+                for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
+                    if (link_group[this.current_group][jdx] === this.start_joint_states.name[idx]) {
+                        let input_slider = document.querySelector('input#' + link_group[this.current_group][jdx]);
+                        input_slider.setAttribute("value", this.start_joint_states.position[idx]);
+                        break;
+                    }
+                }
+            }
+        });
+
+        this.goal_listener.subscribe( (message) => {
+            const link_group = this.state.link_group;
+            this.goal_joint_states = message;
+            if(document.querySelector('input[name="manip"]').checked === true) return;
+
+            let fk_link_name;
+
+            if (this.end_effector_link[this.current_group] === undefined) {
+                fk_link_name = "schunk_gripper";
+            }
+            else {
+                fk_link_name = this.end_effector_link[this.current_group];
+            }
+
+            // Update interactive marker poisition
+            let request = new ROSLIB.ServiceRequest({
+                header: {
+                    seq: 0,
+                    stamp: 0,
+                    frame_id: this.fixed_frame
+                },
+                fk_link_names: [fk_link_name],
+                robot_state: {
+                    joint_state: this.goal_joint_states
+                }
+            });
+
+            this.computefkClient.callService(request, (result) => {
                     
-                    let interactive_msg = new ROSLIB.Message({
-                        marker_name: "start",
-                        event_type: 0,
-                        pose: {
-                            position: {
-                                x: result.pose_stamped[0].pose.position.x,
-                                y: result.pose_stamped[0].pose.position.y,
-                                z: result.pose_stamped[0].pose.position.z
-                            },
-                            orientation: {
-                                x: result.pose_stamped[0].pose.orientation.x,
-                                y: result.pose_stamped[0].pose.orientation.y,
-                                z: result.pose_stamped[0].pose.orientation.z,
-                                w: result.pose_stamped[0].pose.orientation.w
-                            }
+                let interactive_msg = new ROSLIB.Message({
+                    marker_name: "goal",
+                    event_type: 0,
+                    pose: {
+                        position: {
+                            x: result.pose_stamped[0].pose.position.x,
+                            y: result.pose_stamped[0].pose.position.y,
+                            z: result.pose_stamped[0].pose.position.z
+                        },
+                        orientation: {
+                            x: result.pose_stamped[0].pose.orientation.x,
+                            y: result.pose_stamped[0].pose.orientation.y,
+                            z: result.pose_stamped[0].pose.orientation.z,
+                            w: result.pose_stamped[0].pose.orientation.w
                         }
-                    });
-                    this.start_interactive_pub.publish(interactive_msg);
-                });
-
-
-                for (let idx = 0; idx < this.start_joint_states.name.length; idx++) {                
-                    for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
-                        if (link_group[this.current_group][jdx] === this.start_joint_states.name[idx]) {
-                            let input_slider = document.querySelector('input#' + link_group[this.current_group][jdx]);
-                            input_slider.setAttribute("value", this.start_joint_states.position[idx]);
-                            break;
-                        }
-                    }
-                }
-            });
-
-            this.goal_listener.subscribe( (message) => {
-                const link_group = this.state.link_group;
-                this.goal_joint_states = message;
-                if(document.querySelector('input[name="manip"]').checked === false) return;
-
-                let fk_link_name;
-
-                if (this.end_effector_link[this.current_group] === undefined) {
-                    fk_link_name = "schunk_gripper";
-                }
-                else {
-                    fk_link_name = this.end_effector_link[this.current_group];
-                }
-
-                // Update interactive marker poisition
-                let request = new ROSLIB.ServiceRequest({
-                    header: {
-                        seq: 0,
-                        stamp: 0,
-                        frame_id: this.fixed_frame
-                    },
-                    fk_link_names: [fk_link_name],
-                    robot_state: {
-                        joint_state: this.goal_joint_states
                     }
                 });
+                this.goal_interactive_pub.publish(interactive_msg);
+                this.goal_initial_flag = false;
+            });
 
-                this.computefkClient.callService(request, (result) => {
-                        
-                    let interactive_msg = new ROSLIB.Message({
-                        marker_name: "goal",
-                        event_type: 0,
-                        pose: {
-                            position: {
-                                x: result.pose_stamped[0].pose.position.x,
-                                y: result.pose_stamped[0].pose.position.y,
-                                z: result.pose_stamped[0].pose.position.z
-                            },
-                            orientation: {
-                                x: result.pose_stamped[0].pose.orientation.x,
-                                y: result.pose_stamped[0].pose.orientation.y,
-                                z: result.pose_stamped[0].pose.orientation.z,
-                                w: result.pose_stamped[0].pose.orientation.w
-                            }
-                        }
-                    });
-                    this.goal_interactive_pub.publish(interactive_msg);
-                    this.goal_initial_flag = false;
-                });
-
-                for (let idx = 0; idx < this.goal_joint_states.name.length; idx++) {                
-                    for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
-                        if (link_group[this.current_group][jdx] === this.goal_joint_states.name[idx]) {
-                            let input_slider = document.querySelector('input#' + link_group[this.current_group][jdx]);
-                            input_slider.setAttribute("value", this.goal_joint_states.position[idx]);
-                            break;
-                        }
+            for (let idx = 0; idx < this.goal_joint_states.name.length; idx++) {                
+                for (let jdx = 0; jdx < link_group[this.current_group].length; jdx++) {
+                    if (link_group[this.current_group][jdx] === this.goal_joint_states.name[idx]) {
+                        let input_slider = document.querySelector('input#' + link_group[this.current_group][jdx]);
+                        input_slider.setAttribute("value", this.goal_joint_states.position[idx]);
+                        break;
                     }
-                }                          
-            });
-            this.create_joint_position_msg(1, true);
-        }, 3000);
-
-        setTimeout( () => {
-
-            // Setup the URDF client.
-            let goalState = new ROS3D.UrdfClient({
-                ros : this.ros,
-                tfPrefix : 'goal',
-                tfClient : this.tfClient,
-                param : 'robot_description',
-                path : 'robot_description',
-                rootObject : this.viewer.scene,
-                colorMaterial: new ROS3D.makeColorMaterial(0, 1.0, 0, 0.75)
-            });
-
-            let urdfClient = new ROS3D.UrdfClient({
-                ros : this.ros,
-                tfClient : this.tfClient,
-                param : 'robot_description',
-                path : 'robot_description',
-                rootObject : this.viewer.scene,
-            });
-
-            let startState = new ROS3D.UrdfClient({
-                ros : this.ros,
-                tfPrefix : 'start',
-                tfClient : this.tfClient,
-                param : 'robot_description',
-                path : 'robot_description',
-                rootObject : this.viewer.scene,
-                colorMaterial: new ROS3D.makeColorMaterial(1.0, 0, 0, 0.75) 
-            });
-
-            document.querySelector('#start_state').addEventListener("change", () => {
-                if(document.querySelector('#start_state').checked) {
-                    if (document.querySelectorAll('input[name="manip"]')[0].checked) {
-                        this.start_im_client.rootObject.children[0].visible = true;
-                    }
-                    this.viewer.scene.add(startState.urdf);
                 }
-                else {
-                    this.start_im_client.rootObject.children[0].visible = false;
-                    this.viewer.scene.remove(startState.urdf);
-                }
-            });
+            }                          
+        });
+        this.create_joint_position_msg(1, true);
 
-            document.querySelector('#goal_state').addEventListener("change", () => {
-                if(document.querySelector('#goal_state').checked) {
-                    if (document.querySelectorAll('input[name="manip"]')[1].checked) {
-                        this.goal_im_client.rootObject.children[1].visible = true;
-                    }
-                    this.viewer.scene.add(goalState.urdf);
-                }
-                else {
-                    this.goal_im_client.rootObject.children[1].visible = false;
-                    this.viewer.scene.remove(goalState.urdf);
-                }
-            });
-
-            document.querySelectorAll('input[name="manip"]').forEach(input => {
-                input.addEventListener("change", () => {
-                if(this.value == "0"){
-                    if(document.querySelector('#start_state').checked) {
-                        this.start_im_client.rootObject.children[0].visible = true;
-                    }
-                    this.goal_im_client.rootObject.children[1].visible = false;
-                } else {
-                    if(document.querySelector('#goal_state').checked) {
-                        this.goal_im_client.rootObject.children[1].visible = true;
-                    }
-                    this.start_im_client.rootObject.children[0].visible = false;
-                }
-            });
-            });
-
-        }, 1500);
     }
 
 
@@ -533,8 +657,16 @@ export default class ROSLoader2 extends React.Component {
                 }
             }
             else {
-            positions.push(parseFloat(label.nextElementSibling.value));
-        }
+                positions.push(parseFloat(label.nextElementSibling.value));
+            }
+        });
+
+        const display_planned_path = new ROS3D.Path({
+            ros : this.ros,
+            topic : '/kr1410/trajectory_line',
+            tfClient : this.tfClient,
+            rootObject : this.viewer.scene,
+            color : 0xffffe0
         });
 
         let msg;
@@ -572,7 +704,7 @@ export default class ROSLoader2 extends React.Component {
 
     handleInputCallback = (event) => {
         let msg = this.create_joint_position_msg(1, true);
-        if(document.querySelector('input[name="manip"]').checked === false) {
+        if(document.querySelector('input[name="manip"]').checked === true) {
             this.start_pub.publish(msg);
         }
         else {
@@ -614,6 +746,8 @@ export default class ROSLoader2 extends React.Component {
                         child2.min = eval("value." + names[idx] + ".min");
                         child2.step = 0.000001;
                         child2.addEventListener("change", this.handleInputCallback);
+                        // Broken way of handling Assets load
+                        child2.innerHTML = <div onLoad={this.handleAssetsLoad()}></div>
                         document.querySelector("#" + group_name).appendChild(child);
                         document.querySelector("#" + group_name).appendChild(child2);
                     }
@@ -626,8 +760,30 @@ export default class ROSLoader2 extends React.Component {
             this.goal_initial_interactive_pub.publish(msg);
         });
     }
-    
 
+    handleAssetsLoad = () => {
+        this.viewer.scene.remove(this.startState.urdf);
+        this.viewer.scene.remove(this.goalState.urdf);
+        this.start_im_client.rootObject.children[0].visible = false;
+        this.goal_im_client.rootObject.children[1].visible = false;
+        this.viewer.scene.visible = true;
+    }    
+
+    imSizeCallback = (event) => {
+
+        this.setState({ imSize : event.target.value });
+        console.log(this.state.imSize)
+        let msg = new ROSLIB.Message({
+            data: parseFloat(this.state.imSize)
+        });
+
+        if (document.querySelectorAll('input[name="manip"]')[0].checked && document.querySelector('#start_state').checked) {
+            this.im_size_pub.publish(msg);
+        }
+        else if(document.querySelectorAll('input[name="manip"]')[1].checked && document.querySelector('#goal_state').checked){
+            this.im_size_pub.publish(msg);
+        }
+    }
 
     render() {
 
@@ -651,38 +807,46 @@ export default class ROSLoader2 extends React.Component {
                     <select id="group" name="group>" onChange={this.handleGroupChange}>
                         {group_name}
                     </select>
-                    <div id="slider-pane">
-                        <table>
-                            <thead>
-                                <tr><td></td><td>startState</td><td>goalState</td></tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                    View
-                                    </td>
-                                    <td>
-                                    <input type="checkbox" name="start_state" id="start_state"/>
-                                    </td>
-                                    <td>
-                                    <input type="checkbox" name="goal_state" id="goal_state"/>
-                                    </td>
-                                </tr>  
-                                <tr>
-                                    <td>
-                                    Maniplation
-                                    </td>
-                                    <td>
-                                    <input type="radio" name="manip" id="manip" value="0"/>
-                                    </td>
-                                    <td>
-                                    <input type="radio" name="manip" id="manip" value="1"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-
-                        </table>
+                    <table>
+                        <thead>
+                            <tr><td></td><td>startState</td><td>goalState</td></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                View
+                                </td>
+                                <td>
+                                <input type="checkbox" name="start_state" id="start_state"/>
+                                </td>
+                                <td>
+                                <input type="checkbox" name="goal_state" id="goal_state"/>
+                                </td>
+                            </tr>  
+                            <tr>
+                                <td>
+                                Maniplation
+                                </td>
+                                <td>
+                                <input type="radio" name="manip" id="manip" defaultChecked/>
+                                </td>
+                                <td>
+                                <input type="radio" name="manip" id="manip"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div>IM-Size
+                        <input type="number" name="number" id="im-size"
+                                value={this.state.imSize} min="0" max="3" step="0.05"
+                                onChange={this.imSizeCallback}/>
                     </div>
+                    <div id="slider-pane" />
+                    <button id="init">Init</button>
+                    <button id="preview">Preview</button>
+                    <button id="plan">Plan</button>
+                    <button id="execute">Execute</button>
+                    <button id="moveit">Plan & Execute</button>
                     </>
                     )}
                 </div>
