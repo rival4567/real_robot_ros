@@ -56794,7 +56794,6 @@ var Path = /*@__PURE__*/(function (superclass) {
         this.sn.unsubscribeTf();
         this.rootObject.remove(this.sn);
     }
-
     var lineGeometry = new THREE.Geometry();
     for(var i=0; i<message.poses.length;i++){
         var v3 = new THREE.Vector3( message.poses[i].pose.position.x, message.poses[i].pose.position.y,

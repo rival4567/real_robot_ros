@@ -45,113 +45,94 @@ export default class ROSLoader extends React.Component {
             ros: this.ros,
             name: '/joint'
         });
-
         this.start_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/update_start_joint_position',
             messageType: 'std_msgs/Float64MultiArray'
         });
-
         this.goal_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/update_goal_joint_position',
             messageType: 'std_msgs/Float64MultiArray'
         });
-
         this.im_size_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/im_size/update',
             messageType: 'std_msgs/Float32'
         });
-
         this.moveit_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/moveit_joint',
             messageType: 'rwt_moveit/MoveGroupPlan'
         });
-
         this.execute_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/execute_trajectory',
             messageType: 'std_msgs/Empty'
         });
-
-
         this.joint_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/update_joint_position',
             messageType: 'std_msgs/Float64MultiArray'
         });
-
         this.computefkClient = new ROSLIB.Service({
             ros : this.ros,
             name : '/compute_fk',
             serviceType : 'moveit_msgs/GetPositionFK'
         });
-
         this.start_initial_interactive_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/start/initial_marker',
             messageType: 'std_msgs/String'
         });
-
         this.goal_initial_interactive_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/goal/initial_marker',
             messageType: 'std_msgs/String'
         });
-
         this.start_interactive_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/start/marker/feedback',
             messageType: 'visualization_msgs/InteractiveMarkerFeedback'
         });
-
         this.goal_interactive_pub = new ROSLIB.Topic({
             ros: this.ros,
             name: '/goal/marker/feedback',
             messageType: 'visualization_msgs/InteractiveMarkerFeedback'
         });
-
         this.plan_listener = new ROSLIB.Topic({
             ros: this.ros,
             name: '/stock_joint_position',
             messageType: 'std_msgs/Float64MultiArray'
         });
-
         this.fixed_frame_param = new ROSLIB.Param({
             ros: this.ros,
             name: '/fixed_frame'
         });
-    
         this.link_group_param = new ROSLIB.Param({
             ros: this.ros,
             name: '/link_group/'
         });
-    
         this.end_effector_link_param = new ROSLIB.Param({
             ros: this.ros,
             name: '/end_effector_link/'
         });
-    
         // Setup listener
         this.joint_listener = new ROSLIB.Topic({
             ros : this.ros,
             name : '/joint_states',
             messageType : 'sensor_msgs/JointState'
         });
-    
         this.goal_listener = new ROSLIB.Topic({
             ros : this.ros,
             name : '/goal_joint_states',
             messageType : 'sensor_msgs/JointState'
         });
-    
         this.start_listener = new ROSLIB.Topic({
             ros : this.ros,
             name : '/start_joint_states',
             messageType : 'sensor_msgs/JointState'
-        });    
+        });
     }
 
     componentDidMount() {
@@ -173,7 +154,7 @@ export default class ROSLoader extends React.Component {
         this.link_group_param.get( (value) => {
             this.setState({ link_group : value });
             setTimeout( ()=> {
-                this.handleLinkGroupUpdate(value);
+                this.handleLinkGroupUpdate();
             }, 5000);
         });
     }
@@ -183,10 +164,11 @@ export default class ROSLoader extends React.Component {
         if (prevProps.width !== width || prevProps.height !== height) {
             this.viewer.resize(width, height);
         }
-        document.querySelector("button#init").addEventListener("pointerdown", () => {
+        document.querySelector("button#reset").addEventListener("pointerdown", () => {
 
             let positions = new Array();
             let dims = new Array();
+            // this.message_stock = [];
             document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
                 let dim = new ROSLIB.Message({
                     label: (label.getAttribute("for").split("-")[0]),
@@ -216,14 +198,16 @@ export default class ROSLoader extends React.Component {
             else {
                 this.goal_pub.publish(msg);
             }
+            this.display_planned_path.sn.unsubscribeTf();
+            this.display_planned_path.rootObject.visible = false;
         });
     
         document.querySelector("button#preview").addEventListener("pointerdown", () => {
-            if(typeof this.message_stock !== 'undefined' && this.message_stock.length > 0) {
+            if(typeof this.message_stock !== 'undefined') {
                 let idx = 0;
                 let tmp_start_joint_states = this.start_joint_states;
                 console.log("start joint states", this.start_joint_states)
-                console.log(this.message_stock)
+                console.log(this.message_stock.length)
                 let timer = setInterval( () => {
                     this.start_pub.publish(this.message_stock[idx]);
                     idx++;
@@ -234,9 +218,9 @@ export default class ROSLoader extends React.Component {
     
                         document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
                             let dim = new ROSLIB.Message({
-                                label: (label.attr("for").split("-")[0]),
-                                size: (label.attr("for").split("-")[0]).length,
-                                stride: (label.attr("for").split("-")[0]).length
+                                label: (label.getAttribute("for").split("-")[0]),
+                                size: (label.getAttribute("for").split("-")[0]).length,
+                                stride: (label.getAttribute("for").split("-")[0]).length
                             });
                             dims.push(dim);
                             for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
@@ -255,11 +239,10 @@ export default class ROSLoader extends React.Component {
                             },
                             data: positions
                         });
-                        console.log("MEssage", msg)
                         this.start_pub.publish(msg);
                         clearInterval(timer);
                     }
-                },100);
+                }, 100);
             }
         });
 
@@ -274,16 +257,16 @@ export default class ROSLoader extends React.Component {
         });
 
         document.querySelector("button#execute").addEventListener("pointerdown", () => {
-            if(typeof this.message_stock !== 'undefined' && this.message_stock.length > 0) {
+            if(typeof this.message_stock !== 'undefined') {
                 let sim_mode = new ROSLIB.Param({
                     ros: this.ros,
                     name: '/sim_mode'
                 });
                 sim_mode.get( (value) => {
-                    console.log(value)
-                    if (value == true) {
+                    if (value !== true) {
                         let timer = setInterval( () => {
-                            if(this.message_stock.length == 0) {
+                            console.log("execute trajectory", this.message_stock)
+                            if(this.message_stock.length === 0) {
                                 clearInterval(timer);
                             }
                             else {
@@ -305,11 +288,11 @@ export default class ROSLoader extends React.Component {
                 if (document.querySelectorAll('input[name="manip"]')[0].checked) {
                     this.start_im_client.rootObject.children[0].visible = true;
                 }
-                this.viewer.scene.add(this.startState.urdf);
+                this.startState.rootObject.add(this.startState.urdf);
             }
             else {
                 this.start_im_client.rootObject.children[0].visible = false;
-                this.viewer.scene.remove(this.startState.urdf);
+                this.startState.rootObject.remove(this.startState.urdf);
             }
         });
 
@@ -318,11 +301,11 @@ export default class ROSLoader extends React.Component {
                 if (document.querySelectorAll('input[name="manip"]')[1].checked) {
                     this.goal_im_client.rootObject.children[1].visible = true;
                 }
-                this.viewer.scene.add(this.goalState.urdf);
+                this.goalState.rootObject.add(this.goalState.urdf);
             }
             else {
                 this.goal_im_client.rootObject.children[1].visible = false;
-                this.viewer.scene.remove(this.goalState.urdf);
+                this.goalState.rootObject.remove(this.goalState.urdf);
             }
         });
 
@@ -361,7 +344,7 @@ export default class ROSLoader extends React.Component {
             antialias : true,
             intensity : 0.09,
             background : '#415A77',
-            alpha: 0.75
+            alpha: 1.0
         });
 
         this.viewer.camera.fov = 70;
@@ -378,7 +361,7 @@ export default class ROSLoader extends React.Component {
         // Renderer Settings
         this.viewer.renderer.shadowMap.enabled = true;
     
-        this.viewer.selectableObjects.castShadow = true
+        this.viewer.scene.castShadow = true
     
         const drawer = new ROS3D.MeshResource({
             resource: 'ablagebox.dae',
@@ -423,7 +406,6 @@ export default class ROSLoader extends React.Component {
 
     initUrdfClient = () => {
         // Setup the URDF client.
-
         const urdfClient = new ROS3D.UrdfClient({
             ros : this.ros,
             tfClient : this.tfClient,
@@ -431,7 +413,6 @@ export default class ROSLoader extends React.Component {
             path : 'robot_description',
             rootObject : this.viewer.scene,
         });
-
         this.goalState = new ROS3D.UrdfClient({
             ros : this.ros,
             tfPrefix : 'goal',
@@ -441,7 +422,6 @@ export default class ROSLoader extends React.Component {
             rootObject : this.viewer.scene,
             colorMaterial: new ROS3D.makeColorMaterial(1.0, 0.0, 0, 0.25)
         });
-
         this.startState = new ROS3D.UrdfClient({
             ros : this.ros,
             tfPrefix : 'start',
@@ -450,6 +430,27 @@ export default class ROSLoader extends React.Component {
             path : 'robot_description',
             rootObject : this.viewer.scene,
             colorMaterial: new ROS3D.makeColorMaterial(0.0, 1.0, 0, 0.25) 
+        });
+
+        this.new_scene = new ROS3D.SceneNode({
+            tfClient : this.tfClient,
+            frameID : '/world',
+            object : new ROS3D.Axes({
+                shaftRadius : 0.025,
+                headRadius : 0.07,
+                headLength : 0.2,
+              scale : 0.2,
+                lineType: "full"
+              }),     
+        });
+        this.viewer.scene.add(this.new_scene);
+        
+        this.display_planned_path = new ROS3D.Path({
+            ros : this.ros,
+            topic : '/kr1410/trajectory_line',
+            tfClient : this.tfClient,
+            rootObject : this.new_scene,
+            color : 0xffffe0
         });
     }
 
@@ -480,7 +481,7 @@ export default class ROSLoader extends React.Component {
         });
     }
 
-    handleLinkGroupUpdate = (value) => {
+    handleLinkGroupUpdate = () => {
         this.createSliderView();
         this.joint_listener.subscribe( (message) => {
             this.joint_states = message;
@@ -633,6 +634,7 @@ export default class ROSLoader extends React.Component {
 
     create_joint_position_msg = (type, plan_only) => {
 
+        this.new_scene.visible = true;
         let positions = new Array();
         let start_positions = new Array();
         let goal_positions = new Array();
@@ -657,14 +659,6 @@ export default class ROSLoader extends React.Component {
             else {
                 positions.push(parseFloat(label.nextElementSibling.value));
             }
-        });
-
-        const display_planned_path = new ROS3D.Path({
-            ros : this.ros,
-            topic : '/kr1410/trajectory_line',
-            tfClient : this.tfClient,
-            rootObject : this.viewer.scene,
-            color : 0xffffe0
         });
 
         let msg;
@@ -762,17 +756,17 @@ export default class ROSLoader extends React.Component {
     handleAssetsLoad = () => {
         this.setState( {assetsLoaded : true });
         console.log(document.querySelector('.control-panel'))
-        this.viewer.scene.remove(this.startState.urdf);
-        this.viewer.scene.remove(this.goalState.urdf);
+        this.startState.rootObject.remove(this.startState.urdf);
+        this.goalState.rootObject.remove(this.goalState.urdf);
         this.start_im_client.rootObject.children[0].visible = false;
         this.goal_im_client.rootObject.children[1].visible = false;
         this.viewer.scene.visible = true;
+        this.new_scene.visible = false;
     }    
 
     imSizeCallback = (event) => {
 
         this.setState({ imSize : event.target.value });
-        console.log(this.state.imSize)
         let msg = new ROSLIB.Message({
             data: parseFloat(this.state.imSize)
         });
@@ -793,8 +787,6 @@ export default class ROSLoader extends React.Component {
             return <option key={key} value={key}>{key}</option>
         });
 
-
-
         return (
             <>
                 <div className="viewer">
@@ -813,26 +805,14 @@ export default class ROSLoader extends React.Component {
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
-                                View
-                                </td>
-                                <td>
-                                <input type="checkbox" name="start_state" id="start_state"/>
-                                </td>
-                                <td>
-                                <input type="checkbox" name="goal_state" id="goal_state"/>
-                                </td>
+                                <td>View</td>
+                                <td><input type="checkbox" name="start_state" id="start_state"/></td>
+                                <td><input type="checkbox" name="goal_state" id="goal_state"/></td>
                             </tr>  
                             <tr>
-                                <td>
-                                Maniplation
-                                </td>
-                                <td>
-                                <input type="radio" name="manip" id="manip" defaultChecked/>
-                                </td>
-                                <td>
-                                <input type="radio" name="manip" id="manip"/>
-                                </td>
+                                <td>Maniplation</td>
+                                <td><input type="radio" name="manip" id="manip"/></td>
+                                <td><input type="radio" name="manip" id="manip"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -842,7 +822,7 @@ export default class ROSLoader extends React.Component {
                                 onChange={this.imSizeCallback}/>
                     </div>
                     <div id="slider-pane" />
-                    <button id="init">Init</button>
+                    <button id="reset">Reset</button>
                     <button id="preview">Preview</button>
                     <button id="plan">Plan</button>
                     <button id="execute">Execute</button>
@@ -851,6 +831,6 @@ export default class ROSLoader extends React.Component {
                     )}
                 </div>
             </>
-            );
-        }
+        )
+    }
 }
