@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ROS3D from './ros3d';
+import ROS3D from './ros3d';
 import * as ROSLIB from 'roslib';
 import AutoRos from './AutoRos';
 
@@ -7,6 +7,7 @@ import AutoRos from './AutoRos';
  * Setup all visualization elements when the page is loaded. 
  */
 
+console.log(ROS3D)
 export default class ROSLoader extends React.Component {
 
     constructor(props) {
@@ -168,7 +169,6 @@ export default class ROSLoader extends React.Component {
 
             let positions = new Array();
             let dims = new Array();
-            // this.message_stock = [];
             document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
                 let dim = new ROSLIB.Message({
                     label: (label.getAttribute("for").split("-")[0]),
@@ -202,16 +202,55 @@ export default class ROSLoader extends React.Component {
             this.display_planned_path.rootObject.visible = false;
         });
     
-        document.querySelector("button#preview").addEventListener("pointerdown", () => {
+        document.querySelector("button#waypoint").addEventListener("pointerdown", () => {
             if(typeof this.message_stock !== 'undefined') {
                 let idx = 0;
                 let tmp_start_joint_states = this.start_joint_states;
-                console.log("start joint states", this.start_joint_states)
-                console.log(this.message_stock.length)
+                this.start_pub.publish(this.message_stock[idx]);
+                idx++;
+                if(idx == this.message_stock.length) {
+
+                    let positions = new Array();
+                    let dims = new Array();
+
+                    document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
+                        let dim = new ROSLIB.Message({
+                            label: (label.getAttribute("for").split("-")[0]),
+                            size: (label.getAttribute("for").split("-")[0]).length,
+                            stride: (label.getAttribute("for").split("-")[0]).length
+                        });
+                        dims.push(dim);
+                        for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
+                            if (tmp_start_joint_states.name[idx] == dim.label) {
+                                positions.push(tmp_start_joint_states.position[idx]);
+                                break;
+                            }
+                        }
+                    });
+
+                    let msg;
+                    msg = new ROSLIB.Message({
+                        layout: {
+                            dim: dims,
+                            data_offset: 0
+                        },
+                        data: positions
+                    });
+                    // this.start_pub.publish(msg);
+                    // clearInterval(timer);
+                }
+            }
+        });
+
+        document.querySelector("#preview").addEventListener("pointerdown", () => {
+            if(typeof this.message_stock !== 'undefined') {
+                let idx = 0;
+                let tmp_start_joint_states = this.start_joint_states;
+                console.log('fjakf', this.message_stock[0])
                 let timer = setInterval( () => {
                     this.start_pub.publish(this.message_stock[idx]);
                     idx++;
-                    if(idx == this.message_stock.length) {
+                    if(idx === this.message_stock.length) {
     
                         let positions = new Array();
                         let dims = new Array();
@@ -224,7 +263,7 @@ export default class ROSLoader extends React.Component {
                             });
                             dims.push(dim);
                             for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
-                                if (tmp_start_joint_states.name[idx] == dim.label) {
+                                if (tmp_start_joint_states.name[idx] === dim.label) {
                                     positions.push(tmp_start_joint_states.position[idx]);
                                     break;
                                 }
@@ -252,6 +291,7 @@ export default class ROSLoader extends React.Component {
         });
 
         document.querySelector("button#plan").addEventListener("pointerdown", () => {
+            console.log("LAJFAKFAJK")
             let msg = this.create_joint_position_msg(0, true);
             this.moveit_pub.publish(msg);
         });
@@ -755,7 +795,6 @@ export default class ROSLoader extends React.Component {
 
     handleAssetsLoad = () => {
         this.setState( {assetsLoaded : true });
-        console.log(document.querySelector('.control-panel'))
         this.startState.rootObject.remove(this.startState.urdf);
         this.goalState.rootObject.remove(this.goalState.urdf);
         this.start_im_client.rootObject.children[0].visible = false;
@@ -824,6 +863,7 @@ export default class ROSLoader extends React.Component {
                     <div id="slider-pane" />
                     <button id="reset">Reset</button>
                     <button id="preview">Preview</button>
+                    <button id="waypoint">Add waypoint</button>
                     <button id="plan">Plan</button>
                     <button id="execute">Execute</button>
                     <button id="moveit">Plan & Execute</button>
