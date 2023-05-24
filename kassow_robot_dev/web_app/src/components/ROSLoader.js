@@ -37,7 +37,7 @@ export default class ROSLoader extends React.Component {
 
         // Connect to ROS.
         this.autoROS = new AutoRos()
-        const url = 'ws://' + '10.229.199.57' + ':9090';
+        const url = 'ws://' + '10.229.199.16' + ':9090';
         this.autoROS.connect(url)
         this.ros = this.autoROS.ros
 
