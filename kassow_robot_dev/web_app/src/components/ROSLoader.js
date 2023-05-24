@@ -1,5 +1,5 @@
 import React from 'react';
-import * as ROS3D from './ros3d';
+import * as ROS3D from '../ros3djs/src-esm/index';
 import ROSLIB from 'roslib';
 import AutoRos from './AutoRos';
 

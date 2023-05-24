@@ -2,3 +2,4 @@ universal_robot/
 ROS-TCP-Endpoint
 kassow_robot_devel/plugins/
 kassow_robot_devel/orange-ros
+kassow_robot_devel/web_app/src/ros3djs
