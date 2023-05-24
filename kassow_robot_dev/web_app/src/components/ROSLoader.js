@@ -1,6 +1,6 @@
 import React from 'react';
-import ROS3D from './ros3d';
-import * as ROSLIB from 'roslib';
+import * as ROS3D from './ros3d';
+import ROSLIB from 'roslib';
 import AutoRos from './AutoRos';
 
 /**

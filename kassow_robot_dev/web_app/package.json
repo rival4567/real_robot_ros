@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/core": "^7.16.0",
+    "@babel/eslint-plugin": "^7.19.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^8.0.1",
     "@testing-library/jest-dom": "^5.16.5",
@@ -70,7 +71,15 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "parser": "@babel/eslint-parser",
+    "plugins": [
+      "@babel"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2015,
+      "sourceType": "module"
+    }
   },
   "browserslist": {
     "production": [
