@@ -7,7 +7,6 @@ import AutoRos from './AutoRos';
  * Setup all visualization elements when the page is loaded. 
  */
 
-console.log(ROS3D)
 export default class ROSLoader extends React.Component {
 
     constructor(props) {
