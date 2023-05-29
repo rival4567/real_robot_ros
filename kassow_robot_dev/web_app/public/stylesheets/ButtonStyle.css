@@ -1,0 +1,19 @@
+
+/* Toggle Buttons Styling */
+.toggle-button {
+    display: inline-block;
+    padding: 10px;
+    background-color: #eaeaea;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.toggle-button.active {
+    background-color: #a7c957;
+    color: white;
+}
+
+.toggle-button:not(.active):hover {
+    background-color: #d3d3d3;
+}

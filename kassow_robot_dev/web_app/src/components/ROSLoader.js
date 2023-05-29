@@ -22,6 +22,7 @@ export default class ROSLoader extends React.Component {
         this.state = {
             link_group : {},
             imSize : 0.3,
+            linkGroupLoaded : false,
             assetsLoaded : false
         };
         this.end_effector_link = null;
@@ -153,9 +154,25 @@ export default class ROSLoader extends React.Component {
 
         this.link_group_param.get( (value) => {
             this.setState({ link_group : value });
-            setTimeout( ()=> {
-                this.handleLinkGroupUpdate();
-            }, 5000);
+            this.timerID = setInterval( ()=> {
+                if(this.state.linkGroupLoaded){
+                    this.handleLinkGroupUpdate();
+                    clearInterval(this.timerID);
+                //     this.timerID2 = setInterval( ()=> {
+                //     if(this.state.assetsLoaded){
+                //         this.buttonHandler();
+                //         clearInterval(this.timerID2);
+                //     }
+                //     else{
+                //         console.log('Waiting for assets to load!')
+                //     }
+                // }, 100);
+                }
+                else {
+                    console.log("Waiting for link group to update!")
+                }
+            }, 100);
+
         });
     }
 
@@ -164,205 +181,6 @@ export default class ROSLoader extends React.Component {
         if (prevProps.width !== width || prevProps.height !== height) {
             this.viewer.resize(width, height);
         }
-        document.querySelector("button#reset").addEventListener("pointerdown", () => {
-
-            let positions = new Array();
-            let dims = new Array();
-            document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
-                let dim = new ROSLIB.Message({
-                    label: (label.getAttribute("for").split("-")[0]),
-                    size: (label.getAttribute("for").split("-")[0]).length,
-                    stride: (label.getAttribute("for").split("-")[0]).length
-                });
-                dims.push(dim);
-                for (let i = 0; i < this.joint_states.name.length;i++) {
-                    if (this.joint_states.name[i] == dim.label) {
-                        positions.push(this.joint_states.position[i]);
-                        break;
-                    }
-                }
-            });
-
-            let msg;
-            msg = new ROSLIB.Message({
-                layout: {
-                    dim: dims,
-                    data_offset: 0
-                },
-                data: positions
-            });
-            if(document.querySelector('input[name="manip"]').checked === true) {
-                this.start_pub.publish(msg);
-            }
-            else {
-                this.goal_pub.publish(msg);
-            }
-            this.display_planned_path.sn.unsubscribeTf();
-            this.display_planned_path.rootObject.visible = false;
-        });
-    
-        document.querySelector("button#waypoint").addEventListener("pointerdown", () => {
-            if(typeof this.message_stock !== 'undefined') {
-                let idx = 0;
-                let tmp_start_joint_states = this.start_joint_states;
-                this.start_pub.publish(this.message_stock[idx]);
-                idx++;
-                if(idx == this.message_stock.length) {
-
-                    let positions = new Array();
-                    let dims = new Array();
-
-                    document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
-                        let dim = new ROSLIB.Message({
-                            label: (label.getAttribute("for").split("-")[0]),
-                            size: (label.getAttribute("for").split("-")[0]).length,
-                            stride: (label.getAttribute("for").split("-")[0]).length
-                        });
-                        dims.push(dim);
-                        for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
-                            if (tmp_start_joint_states.name[idx] == dim.label) {
-                                positions.push(tmp_start_joint_states.position[idx]);
-                                break;
-                            }
-                        }
-                    });
-
-                    let msg;
-                    msg = new ROSLIB.Message({
-                        layout: {
-                            dim: dims,
-                            data_offset: 0
-                        },
-                        data: positions
-                    });
-                    // this.start_pub.publish(msg);
-                    // clearInterval(timer);
-                }
-            }
-        });
-
-        document.querySelector("#preview").addEventListener("pointerdown", () => {
-            if(typeof this.message_stock !== 'undefined') {
-                let idx = 0;
-                let tmp_start_joint_states = this.start_joint_states;
-                console.log('fjakf', this.message_stock[0])
-                let timer = setInterval( () => {
-                    this.start_pub.publish(this.message_stock[idx]);
-                    idx++;
-                    if(idx === this.message_stock.length) {
-    
-                        let positions = new Array();
-                        let dims = new Array();
-    
-                        document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
-                            let dim = new ROSLIB.Message({
-                                label: (label.getAttribute("for").split("-")[0]),
-                                size: (label.getAttribute("for").split("-")[0]).length,
-                                stride: (label.getAttribute("for").split("-")[0]).length
-                            });
-                            dims.push(dim);
-                            for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
-                                if (tmp_start_joint_states.name[idx] === dim.label) {
-                                    positions.push(tmp_start_joint_states.position[idx]);
-                                    break;
-                                }
-                            }
-                        });
-    
-                        let msg;
-                        msg = new ROSLIB.Message({
-                            layout: {
-                                dim: dims,
-                                data_offset: 0
-                            },
-                            data: positions
-                        });
-                        this.start_pub.publish(msg);
-                        clearInterval(timer);
-                    }
-                }, 100);
-            }
-        });
-
-        document.querySelector("button#moveit").addEventListener("pointerdown", () => {
-            let msg = this.create_joint_position_msg(0, false);
-            this.moveit_pub.publish(msg);
-        });
-
-        document.querySelector("button#plan").addEventListener("pointerdown", () => {
-            console.log("LAJFAKFAJK")
-            let msg = this.create_joint_position_msg(0, true);
-            this.moveit_pub.publish(msg);
-        });
-
-        document.querySelector("button#execute").addEventListener("pointerdown", () => {
-            if(typeof this.message_stock !== 'undefined') {
-                let sim_mode = new ROSLIB.Param({
-                    ros: this.ros,
-                    name: '/sim_mode'
-                });
-                sim_mode.get( (value) => {
-                    if (value !== true) {
-                        let timer = setInterval( () => {
-                            console.log("execute trajectory", this.message_stock)
-                            if(this.message_stock.length === 0) {
-                                clearInterval(timer);
-                            }
-                            else {
-                                this.joint_pub.publish(this.message_stock.shift());
-                            }
-                        }, 100);
-                    }
-                    else {
-                        let msg = new ROSLIB.Message({
-                        });
-                        this.execute_pub.publish(msg);
-                    }                
-                });
-            }
-        });
-
-        document.querySelector('#start_state').addEventListener("change", () => {
-            if(document.querySelector('#start_state').checked) {
-                if (document.querySelectorAll('input[name="manip"]')[0].checked) {
-                    this.start_im_client.rootObject.children[0].visible = true;
-                }
-                this.startState.rootObject.add(this.startState.urdf);
-            }
-            else {
-                this.start_im_client.rootObject.children[0].visible = false;
-                this.startState.rootObject.remove(this.startState.urdf);
-            }
-        });
-
-        document.querySelector('#goal_state').addEventListener("change", () => {
-            if(document.querySelector('#goal_state').checked) {
-                if (document.querySelectorAll('input[name="manip"]')[1].checked) {
-                    this.goal_im_client.rootObject.children[1].visible = true;
-                }
-                this.goalState.rootObject.add(this.goalState.urdf);
-            }
-            else {
-                this.goal_im_client.rootObject.children[1].visible = false;
-                this.goalState.rootObject.remove(this.goalState.urdf);
-            }
-        });
-
-        document.querySelectorAll('input[name="manip"]').forEach(input => {
-            input.addEventListener("change", () => {
-            if(document.querySelector('input[name="manip"]').checked) {
-                if(document.querySelector('#start_state').checked) {
-                    this.start_im_client.rootObject.children[0].visible = true;
-                }
-                this.goal_im_client.rootObject.children[1].visible = false;
-            } else {
-                if(document.querySelector('#goal_state').checked) {
-                    this.goal_im_client.rootObject.children[1].visible = true;
-                }
-                this.start_im_client.rootObject.children[0].visible = false;
-            }
-        });
-        });
     }
 
     componentWillUnmount() {
@@ -443,82 +261,6 @@ export default class ROSLoader extends React.Component {
         this.resizeObserver.observe(targetNode);
     }
 
-    initUrdfClient = () => {
-        // Setup the URDF client.
-        const urdfClient = new ROS3D.UrdfClient({
-            ros : this.ros,
-            tfClient : this.tfClient,
-            param : 'robot_description',
-            path : 'robot_description',
-            rootObject : this.viewer.scene,
-        });
-        this.goalState = new ROS3D.UrdfClient({
-            ros : this.ros,
-            tfPrefix : 'goal',
-            tfClient : this.tfClient,
-            param : 'robot_description',
-            path : 'robot_description',
-            rootObject : this.viewer.scene,
-            colorMaterial: new ROS3D.makeColorMaterial(1.0, 0.0, 0, 0.25)
-        });
-        this.startState = new ROS3D.UrdfClient({
-            ros : this.ros,
-            tfPrefix : 'start',
-            tfClient : this.tfClient,
-            param : 'robot_description',
-            path : 'robot_description',
-            rootObject : this.viewer.scene,
-            colorMaterial: new ROS3D.makeColorMaterial(0.0, 1.0, 0, 0.25) 
-        });
-
-        this.new_scene = new ROS3D.SceneNode({
-            tfClient : this.tfClient,
-            frameID : '/world',
-            object : new ROS3D.Axes({
-                shaftRadius : 0.025,
-                headRadius : 0.07,
-                headLength : 0.2,
-              scale : 0.2,
-                lineType: "full"
-              }),     
-        });
-        this.viewer.scene.add(this.new_scene);
-        
-        this.display_planned_path = new ROS3D.Path({
-            ros : this.ros,
-            topic : '/kr1410/trajectory_line',
-            tfClient : this.tfClient,
-            rootObject : this.new_scene,
-            color : 0xffffe0
-        });
-    }
-
-    handleFixedFrameUpdate = (value) => {
-        //Setup a client to listen to TFs.
-        this.fixed_frame = value;
-        this.tfClient = new ROSLIB.TFClient({
-            ros : this.ros,
-            fixedFrame : this.fixed_frame,
-            angularThres : 0.01,
-            transThres : 0.01,
-            rate : 60.0
-        });
-        // Setup the marker client.
-        this.start_im_client = new ROS3D.InteractiveMarkerClient({
-            ros : this.ros,
-            tfClient : this.tfClient,
-            topic : '/start/marker',
-            camera : this.viewer.camera,
-            rootObject : this.viewer.selectableObjects
-        });
-        this.goal_im_client = new ROS3D.InteractiveMarkerClient({
-            ros : this.ros,
-            tfClient : this.tfClient,
-            topic : '/goal/marker',
-            camera : this.viewer.camera,
-            rootObject : this.viewer.selectableObjects
-        });
-    }
 
     handleLinkGroupUpdate = () => {
         this.createSliderView();
@@ -793,7 +535,7 @@ export default class ROSLoader extends React.Component {
     }
 
     handleAssetsLoad = () => {
-        this.setState( {assetsLoaded : true });
+        this.setState( {assetsLoaded : true })
         this.startState.rootObject.remove(this.startState.urdf);
         this.goalState.rootObject.remove(this.goalState.urdf);
         this.start_im_client.rootObject.children[0].visible = false;
@@ -817,6 +559,208 @@ export default class ROSLoader extends React.Component {
         }
     }
 
+    buttonHandler = () => {
+
+        document.querySelector("button#reset").addEventListener("pointerdown", () => {
+
+            let positions = new Array();
+            let dims = new Array();
+            document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
+                let dim = new ROSLIB.Message({
+                    label: (label.getAttribute("for").split("-")[0]),
+                    size: (label.getAttribute("for").split("-")[0]).length,
+                    stride: (label.getAttribute("for").split("-")[0]).length
+                });
+                dims.push(dim);
+                for (let i = 0; i < this.joint_states.name.length;i++) {
+                    if (this.joint_states.name[i] == dim.label) {
+                        positions.push(this.joint_states.position[i]);
+                        break;
+                    }
+                }
+            });
+
+            let msg;
+            msg = new ROSLIB.Message({
+                layout: {
+                    dim: dims,
+                    data_offset: 0
+                },
+                data: positions
+            });
+            if(document.querySelector('input[name="manip"]').checked === true) {
+                this.start_pub.publish(msg);
+            }
+            else {
+                this.goal_pub.publish(msg);
+            }
+            this.display_planned_path.sn.unsubscribeTf();
+            this.display_planned_path.rootObject.visible = false;
+        });
+
+        document.querySelector("button#waypoint").addEventListener("pointerdown", () => {
+            if(typeof this.message_stock !== 'undefined') {
+                let idx = 0;
+                let tmp_start_joint_states = this.start_joint_states;
+                this.start_pub.publish(this.message_stock[idx]);
+                idx++;
+                if(idx == this.message_stock.length) {
+
+                    let positions = new Array();
+                    let dims = new Array();
+
+                    document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
+                        let dim = new ROSLIB.Message({
+                            label: (label.getAttribute("for").split("-")[0]),
+                            size: (label.getAttribute("for").split("-")[0]).length,
+                            stride: (label.getAttribute("for").split("-")[0]).length
+                        });
+                        dims.push(dim);
+                        for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
+                            if (tmp_start_joint_states.name[idx] == dim.label) {
+                                positions.push(tmp_start_joint_states.position[idx]);
+                                break;
+                            }
+                        }
+                    });
+
+                    let msg;
+                    msg = new ROSLIB.Message({
+                        layout: {
+                            dim: dims,
+                            data_offset: 0
+                        },
+                        data: positions
+                    });
+                    // this.start_pub.publish(msg);
+                    // clearInterval(timer);
+                }
+            }
+        });
+
+        document.querySelector("#preview").addEventListener("pointerdown", () => {
+            if(typeof this.message_stock !== 'undefined') {
+                let idx = 0;
+                let tmp_start_joint_states = this.start_joint_states;
+                console.log('fjakf', this.message_stock[0])
+                let timer = setInterval( () => {
+                    this.start_pub.publish(this.message_stock[idx]);
+                    idx++;
+                    if(idx === this.message_stock.length) {
+
+                        let positions = new Array();
+                        let dims = new Array();
+
+                        document.querySelectorAll("#" + this.current_group + " > label").forEach(label => {
+                            let dim = new ROSLIB.Message({
+                                label: (label.getAttribute("for").split("-")[0]),
+                                size: (label.getAttribute("for").split("-")[0]).length,
+                                stride: (label.getAttribute("for").split("-")[0]).length
+                            });
+                            dims.push(dim);
+                            for (let idx = 0; idx < tmp_start_joint_states.name.length;idx++) {
+                                if (tmp_start_joint_states.name[idx] === dim.label) {
+                                    positions.push(tmp_start_joint_states.position[idx]);
+                                    break;
+                                }
+                            }
+                        });
+
+                        let msg;
+                        msg = new ROSLIB.Message({
+                            layout: {
+                                dim: dims,
+                                data_offset: 0
+                            },
+                            data: positions
+                        });
+                        this.start_pub.publish(msg);
+                        clearInterval(timer);
+                    }
+                }, 100);
+            }
+        });
+
+        document.querySelector("button#moveit").addEventListener("pointerdown", () => {
+            let msg = this.create_joint_position_msg(0, false);
+            this.moveit_pub.publish(msg);
+        });
+
+        document.querySelector("button#plan").addEventListener("pointerdown", () => {
+            let msg = this.create_joint_position_msg(0, true);
+            this.moveit_pub.publish(msg);
+        });
+
+        document.querySelector("button#execute").addEventListener("pointerdown", () => {
+            if(typeof this.message_stock !== 'undefined') {
+                let sim_mode = new ROSLIB.Param({
+                    ros: this.ros,
+                    name: '/sim_mode'
+                });
+                sim_mode.get( (value) => {
+                    if (value !== true) {
+                        let timer = setInterval( () => {
+                            console.log("execute trajectory", this.message_stock)
+                            if(this.message_stock.length === 0) {
+                                clearInterval(timer);
+                            }
+                            else {
+                                this.joint_pub.publish(this.message_stock.shift());
+                            }
+                        }, 100);
+                    }
+                    else {
+                        let msg = new ROSLIB.Message({
+                        });
+                        this.execute_pub.publish(msg);
+                    }                
+                });
+            }
+        });
+
+        document.querySelector('#start_state').addEventListener("change", () => {
+            if(document.querySelector('#start_state').checked) {
+                if (document.querySelectorAll('input[name="manip"]')[0].checked) {
+                    this.start_im_client.rootObject.children[0].visible = true;
+                }
+                this.startState.rootObject.add(this.startState.urdf);
+            }
+            else {
+                this.start_im_client.rootObject.children[0].visible = false;
+                this.startState.rootObject.remove(this.startState.urdf);
+            }
+        });
+
+        document.querySelector('#goal_state').addEventListener("change", () => {
+            if(document.querySelector('#goal_state').checked) {
+                if (document.querySelectorAll('input[name="manip"]')[1].checked) {
+                    this.goal_im_client.rootObject.children[1].visible = true;
+                }
+                this.goalState.rootObject.add(this.goalState.urdf);
+            }
+            else {
+                this.goal_im_client.rootObject.children[1].visible = false;
+                this.goalState.rootObject.remove(this.goalState.urdf);
+            }
+        });
+
+        document.querySelectorAll('input[name="manip"]').forEach(input => {
+            input.addEventListener("change", () => {
+            if(document.querySelector('input[name="manip"]').checked) {
+                if(document.querySelector('#start_state').checked) {
+                    this.start_im_client.rootObject.children[0].visible = true;
+                }
+                this.goal_im_client.rootObject.children[1].visible = false;
+            } else {
+                if(document.querySelector('#goal_state').checked) {
+                    this.goal_im_client.rootObject.children[1].visible = true;
+                }
+                this.start_im_client.rootObject.children[0].visible = false;
+                }
+            });
+        });
+    }
+
     render() {
 
 
@@ -834,7 +778,7 @@ export default class ROSLoader extends React.Component {
                     {Object.keys(link_group).length === 0 ? (
                         <div className='loading'>Loading...</div>
                     ) : (<>
-                    <select id="group" name="group>" onChange={this.handleGroupChange}>
+                    <select id="group" name="group>" onChange={this.handleGroupChange}  onLoad={this.setState( {linkGroupLoaded : true })}>
                         {group_name}
                     </select>
                     <table>

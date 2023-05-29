@@ -1,10 +1,10 @@
 import './App.css';
-import ROSLoader from './components/ROSLoader';
+import ROSConnect from './components/ROSConnect';
 
 function App() {
   return (
       <div className='container'>
-        <ROSLoader />
+        <ROSConnect />
       </div>
   );
 }
