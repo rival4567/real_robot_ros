@@ -3,6 +3,7 @@ import { Context } from "./ContextProvider";
 import ROSLIB from "roslib";
 import ROSJointSlider from './ROSJointSlider';
 import ROSInteractiveMarker from "./ROSInteractiveMarker";
+import ROSButton from "./ROSButton";
 
 export default class ROSControlTopic extends Component {
     static contextType = Context;
@@ -18,6 +19,7 @@ export default class ROSControlTopic extends Component {
         this.state = {
             isLinkGroupLoaded : false
         }
+
         this.joint_group_slider = createRef();
 
         this.message_stock = [];
@@ -49,6 +51,19 @@ export default class ROSControlTopic extends Component {
             name : '/goal_joint_states',
             messageType : 'sensor_msgs/JointState'
         });
+
+        // Publisher
+        this.start_pub = new ROSLIB.Topic({
+            ros: this.ros,
+            name: '/update_start_joint_position',
+            messageType: 'std_msgs/Float64MultiArray'
+        });
+        this.goal_pub = new ROSLIB.Topic({
+            ros: this.ros,
+            name: '/update_goal_joint_position',
+            messageType: 'std_msgs/Float64MultiArray'
+        });
+
     }
 
     async componentDidMount() {
@@ -89,6 +104,8 @@ export default class ROSControlTopic extends Component {
         this.plan_listener.unsubscribe();
         this.joint_listener.unsubscribe();
         this.goal_listener.unsubscribe();
+        this.start_pub.unsubscribe();
+        this.goal_pub.unsubscribe();
         this.setState({ isLinkGroupLoaded: false });
     }
 
@@ -101,15 +118,22 @@ export default class ROSControlTopic extends Component {
                             <ROSJointSlider
                                 ros={this.ros}
                                 link_group={this.link_group}
+                                start_pub={this.start_pub}
+                                goal_pub={this.goal_pub}
                                 joint_group_slider={this.joint_group_slider}
                                 start_joint_states={this.start_joint_states}
                                 goal_joint_states={this.goal_joint_states}
                             />
                             <ROSInteractiveMarker 
                                 ros={this.ros}
-                                joint_group_slider={this.joint_group_slider}
                                 start_joint_states={this.start_joint_states}
                                 goal_joint_states={this.goal_joint_states}
+                            />
+                            <ROSButton
+                                joint_states={this.joint_states}
+                                start_pub={this.start_pub}
+                                goal_pub={this.goal_pub}
+                                joint_group_slider={this.joint_group_slider}
                             />
                         </>
                         : <div>Loading JointSlider</div>

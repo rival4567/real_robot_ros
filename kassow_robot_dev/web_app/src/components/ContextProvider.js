@@ -8,8 +8,10 @@ export class ContextProvider extends Component {
         fixed_frame: null,
         link_group: null,
         selected_group: null,
+        joint_value: 0,
         isStartManipulateActive: false,
-        isGoalManipulateActive: false
+        isGoalManipulateActive: false,
+        createJointPositionMsg: null
     }
     render() {
         return (

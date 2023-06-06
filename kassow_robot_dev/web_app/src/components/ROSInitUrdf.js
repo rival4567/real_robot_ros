@@ -119,14 +119,10 @@ export default class ROSInitUrdf extends Component {
         this.path_scene = new SceneNode({
             tfClient : this.tfClient,
             frameID : this.fixed_frame,
-            object : new Axes({
-                shaftRadius : 0.025,
-                headRadius : 0.07,
-                headLength : 0.2,
-              scale : 0.2,
-                lineType: "full"
-              }),     
-        });        
+            object : new Arrow({
+                origin : new THREE.Vector3(1000, 1000, 1000),
+            }),
+        })      
         this.display_planned_path = new Path({
             ros : this.ros,
             topic : '/kr1410/trajectory_line',

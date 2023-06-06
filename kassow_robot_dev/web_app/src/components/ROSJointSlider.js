@@ -1,4 +1,4 @@
-import { Component, createRef, Fragment } from "react";
+import { Component, Fragment } from "react";
 import ROSLIB from "roslib";
 import { Context } from "./ContextProvider";
 
@@ -15,16 +15,10 @@ export default class ROSJointSlider extends Component {
             ros: this.ros,
             name: '/joint'
         });
-        this.start_pub = new ROSLIB.Topic({
-            ros: this.ros,
-            name: '/update_start_joint_position',
-            messageType: 'std_msgs/Float64MultiArray'
-        });
-        this.goal_pub = new ROSLIB.Topic({
-            ros: this.ros,
-            name: '/update_goal_joint_position',
-            messageType: 'std_msgs/Float64MultiArray'
-        });
+        this.joint_states = null;
+
+        this.start_pub = props.start_pub;
+        this.goal_pub = props.goal_pub;
 
         this.state = {
             isJointNamesLoaded : false
@@ -47,8 +41,10 @@ export default class ROSJointSlider extends Component {
                 reject(new Error('Failed to fetch from Joint Names ROSParam.'));
             }, 10000)
         });
+        this.joint_states = this.context.state.isStartManipulateActive ? this.props.start_joint_states : this.props.goal_joint_states
         this.context.state.selected_group = this.selected_group;
         this.setState({ isJointNamesLoaded : true });
+        this.context.state.createJointPositionMsg = this.createJointPositionMsg;
     }
 
     componentWillUnmount() {
@@ -56,7 +52,26 @@ export default class ROSJointSlider extends Component {
     }
 
     componentDidUpdate() {
+        if(this.joint_states){
+            // this.updateJointValues();
+            // console.log(this.joint_states.position)
+
+        }
         this.createJointPositionMsg(1, true);
+    }
+
+    updateJointValues = () => {
+        Array.from(this.props.joint_group_slider.current.children).map( (key) => {
+            Array.from(key.children).map( (child) => {
+                if (child.tagName === 'INPUT') {
+                    let index = this.joint_states.name.indexOf(child.id);
+                    let isJointPresent = index !== -1;
+                    if (isJointPresent) {
+                        child.value = this.joint_states.position[index];
+                    }
+                }
+            })
+        });
     }
 
     createJointPositionMsg = (type, plan_only) => {
@@ -136,6 +151,7 @@ export default class ROSJointSlider extends Component {
         else if (this.context.state.isGoalManipulateActive){
             this.goal_pub.publish(msg);
         }
+        console.log(msg)
     }
 
     render() {
