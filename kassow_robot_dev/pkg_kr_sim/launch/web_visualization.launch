@@ -7,7 +7,7 @@
     <arg name="is_sim" default="true" />
     <arg name="roswww_port" default="8000" />
     <arg name="use_roswww" default="false" />
-    <arg name="fk_link_name" default="tool_io" />
+    <arg name="fk_link_name" default="schunk_gripper" />
 
     <include if="$(eval arg('gripper') == 'schunk')" file="$(find pkg_kr_sg_sim)/launch/kr1410_sg_test.launch" />
 

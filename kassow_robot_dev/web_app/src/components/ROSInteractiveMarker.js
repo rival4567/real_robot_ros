@@ -10,8 +10,6 @@ export default class ROSInteractiveMarker extends Component {
     constructor(props) {
         super(props);
         this.ros = props.ros;
-        this.start_joint_states = props.start_joint_states;
-        this.goal_joint_states = props.goal_joint_states;
         this.end_effector_link = null;
 
         this.viewer_start_ref = createRef();
@@ -80,14 +78,13 @@ export default class ROSInteractiveMarker extends Component {
             this.goal_initial_interactive_pub.publish(msg);
             return null;
         });
-        this.interactive_marker = this.context.state.viewer.selectableObjects.children;
-        this.context.state.isStartManipulateActive = this.state.toggleStartManipulation;
-        this.context.state.isGoalManipulateActive = this.state.toggleGoalManipulation;
     }
 
     componentDidUpdate (prevProps, prevState) {
+        this.interactive_marker = this.context.state.viewer.selectableObjects.children;
         this.context.state.isStartManipulateActive = this.state.toggleStartManipulation;
-        this.context.state.isGoalManipulateActive = this.state.toggleGoalManipulation;        if (prevState !== this.state ) {
+        this.context.state.isGoalManipulateActive = this.state.toggleGoalManipulation;
+        if (prevState !== this.state ) {
             this.interactive_marker.map( (marker) => {
                 if (marker.name === 'start') {
                     if (this.viewer_start_ref.current.checked) {
@@ -110,6 +107,11 @@ export default class ROSInteractiveMarker extends Component {
                 }
             })
         }
+        if (this.state.toggleStartManipulation){
+            this.updateIMposition('start');
+        } else if (this.state.toggleGoalManipulation) {
+            this.updateIMposition('goal')
+        }
     }
 
     componentWillUnmount() {
@@ -121,15 +123,17 @@ export default class ROSInteractiveMarker extends Component {
             toggleStartManipulation: false, toggleGoalManipulation: false })
     }
 
-    updateJointsIM(state) {
+    updateIMposition(state) {
+        this.selected_group = this.context.state.selected_group;
+        this.fixed_frame = this.context.state.fixed_frame;
         let joint_states = null;
         let interactive_pub = null;
-        if (state === 'start'){
-            joint_states = this.start_joint_states;
+        if (state === 'start') {
+            joint_states = this.props.start_joint_states;
             interactive_pub = this.start_interactive_pub;
         }
-        else if (state === 'goal'){
-            joint_states = this.goal_joint_states;
+        else if (state === 'goal') {
+            joint_states = this.props.goal_joint_states;
             interactive_pub = this.goal_interactive_pub;
         }
         else {
@@ -178,8 +182,6 @@ export default class ROSInteractiveMarker extends Component {
     }
 
     handleManipulationCallback = (event) => {
-        this.selected_group = this.context.state.selected_group;
-        this.fixed_frame = this.context.state.fixed_frame;
         if (event.target.checked) {
             if(event.target.name === 'start') {
                 this.setState( (prevState) => ({
@@ -196,7 +198,6 @@ export default class ROSInteractiveMarker extends Component {
             else {
                 return
             }
-            this.updateJointsIM(event.target.name)
         } else {
             if(event.target.name === "start") {
                 this.setState({toggleStartManipulation: false})
@@ -242,7 +243,6 @@ export default class ROSInteractiveMarker extends Component {
 
 
     render() {
-
         let toggleViewButton = (type) => {
             let input_id = 'view_' + type + '_state';
             let default_class = "mobileToggle";

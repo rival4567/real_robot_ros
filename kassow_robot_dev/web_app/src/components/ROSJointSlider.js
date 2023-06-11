@@ -41,40 +41,16 @@ export default class ROSJointSlider extends Component {
                 reject(new Error('Failed to fetch from Joint Names ROSParam.'));
             }, 10000)
         });
-        this.joint_states = this.context.state.isStartManipulateActive ? this.props.start_joint_states : this.props.goal_joint_states
         this.context.state.selected_group = this.selected_group;
         this.setState({ isJointNamesLoaded : true });
-        this.context.state.createJointPositionMsg = this.createJointPositionMsg;
     }
 
     componentWillUnmount() {
         this.setState({ isJointNamesLoaded : false })
     }
 
-    componentDidUpdate() {
-        if(this.joint_states){
-            // this.updateJointValues();
-            // console.log(this.joint_states.position)
 
-        }
-        this.createJointPositionMsg(1, true);
-    }
-
-    updateJointValues = () => {
-        Array.from(this.props.joint_group_slider.current.children).map( (key) => {
-            Array.from(key.children).map( (child) => {
-                if (child.tagName === 'INPUT') {
-                    let index = this.joint_states.name.indexOf(child.id);
-                    let isJointPresent = index !== -1;
-                    if (isJointPresent) {
-                        child.value = this.joint_states.position[index];
-                    }
-                }
-            })
-        });
-    }
-
-    createJointPositionMsg = (type, plan_only) => {
+    createJointPositionMsg = (type, plan_only) => { 
         let positions = [];
         let start_positions = [];
         let goal_positions = [];
@@ -151,7 +127,14 @@ export default class ROSJointSlider extends Component {
         else if (this.context.state.isGoalManipulateActive){
             this.goal_pub.publish(msg);
         }
-        console.log(msg)
+    }
+
+    handleDecrease = (event) => {
+        console.log(event.target)
+    }
+
+    handleIncrease = (event) => {
+        console.log(event.target)
     }
 
     render() {
@@ -166,13 +149,31 @@ export default class ROSJointSlider extends Component {
                     {group}
                     {Object.values(this.joint_names.names).map( (name, index) => {
                         let isJointPresent = this.link_group[group].includes(name);
+                        this.joint_states = this.context.state.isStartManipulateActive ? 
+                            this.props.start_joint_states : this.props.goal_joint_states
+                        let joint_value = 0
+                        Array.from(this.joint_states.name).map( (joint_name, index) => {
+                            if (joint_name === name) {
+                                joint_value = this.joint_states.position[index];
+                            }
+                        })
                         return ( isJointPresent ? 
                                 <Fragment key={index}>
+                                    <button className="slider-button" onClick={this.handleDecrease}>-</button>
                                     <label htmlFor={name}>{name}</label> 
-                                    <input type="range" name={name} id={name} defaultValue="0"
+                                    <input type="range" name={name} id={name} value={joint_value}
                                         max={this.joint_names[name].max} min={this.joint_names[name].min}
                                         step="0.000001" onChange={this.handleJointChange}>
                                     </input>
+                                    <input
+                                        type="number"
+                                        value={joint_value}
+                                        min={this.joint_names[name].min}
+                                        max={this.joint_names[name].max}
+                                        step="0.01"
+                                        onChange={this.handleJointChange}
+                                    />
+                                    <button className="slider-button" onClick={this.handleIncrease}>+</button>
                                 </Fragment>
                             :
                             <Fragment key={index}></Fragment>

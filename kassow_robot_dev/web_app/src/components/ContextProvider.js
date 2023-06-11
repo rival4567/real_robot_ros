@@ -11,7 +11,6 @@ export class ContextProvider extends Component {
         joint_value: 0,
         isStartManipulateActive: false,
         isGoalManipulateActive: false,
-        createJointPositionMsg: null
     }
     render() {
         return (
