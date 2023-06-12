@@ -44,11 +44,6 @@ manipulator_controller:
       d: 1
       i: 1
       i_clamp: 1
-  constraints:
-    goal_time: 0.6
-    # vel_tolerance is 0 for due to the movegroup/follow_joint_trajectory/goal tolerance is empty
-    stopped_velocity_tolerance: 0
-    joint_2: {trajectory: 0, goal: 0}
 end_effector_controller:
   type: position_controllers/JointTrajectoryController
   joints:

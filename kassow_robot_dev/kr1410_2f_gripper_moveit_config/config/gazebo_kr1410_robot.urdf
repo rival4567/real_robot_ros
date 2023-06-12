@@ -245,7 +245,7 @@
         </joint>
         <actuator name="joint_1_motor">
             <mechanicalReduction>1.0</mechanicalReduction>
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
     <transmission name="joint_2_trans">
@@ -255,7 +255,7 @@
         </joint>
         <actuator name="joint_2_motor">
             <mechanicalReduction>1.0</mechanicalReduction>
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
     <transmission name="joint_3_trans">
@@ -265,7 +265,7 @@
         </joint>
         <actuator name="joint_3_motor">
             <mechanicalReduction>1.0</mechanicalReduction>
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
     <transmission name="joint_4_trans">
@@ -275,7 +275,7 @@
         </joint>
         <actuator name="joint_4_motor">
             <mechanicalReduction>1.0</mechanicalReduction>
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
     <transmission name="joint_5_trans">
@@ -285,7 +285,7 @@
         </joint>
         <actuator name="joint_5_motor">
             <mechanicalReduction>1.0</mechanicalReduction>
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
     <transmission name="joint_6_trans">
@@ -295,7 +295,7 @@
         </joint>
         <actuator name="joint_6_motor">
             <mechanicalReduction>1.0</mechanicalReduction>
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
     <transmission name="joint_tool_io_trans">
@@ -305,7 +305,7 @@
         </joint>
         <actuator name="joint_tool_io_motor">
             <mechanicalReduction>1.0</mechanicalReduction>
-            <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+            <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
         </actuator>
     </transmission>
     <!-- Tool frame used by the arm -->

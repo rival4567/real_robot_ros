@@ -141,7 +141,7 @@ export default class ROSInteractiveMarker extends Component {
         }
         let fk_link_name;
         if (this.end_effector_link[this.selected_group[0]] === undefined) {
-            fk_link_name = "schunk_gripper";
+            fk_link_name = "tool_io";
         }
         else {
             fk_link_name = this.end_effector_link[this.selected_group[0]];

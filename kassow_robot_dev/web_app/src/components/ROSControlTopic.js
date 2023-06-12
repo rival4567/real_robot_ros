@@ -130,10 +130,14 @@ export default class ROSControlTopic extends Component {
                                 goal_joint_states={this.goal_joint_states}
                             />
                             <ROSButton
+                                ros={this.ros}
                                 joint_states={this.joint_states}
                                 start_pub={this.start_pub}
                                 goal_pub={this.goal_pub}
                                 joint_group_slider={this.joint_group_slider}
+                                message_stock={this.message_stock}
+                                start_joint_states={this.start_joint_states}
+                                goal_joint_states={this.goal_joint_states}
                             />
                         </>
                         : <div>Loading JointSlider</div>

@@ -10,7 +10,9 @@ export default class ROSConnect extends React.Component {
 
         super(props);
         // Connect to ROS.
-        this.autoROS = new AutoRos();
+        this.autoROS = new AutoRos({
+            reconnectTimeOut: 5000
+        });
         const url = 'ws://10.229.199.16:9090';
         this.autoROS.connect(url);
         this.ros = this.autoROS.ros;

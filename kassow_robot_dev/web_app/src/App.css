@@ -17,7 +17,7 @@
   margin: 0 auto;
   box-sizing: border-box;
   padding: 1rem;
-  background-color: green;
+  background-color: white;
 }
 
 .input-wrapper {
@@ -39,7 +39,7 @@
   margin: 0 auto;
   box-sizing: border-box;
   padding: 1rem;
-  background-color: darkgoldenrod;
+  background-color: white;
 }
 
 /* Style for the buttons inside the control panel */

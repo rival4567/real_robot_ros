@@ -1,0 +1,75 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway);
+.widget-select {
+    width: 100%;
+}
+
+.widget-select label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    text-align: center;
+}
+  
+.widget-select select {
+    font-size: 1rem;
+    min-width: 250px;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    margin: 0 0 0 0;
+    border: 1px solid #CCC;
+    border-radius: 50rem;
+}
+  
+.widget-select select[multiple] {
+    height: 4rem;
+
+}
+
+.widget-select option {
+    text-transform: uppercase;
+    display: flex;
+    justify-content:space-between;
+    margin: auto 1.5rem;
+    padding: 1.1rem 1rem;
+    align-items: center;
+    cursor: pointer;
+    font-family: 'Raleway', Arial, sans-serif;
+    font-weight: 800;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+.widget-select option::after {
+    content: "";
+    background-size: contain;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 2rem;
+}
+  
+
+.widget-select option:checked::after {
+    -webkit-appearance: none;
+    appearance: none;
+    content: "";
+    background-image: url('./yes.png');
+    background-size: contain;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: 2rem;
+}
+
+.widget-select option:hover {
+    background: transparent;
+    background-color: lightgray; /* Background color on hover */
+}
+  
+.widget-select option:checked {
+    background: transparent;
+    background-color: #c5e1a5; /* Background color when checked */
+}
+  

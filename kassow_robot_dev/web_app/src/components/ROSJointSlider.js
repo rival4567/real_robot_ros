@@ -1,6 +1,7 @@
 import { Component, Fragment } from "react";
 import ROSLIB from "roslib";
 import { Context } from "./ContextProvider";
+import '../styles/JointInput.css';
 
 export default class ROSJointSlider extends Component {
     static contextType = Context;
@@ -49,11 +50,13 @@ export default class ROSJointSlider extends Component {
         this.setState({ isJointNamesLoaded : false })
     }
 
+    handleGroupChange = (event) => {
+        this.selected_group = Array.from(event.target.selectedOptions).map( option => option.value);
+        this.context.state.selected_group = this.selected_group;
+    }
 
-    createJointPositionMsg = (type, plan_only) => { 
+    handleJointChange = (event) => {        
         let positions = [];
-        let start_positions = [];
-        let goal_positions = [];
         let dims = [];
         Array.from(this.props.joint_group_slider.current.children).map( (group) => {
             Array.from(group.children).map( (joint_html) => {
@@ -64,69 +67,23 @@ export default class ROSJointSlider extends Component {
                         stride: joint_html.htmlFor.length
                     });
                     dims.push(dim);
-                    if (type === 0) {
-                        this.props.start_joint_states.name.map( (joint, index) => {
-                            if (joint === dim.label) {
-                                start_positions.push(this.props.start_joint_states.position[index]);
-                                goal_positions.push(this.props.goal_joint_states.position[index]);
-                            }
-                        })
-                    }
-                    else {
-                        positions.push(parseFloat(joint_html.nextElementSibling.value))
-                    }
+                    positions.push(parseFloat(joint_html.nextElementSibling.value))
                 }
             })
-        })
-        let msg;
-        this.selected_group.map( (group) => {
-            if (type === 0) {
-                msg = new ROSLIB.Message({
-                    start_joint: {
-                        layout: {
-                            dim: dims,
-                            data_offset: 0
-                        },
-                        data: start_positions
-                    },
-                    goal_joint: {
-                        layout: {
-                            dim: dims,
-                            data_offset: 0
-                        },
-                        data: goal_positions
-                    },
-                    plan_only: plan_only,
-                    group_name: group
-                });
-            }
-            else {
-                msg = new ROSLIB.Message({
-                    layout: {
-                        dim: dims,
-                        data_offset: 0
-                    },
-                    data: positions
-                });
-            }
+            let message = new ROSLIB.Message({
+                layout: {
+                    dim: dims,
+                    data_offset: 0
+                },
+                data: positions
             });
-        return msg;
-    }
-
-    handleGroupChange = (event) => {
-        this.selected_group = Array.from(event.target.selectedOptions).map( option => option.value);
-        this.context.state.selected_group = this.selected_group;
-        this.createJointPositionMsg(1, true);
-    }
-
-    handleJointChange = (event) => {
-        let msg = this.createJointPositionMsg(1, true);
-        if (this.context.state.isStartManipulateActive) {
-            this.start_pub.publish(msg);
-        }
-        else if (this.context.state.isGoalManipulateActive){
-            this.goal_pub.publish(msg);
-        }
+            if (this.context.state.isStartManipulateActive) {
+                this.start_pub.publish(message);
+            }
+            else if (this.context.state.isGoalManipulateActive){
+                this.goal_pub.publish(message);
+            }
+        })
     }
 
     handleDecrease = (event) => {
@@ -139,8 +96,9 @@ export default class ROSJointSlider extends Component {
 
     render() {
         let group_name = Object.keys(this.link_group).map((key) => {
-            return <option key={key} id={key}>{key}</option>
+            return <option key={key} id={key} className="select-option" value={key}> {key}</option>
         });
+
     
         let joint_slider_view = this.selected_group.map( (group, index) => {
             return (
@@ -161,18 +119,16 @@ export default class ROSJointSlider extends Component {
                                 <Fragment key={index}>
                                     <button className="slider-button" onClick={this.handleDecrease}>-</button>
                                     <label htmlFor={name}>{name}</label> 
-                                    <input type="range" name={name} id={name} value={joint_value}
-                                        max={this.joint_names[name].max} min={this.joint_names[name].min}
-                                        step="0.000001" onChange={this.handleJointChange}>
-                                    </input>
-                                    <input
-                                        type="number"
+                                    <input type="range"
+                                        name={name}
+                                        id={name}
                                         value={joint_value}
-                                        min={this.joint_names[name].min}
                                         max={this.joint_names[name].max}
-                                        step="0.01"
-                                        onChange={this.handleJointChange}
-                                    />
+                                        min={this.joint_names[name].min}
+                                        step="0.0001"
+                                        className="fancy-input"
+                                        onChange={this.handleJointChange}>
+                                    </input>
                                     <button className="slider-button" onClick={this.handleIncrease}>+</button>
                                 </Fragment>
                             :
@@ -188,9 +144,13 @@ export default class ROSJointSlider extends Component {
 
         return (
             <>
-                <select id="group" name="group" onChange={this.handleGroupChange} multiple>
-                    {group_name}
-                </select>
+                <div className="widget widget-select multi-checkbox-select">
+                <label htmlFor="group" className="select">Select Joint Group</label>
+                    <select id="group" className="select" name="group" onChange={this.handleGroupChange} multiple>
+                        {group_name}
+                    </select>
+                </div>
+
                 <div id="slider-pane" ref={this.props.joint_group_slider}>
                     {joint_slider_view}
                 </div>
